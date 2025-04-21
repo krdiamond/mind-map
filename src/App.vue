@@ -1,10 +1,24 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+import Wishlist from './components/Wishlist.vue'
+import Cabinet from './assets/curiocabinet.png'
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center">
-    <h1 class="text-4xl text-blue-500">Tailwind is working!</h1>
-    <HelloWorld />
+  <div class="h-100vh">
+    <div class="w-800 cabinet">
+      <img :src="Cabinet" class="w-fill" alt="Glass Cabinet" />
+      <Wishlist />
+    </div>
+      
+    
   </div>
 </template>
+
+<style scoped>
+.cabinet {
+  left: 1000px;
+  position: relative;
+  top: 100px;
+}
+</style>
+

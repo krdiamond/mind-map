@@ -1,7 +1,12 @@
+<script setup>
+import Heart from '../assets/heart.png'
+</script>
+
+
 <template>
   <div>
-    <h1>{{ message }}</h1>
-    <button @click="updateMessage">Click Me</button>
+    <img :src="Heart" class="heart w-30 absolute" alt="Heart" />
+    <!-- <button @click="updateMessage">Click Me</button> -->
   </div>
 </template>
 
@@ -22,7 +27,8 @@ export default {
 </script>
 
 <style scoped>
-h1 {
-  color: #42b983;
+.heart {
+  top: 135px;
+  left: 420px;
 }
 </style>

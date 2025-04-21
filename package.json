@@ -6,18 +6,17 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "serve": "vite preview",
+    "predeploy": "npm run build",
+    "gitDeploy": "gh-pages -d dist",
+    "deploy": "npm run build && npm run deploy"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.1.4",
     "vue": "^3.5.13"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.4",
     "@vitejs/plugin-vue": "^5.2.2",
-    "autoprefixer": "^10.4.21",
-    "postcss": "^8.5.3",
-    "tailwindcss": "^4.1.4",
-    "vite": "^6.3.1"
+    "gh-pages": "^6.3.0",
+    "vite": "^6.3.2"
   }
 }

@@ -1,1 +1,8 @@
-@import "tailwindcss";
+.h-100vh {height: 100vh}
+
+.w-30 { width: 30px;}
+.w-800 { width: 800px;}
+.w-fill { width: 100%;}
+
+.relative {position: relative;}
+.absolute {position: absolute;}
