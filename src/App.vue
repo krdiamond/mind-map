@@ -2,7 +2,7 @@
   <div class="h-100vh p-20">
     <Wishlist v-show="showWishlist" @close="toggleWishlist" />
     <Podcast v-show="showPodcast" @close="togglePodcast" />
-    <div class="w-800 cabinet-container absolute">
+    <div class="w-800 absolute">
       <img :src="Cabinet" class="w-full" alt="Glass Cabinet" />
       <img :src="Heart" @click="toggleWishlist" class="heart w-30 absolute" alt="Heart" />
       <img :src="Headphones" @click="togglePodcast" class="headphones w-100 absolute" alt="Apple airpod pro" />
@@ -46,9 +46,6 @@ export default {
 </script>
 
 <style scoped>
-.cabinet-container {
-  left: 800px;
-}
 .heart {
   top: 135px;
   left: 420px;

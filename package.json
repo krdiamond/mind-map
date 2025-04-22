@@ -8,8 +8,7 @@
     "build": "vite build",
     "serve": "vite preview",
     "predeploy": "npm run build",
-    "gitDeploy": "gh-pages -d dist",
-    "deploy": "npm run build && npm run deploy"
+    "gitDeploy": "gh-pages -d dist"
   },
   "dependencies": {
     "vue": "^3.5.13"
