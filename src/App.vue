@@ -1,46 +1,40 @@
 <template>
-  <div class="h-100vh p-20">
-    <Wishlist v-show="showWishlist" @close="toggleWishlist" />
-    <Podcast v-show="showPodcast" @close="togglePodcast" />
-    <div class="w-800 absolute">
-      <img :src="Cabinet" class="w-full" alt="Glass Cabinet" />
-      <img :src="Heart" @click="toggleWishlist" class="heart w-30 absolute" alt="Heart" />
-      <img :src="Headphones" @click="togglePodcast" class="headphones w-100 absolute" alt="Apple airpod pro" />
+  <div>
+    <EgoTrap v-if="showEgoTrap" @close="toggleEgoTrap" />
+    <div class="page-container p-20 relative">
+      <div class="cabinet-container w-800 relative">
+        <img :src="Cabinet" class=" w-800 absolute" alt="Glass Cabinet" />
+        <div @click="toggleEgoTrap" class="ego text-80 absolute" alt="Ego Brain">🧠</div>
+      </div>
+      
     </div>
   </div>
 </template>
 
 <script>
 import Cabinet from './assets/curiocabinet.png'
-
-import Heart from './assets/heart.png'
-import Wishlist from './components/Wishlist/Wishlist.vue'
-
-import Headphones from './assets/headphones.png'
-import Podcast from './components/Podcast.vue'
+import EgoTrap from './components/EgoTrap.vue'
 
 export default {
   name: 'HelloWorld',
   components: {
-    Wishlist,
-    Podcast,
+    EgoTrap,
   },
   data() {
     return {
       Cabinet,
-      Heart,
-      Headphones,
-      showWishlist: false,
-      showPodcast: false
+      showEgoTrap: false,
     }
   },
+  mounted() {
+
+  },
   methods: {
-    toggleWishlist() {
-      this.showWishlist = !this.showWishlist
+    toggleEgoTrap() {
+      this.showEgoTrap = !this.showEgoTrap
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      document.body.style.overflow = this.showEgoTrap ? 'hidden' : '';
     },
-    togglePodcast() {
-      this.showPodcast = !this.showPodcast
-    }
   }
 }
 </script>
@@ -50,8 +44,16 @@ export default {
   top: 135px;
   left: 420px;
 }
-.headphones {
-  top: 573px;
-  left: 386px;
+.ego {
+  top: 525px;
+  left: 400px;
+}
+.cabinet-container {
+  top: 100px;
+  left: 800px;
+}
+.page-container {
+  width: 1500px; /* Large scrollable area */
+  height: 900px;
 }
 </style>
