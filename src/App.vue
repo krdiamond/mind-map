@@ -1,6 +1,7 @@
 <template>
   <div>
-    <EgoTrap v-if="showEgoTrap" @close="toggleEgoTrap" />
+    <!-- <EgoTrap v-if="showEgoTrap" @close="toggleEgoTrap" /> -->
+    <Validation v-if="showValidation" @close="toggleValidation" />
     <div class="page-container p-20 relative">
       <div class="relative  w-500">
         <img :src="TV" class="tv w-400 z-1 absolute" alt="TV" />
@@ -9,7 +10,10 @@
       </div>
       <div class="cabinet-container w-800 relative">
         <img :src="Cabinet" class=" w-800 absolute" alt="Glass Cabinet" />
-        <div @click="toggleEgoTrap" class="ego text-80 absolute" alt="Ego Brain">🧠</div>
+        <!-- <div @click="toggleEgoTrap" class="ego text-80 absolute" alt="Ego Brain">🧠</div> -->
+        <div @click="toggleValidation" class="buddha absolute" alt="Buddha">
+          <img :src="Buddha" class="w-60" alt="Buddha" />
+        </div>
       </div>
       
     </div>
@@ -18,17 +22,23 @@
 
 <script>
 import EgoTrap from './components/EgoTrap.vue'
+import Validation from './components/Validation.vue'
 
 import Cabinet from './assets/curiocabinet.png'
 import TV from './assets/tv.png'
 import Static from './assets/static.gif'
 import Boulder from './assets/boulder.png'
 
+import Buddha from './assets/buddha.png'
+
+
+
 
 export default {
   name: 'HelloWorld',
   components: {
     EgoTrap,
+    Validation,
   },
   data() {
     return {
@@ -36,7 +46,9 @@ export default {
       TV,
       Boulder,
       Static,
+      Buddha,
       showEgoTrap: false,
+      showValidation: false,
     }
   },
   mounted() {
@@ -48,6 +60,11 @@ export default {
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
       document.body.style.overflow = this.showEgoTrap ? 'hidden' : '';
     },
+    toggleValidation() {
+      this.showValidation = !this.showValidation
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      document.body.style.overflow = this.showEgoTrap ? 'hidden' : '';
+    },
   }
 }
 </script>
@@ -56,6 +73,11 @@ export default {
 .heart {
   top: 135px;
   left: 420px;
+}
+
+.buddha {
+  top: 534px;
+  left: 400px;
 }
 .ego {
   top: 525px;

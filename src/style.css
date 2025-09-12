@@ -1,4 +1,11 @@
+h2 {font-size: 18px;}
+
+a {text-decoration: none;}
+
+p {font-size: 12px;}
+
 .w-30 { width: 30px;}
+.w-60 { width: 60px;}
 .w-100 { width: 100px;}
 .w-200 { width: 200px;}
 .w-400 { width: 400px;}
@@ -38,5 +45,3 @@
 .center {text-align: center; }
 
 .pointer {cursor: pointer;}
-
-a {text-decoration: none;}
