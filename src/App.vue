@@ -1,22 +1,18 @@
 <template>
-  <div>
-    <!-- <EgoTrap v-if="showEgoTrap" @close="toggleEgoTrap" /> -->
-    <Validation v-if="showValidation" @close="toggleValidation" />
-    <div class="page-container p-20 relative">
-      <div class="relative  w-500">
+  <div class="page-container relative p-20">
+   <div class="tv-container relative  w-500">
         <img :src="TV" class="tv w-400 z-1 absolute" alt="TV" />
         <img :src="Static" class="static w-400 z-1 absolute" alt="static" />
         <img :src="Boulder" class="boulder w-500 absolute" alt="Boulder" />
       </div>
-      <div class="cabinet-container w-800 relative">
+      <div class="cabinet-container w-800 absolute">
         <img :src="Cabinet" class=" w-800 absolute" alt="Glass Cabinet" />
-        <!-- <div @click="toggleEgoTrap" class="ego text-80 absolute" alt="Ego Brain">🧠</div> -->
+        <!-- <div @click="toggleEgoTrap" class="ego text-40 absolute" alt="Ego Brain">🧠</div> -->
         <div @click="toggleValidation" class="buddha absolute" alt="Buddha">
           <img :src="Buddha" class="w-60" alt="Buddha" />
+          <Validation v-if="showValidation" @close="toggleValidation" />
         </div>
       </div>
-      
-    </div>
   </div>
 </template>
 
@@ -63,51 +59,56 @@ export default {
     toggleValidation() {
       this.showValidation = !this.showValidation
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-      document.body.style.overflow = this.showEgoTrap ? 'hidden' : '';
+      document.body.style.overflow = this.showValidation ? 'hidden' : '';
     },
   }
 }
 </script>
 
 <style scoped>
-.heart {
-  top: 135px;
-  left: 420px;
+
+.tv-container {
+    height: 580px;
+    width: 500px;
+    top: 300px;
+    left: 100px;
 }
+
+.cabinet-container {
+    height: 800px;
+    right: 0;
+    bottom: 40px;
+}
+
+
 
 .buddha {
   top: 534px;
   left: 400px;
 }
 .ego {
-  top: 525px;
-  left: 400px;
+  top: 268px;
+  left: 300px;
 }
-.cabinet-container {
-  top: 50px;
-  left: 800px;
-}
+
+
 .page-container {
-  width: 1500px; /* Large scrollable area */
   height: 900px;
 }
 
 .boulder{
-  top: 500px;
-  left: 50px;
+  top: 250px;
 }
 
 .tv {
-  top: 255px;
-  left: 100px;
+  left: 60px;
 }
 
 .static {
   width: 556px;
     height: 242px;
     z-index: 2;
-    top: 281px;
-    left: 39px;
+    top: 25px;
     transform: perspective(2500px) rotateY(50deg) rotateZ(.5deg);
 }
 </style>

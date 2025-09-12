@@ -1,8 +1,27 @@
-h2 {font-size: 18px;}
+
+html {
+    width: 1500px;
+    margin: auto;
+}
+
+
+/* ---------------- TEXT ---------------- */
+
+h2 {
+    font-size: 18px;
+    margin: 0 0 12px 0;
+}
 
 a {text-decoration: none;}
 
-p {font-size: 12px;}
+p {
+    font-size: 12px;
+    margin: 0;
+}
+
+
+.text-40 {font-size: 40px;}
+/* ---------------- WIDTH ---------------- */
 
 .w-30 { width: 30px;}
 .w-60 { width: 60px;}
@@ -12,6 +31,9 @@ p {font-size: 12px;}
 .w-500 { width: 500px;}
 .w-800 { width: 800px;}
 .w-full { width: 100%;}
+
+
+
 
 .p-20 {padding: 20px;}
 
@@ -32,8 +54,6 @@ p {font-size: 12px;}
 .top-0 {top: 0;}
 .right-0 {right: 0}
 
-.text-80 {font-size: 80px;}
-
 .centered {
     top: 0;
     bottom: 0;
@@ -43,5 +63,10 @@ p {font-size: 12px;}
 }
 
 .center {text-align: center; }
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+}
 
 .pointer {cursor: pointer;}

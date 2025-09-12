@@ -6,13 +6,15 @@
       ref="dragEl">
           <div @click="$emit('close')" class="absolute top-0 right-0 p-20 pointer">X</div>
           <div>
-            <h2>pleasure trap / ego trap </h2>
-            <p>The world expects that you can achieve some sort of goal but you find yourself having a difficult time.  This goal is an unnatural but common modern issue that is not possible for a human to solve based on our design but because we are living in modern times we assume that we should be able to solve it. Think quitting smoking, ime travel, alchemy. 
-            
-            
-            This is an effect brought on by the pleasure trap. Thus your internal device is picking up a sense that people have a higher esteem for you and higher expectations than you have for yourself.  Generally you have a pretty aware sense of your capabilities but nothing is more confusing than your cool friend telling you, you can do something that you can't.  Only, you rationally know that they are wrong. To leave the ego trap is to not try, said by bujowski and matt’s tattoo and yoda to maintain self esteem. Although, the problem will never be solved.</p>
-            <p>In certain sitiations a person can become overrated and cause an ego trap. There was a great episode of Frasier where there is a man with a gun at Café Nervosa and Bulldog uses a pregnant woman as a human sheild. In doing so he accidentally knocks over a pot of coffee and burns the man leading him to run away.  Bulldog was praised as a hero and lived within the hell of the ego trap, knowing that he was actually a coward.  Eventually Frasier calls him out in front of his community fully crushing his ego publically</p>
-            <p>This is a common issue in procrastination. “If i have more esteem to lose than i have to gain, i am not going to try”. If the expectations from others are so high that you are unlikely to meet them is it worth putting in the effort if the result is beneath the expectations of others?  The true solution: change the focus of who you choose to receive self esteem from. Switch to your internal audience for approval.  Always remember, if you can't do something perfectly just do it a little better than you did yesterday. </p>
+            <h2>Pleasure Trap // Ego Trap</h2>
+              <p>The <b>Pleasure Trap</b> describes how our instincts, designed for survival in a natural environment, get hijacked in modern life. We evolved to seek pleasure, avoid pain, and conserve energy. That wiring helped our ancestors, but in today’s world it backfires. Processed food, nicotine, alcohol, and endless entertainment all trigger short-term reward circuits, leaving us stuck in unhealthy loops. Think of someone who wants to quit smoking or stick to a diet, but their brain is constantly drawn back toward the “quick fix.”</p>
+
+              <p>The <b>Ego Trap</b> occurs when others hold you in higher esteem and expect more from you than you believe you can realistically deliver. You may know your own limits, but when your cool friend insists “you can do it,” their praise raises the stakes. Now trying and falling short risks a public loss of esteem. To protect yourself, the safest option feels like not trying at all. This is why the Ego Trap is often tied to procrastination: <em>“If I have more esteem to lose than I have to gain, why risk it?”</em></p>
+
+              <p>These two traps can stack. The Pleasure trap gets you stuck in self-defeating cycles (overeating, smoking, procrastinating). Then the ego trap locks you in place: the fear of failing publicly makes it even harder to take the small, imperfect steps that are the only way out. The cycle becomes: <em>temptation → slip-up → inflated expectations → avoidance.</em> The key to breaking it is to shift your “audience” away from external esteem and toward your internal audience. Always remember, if you can't do something perfectly just do it a little better than you did yesterday.</p>
+
+              <p>There’s a perfect illustration of the ego trap in an episode of Frasier. At Café Nervosa, a gunman bursts in. Bulldog, in a panic, shoves a pregnant woman in front of him as a shield — hardly heroic. But in the chaos, he accidentally knocks over a pot of hot coffee that scalds the gunman and drives him away. To everyone watching, Bulldog looks like a brave hero. Now Bulldog is trapped. The world heaps praise on him, expecting courage and leadership — but inside, he knows he acted out of cowardice. That gap between external esteem and internal reality is exactly what makes the ego trap so painful. Eventually, when Frasier exposes the truth, Bulldog’s public ego is crushed, but the trap itself is broken.</p>
+
           </div>
     </div>
 </template>
@@ -20,7 +22,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
-const pos = ref({ x: 100, y: 100 })
+const pos = ref({ x: 625, y: 100 })
 const dragging = ref(false)
 const offset = ref({ x: 0, y: 0 })
 const dragEl = ref(null)
@@ -52,9 +54,10 @@ function endDrag() {
 
 <style scoped>
 .draggable {
-  position: fixed;
+  position: absolute;
   z-index: 9999;
   cursor: grab;
   user-select: none;
 }
+.draggable:active { cursor: grabbing; }
 </style>
