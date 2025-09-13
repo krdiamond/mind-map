@@ -6,7 +6,7 @@
     @click.stop
     ref="dragEl"
   >
-    <img :src="Remote" alt="Remote" class="w-100" />
+    <img :src="Remote" alt="Remote" class="remote w-100" />
   </div>
 </template>
 
@@ -19,7 +19,7 @@ import Remote from '../assets/remote.png'
  * Position is relative to the nearest positioned ancestor.
  * Ensure the parent wrapper has `position: relative`.
  */
-const pos = ref({ x: 400, y: 420 })
+const pos = ref({ x: 415, y: 420 })
 const dragEl = ref(null)
 
 function onPointerDown(e) {
@@ -67,5 +67,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-
+.remote {
+  transform: rotate(19deg);
+}
 </style>

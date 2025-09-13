@@ -8,8 +8,16 @@
       <div class="cabinet-container w-800 absolute">
         <img :src="Cabinet" class=" w-800 absolute" alt="Glass Cabinet" />
         <!-- <div @click="toggleEgoTrap" class="ego text-40 absolute" alt="Ego Brain">🧠</div> -->
-        
-        <Remote/>
+
+          <div
+            class="remote absolute pointer"
+            ref="remoteEl"
+            :style="{ left: remotePos.x + 'px', top: remotePos.y + 'px', transform: 'rotate(20deg)' }"
+            @pointerdown.stop.prevent="onRemoteDown"
+            @click.stop
+          >
+            <img :src="Remote" class="w-100" alt="Remote" />
+          </div>
 
         <div @click="toggleValidation" class="buddha absolute pointer" alt="Buddha">
           <img :src="Buddha" class="w-60" alt="Buddha" />
@@ -19,7 +27,15 @@
         <div @click="toggleAlchemy" class="gold absolute pointer" alt="Gold">
           <img :src="Gold" class="w-60" alt="Gold" />
           <Alchemy v-if="showAlchemy" @close="toggleAlchemy" />
-        </div>
+        </div> 
+
+
+
+
+
+
+
+
       </div>
 
 
@@ -29,10 +45,11 @@
 </template>
 
 <script>
+import { useDraggable } from './composables/useDraggable'
+
 import EgoTrap from './components/EgoTrap.vue'
 import Validation from './components/Validation.vue'
 import Alchemy from './components/Alchemy.vue'
-import Remote from './components/Remote.vue'
 
 import Cabinet from './assets/curiocabinet.png'
 import TV from './assets/tv.png'
@@ -41,26 +58,50 @@ import Boulder from './assets/boulder.png'
 
 import Buddha from './assets/buddha.png'
 import Gold from './assets/gold.png'
+import Remote from './assets/remote.png'
 
 
 
 
 export default {
   name: 'HelloWorld',
-  components: {
-    EgoTrap,
-    Validation,
-    Alchemy,
-    Remote
+  components: { EgoTrap, Validation, Alchemy },
+  setup() {
+    // one instance per draggable element
+    const remoteDrag = useDraggable({
+      initial: { x: 395, y: 415 },
+      constrainToParent: true
+    })
+    // const buddhaDrag = useDraggable({
+    //   initial: { x: 400, y: 534 },
+    //   constrainToParent: true
+    // })
+    // const goldDrag = useDraggable({
+    //   initial: { x: 280, y: 555 },
+    //   constrainToParent: true
+    // })
+
+    // expose them to the template
+    return {
+      // remote
+      remotePos: remoteDrag.pos,
+      remoteEl:  remoteDrag.dragEl,
+      onRemoteDown: remoteDrag.onPointerDown,
+
+      // // buddha
+      // buddhaPos: buddhaDrag.pos,
+      // buddhaEl:  buddhaDrag.dragEl,
+      // onBuddhaDown: buddhaDrag.onPointerDown,
+
+      // // gold
+      // goldPos: goldDrag.pos,
+      // goldEl:  goldDrag.dragEl,
+      // onGoldDown: goldDrag.onPointerDown,
+    }
   },
   data() {
     return {
-      Cabinet,
-      TV,
-      Boulder,
-      Static,
-      Buddha,
-      Gold,
+       Cabinet, TV, Boulder, Static, Buddha, Gold, Remote,
       showEgoTrap: false,
       showValidation: false,
       showAlchemy: false,
@@ -135,6 +176,9 @@ export default {
 .ego {
   top: 268px;
   left: 300px;
+}
+.remote {
+  transform: rotate(20deg);
 }
 
 
