@@ -7,6 +7,7 @@ html {
     margin: auto;
     height: 100%;
     padding-top: 100px;
+    overflow: hidden;
 
     @include up(sm) {  
         width: 1500px; 
@@ -15,8 +16,8 @@ html {
     }
 }
 
-// html {border: 3px solid green;}
-// body {border: 3px solid purple;}
+html {border: 3px solid green;}
+body {border: 3px solid purple;}
 
 /* ----------------- TEXT ----------------- */
 
