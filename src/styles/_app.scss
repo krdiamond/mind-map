@@ -1,9 +1,9 @@
 @use './mixins' as *;
 
 .tv-container {
-    height: 130px;
+    height: 200px;
     top: 50px;
-    left: 0px;
+    left: -20px;
 
     @include up(sm) { 
         height: 580px; 
@@ -13,7 +13,7 @@
 }
 
 .boulder{
-  top: 65px;
+  top: 95px;
       @include up(sm) {  
         top: 250px;
     }
@@ -27,11 +27,11 @@
 }
 
 .static {
-    top: 6px;
-    left: -42px;
-    transform: perspective(1000px) rotateY(62deg) rotateZ(0.2deg);
-    width: 192px;
-    height: 61px;
+top: 9px;
+    left: -23px;
+    transform: perspective(1000px) rotateY(50deg) rotateZ(0.5deg);
+    width: 208px;
+    height: 91px;
 
     @include up(sm) {  
         top: 25px;
@@ -43,10 +43,11 @@
 }
 
 .cabinet-container {
-    right: 0;
-    top: 5px;
+    right: 10px;
+    top: 10px;
     @include up(sm) {  
         top: 100px;
+        right: 100px;
     }
 }
 
