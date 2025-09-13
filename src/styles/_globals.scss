@@ -1,0 +1,101 @@
+@use './mixins' as *;
+
+/* ---------------- GENERAL ---------------- */
+
+html {
+    width: 350px;
+    margin: auto;
+
+    @include up(sm) {  width: 1500px; }
+}
+
+// html {border: 3px solid green;}
+// body {border: 3px solid purple;}
+
+/* ----------------- TEXT ----------------- */
+
+h2 {
+    font-size: 18px;
+    margin: 0 0 12px 0;
+}
+
+a {text-decoration: none;}
+
+p {
+    font-size: 12px;
+    margin: 0;
+}
+
+.text-18 {font-size: 18px;}
+.text-40 {font-size: 40px;}
+
+/* ---------------- WIDTH ---------------- */
+
+.w-30 { width: 30px;}
+.w-60 { width: 60px;}
+.w-100 { width: 100px;}
+.w-200 { width: 200px;}
+.w-400 { width: 400px;}
+.w-500 { width: 500px;}
+.w-800 { width: 800px;}
+.w-full { width: 100%;}
+
+.sm-w-400 {@include up(sm) {  width: 400px; }}
+.sm-w-500 {@include up(sm) {  width: 500px; }}
+.sm-w-800 {@include up(sm) {  width: 800px; }}
+
+  
+/* ---------------- HEIGHT ---------------- */
+
+.h-200 { height: 200px;}
+.h-900 { height: 900px;}
+
+.sm-h-800 {@include up(sm) {  height: 800px; }}
+.sm-h-900 {@include up(sm) {  height: 900px; }}
+
+/* ---------------- PADDING ---------------- */
+
+.p-20 {padding: 20px;}
+
+.pt-12 {padding-top: 12px;}
+
+/* ---------------- POSITION ---------------- */
+
+.relative {position: relative;}
+.absolute {position: absolute;}
+
+
+.bg-white {background-color: white;}
+
+.z-1 { z-index: 1}
+.z-2 { z-index: 2}
+
+.border { border: 3px solid black;}
+.radius-20 { border-radius: 20px;}
+
+.top-0 {top: 0;}
+.right-0 {right: 0}
+
+.centered {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.center {text-align: center; }
+
+.pointer {cursor: pointer;}
+
+
+.draggable {
+  position: absolute; /* relative to positioned parent */
+  z-index: 9999;
+  cursor: grab;
+  user-select: none;
+  touch-action: none; /* crucial for touch: allows smooth pointer events */
+}
+.draggable:active {
+  cursor: grabbing;
+}

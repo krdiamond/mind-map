@@ -1,15 +1,14 @@
 <template>
-  <div class="h-900 relative p-20">
-   <div class="tv-container relative  w-500">
-        <img :src="TV" class="tv w-400 z-1 absolute" alt="TV" />
-        <img :src="Static" class="static w-400 z-1 absolute" alt="static" />
-        <img :src="Boulder" class="boulder w-500 absolute" alt="Boulder" />
+  <div class="h-200 sm-h-900 relative p-20">
+      <div class="tv-container relative w-100 sm-w-500">
+        <img :src="TV" class="tv w-100 sm-w-400 z-1 absolute" alt="TV" />
+        <img :src="Static" class="static z-2 absolute" alt="static" />
+        <img :src="Boulder" class="boulder w-100 sm-w-500 absolute" alt="Boulder" />
       </div>
-      <div class="cabinet-container w-800 absolute">
-        <img :src="Cabinet" class=" w-800 absolute" alt="Glass Cabinet" />
-        <!-- <div @click="toggleEgoTrap" class="ego text-40 absolute" alt="Ego Brain">🧠</div> -->
-
-          <div
+      <div class="cabinet-container w-200 sm-w-800 h-200 sm-h-800 absolute">
+        <img :src="Cabinet" class=" w-200 sm-w-800 h-200 sm-h-800 absolute" alt="Glass Cabinet" />
+          
+        <!--<div
             class="remote absolute pointer"
             ref="remoteEl"
             :style="{ left: remotePos.x + 'px', top: remotePos.y + 'px', transform: 'rotate(20deg)' }"
@@ -19,7 +18,7 @@
             <img :src="Remote" class="w-100" alt="Remote" />
           </div>
 
-        <div @click="toggleValidation" class="buddha absolute pointer" alt="Buddha">
+         <div @click="toggleValidation" class="buddha absolute pointer" alt="Buddha">
           <img :src="Buddha" class="w-60" alt="Buddha" />
           <Validation v-if="showValidation" @close="toggleValidation" />
         </div>
@@ -32,24 +31,18 @@
          <div @click="toggleMusicPlayer" class="airpod-pro absolute pointer" alt="AirpodPro">
           <img :src="AirpodPro" class="w-60" alt="AirpodPro" />
           <MusicPlayer v-if="showMusicPlayer" @close="toggleMusicPlayer" />
-        </div> 
-
-
-
-
-
-
-
-
+        </div>  -->
       </div>
-
-
-
 
   </div>
 </template>
 
+        <!-- <div @click="toggleEgoTrap" class="ego text-40 absolute" alt="Ego Brain">🧠</div> -->
+
 <script>
+
+import './styles/_app.scss'
+
 import { useDraggable } from './composables/useDraggable'
 
 import EgoTrap from './components/EgoTrap.vue'
@@ -149,59 +142,6 @@ export default {
 
 <style scoped>
 
-.tv-container {
-    height: 580px;
-    width: 500px;
-    top: 300px;
-    left: 100px;
-}
-
-.cabinet-container {
-    height: 800px;
-    right: 0;
-    bottom: 40px;
-}
-
-.boulder{
-  top: 250px;
-}
-
-.tv {
-  left: 60px;
-}
-
-.static {
-  width: 556px;
-  height: 242px;
-  z-index: 2;
-  top: 25px;
-  transform: perspective(2500px) rotateY(50deg) rotateZ(.5deg);
-}
-
-
-
-
-.gold {
-  top: 555px;
-  left: 280px;
-}
-
-.airpod-pro {
-  top: 569px;
-  left: 340px;
-}
-
-.buddha {
-  top: 534px;
-  left: 400px;
-}
-.ego {
-  top: 268px;
-  left: 300px;
-}
-.remote {
-  transform: rotate(20deg);
-}
 
 
 
