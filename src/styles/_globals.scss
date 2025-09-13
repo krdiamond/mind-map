@@ -5,7 +5,18 @@
 html {
     width: 600px;
     margin: auto;
+<<<<<<< HEAD
+    height: 100%;
+    padding-top: 100px;
+
+    @include up(sm) {  
+        width: 1500px; 
+        height: unset;
+        padding-top: unset;
+    }
+=======
     @include up(sm) {  width: 1500px; }
+>>>>>>> main
 }
 
 // html {border: 3px solid green;}
@@ -33,6 +44,8 @@ p {
 .w-30 { width: 30px;}
 .w-60 { width: 60px;}
 .w-100 { width: 100px;}
+.w-110 { width: 110px;}
+.w-150 { width: 150px;}
 .w-200 { width: 200px;}
 .w-400 { width: 400px;}
 .w-500 { width: 500px;}
@@ -47,6 +60,7 @@ p {
 /* ---------------- HEIGHT ---------------- */
 
 .h-200 { height: 200px;}
+.h-250 { height: 250px;}
 .h-900 { height: 900px;}
 
 .sm-h-800 {@include up(sm) {  height: 800px; }}
