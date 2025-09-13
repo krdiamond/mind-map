@@ -4,7 +4,6 @@ html {
     margin: auto;
 }
 
-
 /* ---------------- TEXT ---------------- */
 
 h2 {
@@ -19,8 +18,9 @@ p {
     margin: 0;
 }
 
-
+.text-18 {font-size: 18px;}
 .text-40 {font-size: 40px;}
+
 /* ---------------- WIDTH ---------------- */
 
 .w-30 { width: 30px;}
@@ -32,17 +32,21 @@ p {
 .w-800 { width: 800px;}
 .w-full { width: 100%;}
 
+/* ---------------- HEIGHT ---------------- */
 
+.h-900 { height: 900px;}
 
+/* ---------------- PADDING ---------------- */
 
 .p-20 {padding: 20px;}
 
-.m-20 {margin: 20px;}
+.pt-12 {padding-top: 12px;}
+
+/* ---------------- POSITION ---------------- */
 
 .relative {position: relative;}
 .absolute {position: absolute;}
 
-.flex {display: flex;}
 
 .bg-white {background-color: white;}
 
@@ -64,9 +68,16 @@ p {
 
 .center {text-align: center; }
 
-.flex-center {
-    display: flex;
-    justify-content: center;
-}
-
 .pointer {cursor: pointer;}
+
+
+.draggable {
+  position: absolute; /* relative to positioned parent */
+  z-index: 9999;
+  cursor: grab;
+  user-select: none;
+  touch-action: none; /* crucial for touch: allows smooth pointer events */
+}
+.draggable:active {
+  cursor: grabbing;
+}

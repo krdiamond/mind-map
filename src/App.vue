@@ -1,5 +1,5 @@
 <template>
-  <div class="page-container relative p-20">
+  <div class="h-900 relative p-20">
    <div class="tv-container relative  w-500">
         <img :src="TV" class="tv w-400 z-1 absolute" alt="TV" />
         <img :src="Static" class="static w-400 z-1 absolute" alt="static" />
@@ -8,17 +8,31 @@
       <div class="cabinet-container w-800 absolute">
         <img :src="Cabinet" class=" w-800 absolute" alt="Glass Cabinet" />
         <!-- <div @click="toggleEgoTrap" class="ego text-40 absolute" alt="Ego Brain">🧠</div> -->
-        <div @click="toggleValidation" class="buddha absolute" alt="Buddha">
+        
+        <Remote/>
+
+        <div @click="toggleValidation" class="buddha absolute pointer" alt="Buddha">
           <img :src="Buddha" class="w-60" alt="Buddha" />
           <Validation v-if="showValidation" @close="toggleValidation" />
         </div>
+
+        <div @click="toggleAlchemy" class="gold absolute pointer" alt="Gold">
+          <img :src="Gold" class="w-60" alt="Gold" />
+          <Alchemy v-if="showAlchemy" @close="toggleAlchemy" />
+        </div>
       </div>
+
+
+
+
   </div>
 </template>
 
 <script>
 import EgoTrap from './components/EgoTrap.vue'
 import Validation from './components/Validation.vue'
+import Alchemy from './components/Alchemy.vue'
+import Remote from './components/Remote.vue'
 
 import Cabinet from './assets/curiocabinet.png'
 import TV from './assets/tv.png'
@@ -26,6 +40,7 @@ import Static from './assets/static.gif'
 import Boulder from './assets/boulder.png'
 
 import Buddha from './assets/buddha.png'
+import Gold from './assets/gold.png'
 
 
 
@@ -35,6 +50,8 @@ export default {
   components: {
     EgoTrap,
     Validation,
+    Alchemy,
+    Remote
   },
   data() {
     return {
@@ -43,8 +60,10 @@ export default {
       Boulder,
       Static,
       Buddha,
+      Gold,
       showEgoTrap: false,
       showValidation: false,
+      showAlchemy: false,
     }
   },
   mounted() {
@@ -53,13 +72,18 @@ export default {
   methods: {
     toggleEgoTrap() {
       this.showEgoTrap = !this.showEgoTrap
-      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-      document.body.style.overflow = this.showEgoTrap ? 'hidden' : '';
+      this.showAlchemy = false
+      this.showValidation = false
     },
     toggleValidation() {
       this.showValidation = !this.showValidation
-      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-      document.body.style.overflow = this.showValidation ? 'hidden' : '';
+      this.showEgoTrap = false
+      this.showAlchemy = false
+    },
+     toggleAlchemy() {
+      this.showAlchemy = !this.showAlchemy
+      this.showEgoTrap = false
+      this.showValidation = false
     },
   }
 }
@@ -80,7 +104,29 @@ export default {
     bottom: 40px;
 }
 
+.boulder{
+  top: 250px;
+}
 
+.tv {
+  left: 60px;
+}
+
+.static {
+  width: 556px;
+  height: 242px;
+  z-index: 2;
+  top: 25px;
+  transform: perspective(2500px) rotateY(50deg) rotateZ(.5deg);
+}
+
+
+
+
+.gold {
+  top: 555px;
+  left: 280px;
+}
 
 .buddha {
   top: 534px;
@@ -92,23 +138,6 @@ export default {
 }
 
 
-.page-container {
-  height: 900px;
-}
 
-.boulder{
-  top: 250px;
-}
 
-.tv {
-  left: 60px;
-}
-
-.static {
-  width: 556px;
-    height: 242px;
-    z-index: 2;
-    top: 25px;
-    transform: perspective(2500px) rotateY(50deg) rotateZ(.5deg);
-}
 </style>

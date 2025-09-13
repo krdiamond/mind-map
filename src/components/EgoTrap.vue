@@ -1,6 +1,6 @@
 <template>
     <div
-      class="draggable bg-white w-400 m-20 border radius-20 p-20"
+      class="draggable bg-white w-400 border radius-20 p-20"
       :style="{ top: pos.y + 'px', left: pos.x + 'px' }"
       @mousedown="startDrag"
       ref="dragEl">
@@ -53,11 +53,5 @@ function endDrag() {
 </script>
 
 <style scoped>
-.draggable {
-  position: absolute;
-  z-index: 9999;
-  cursor: grab;
-  user-select: none;
-}
-.draggable:active { cursor: grabbing; }
+
 </style>

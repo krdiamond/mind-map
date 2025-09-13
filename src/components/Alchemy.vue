@@ -20,19 +20,22 @@
     </div>
 
     <div>
-      <h2>Buddha’s Parable of the Poisoned Arrow</h2>
+      <h2>Alchemy</h2>
       <p>
-        It's just as if <b>a man were wounded with an arrow</b> thickly smeared with poison. His friends &amp; companions, kinsmen &amp; relatives would provide him with a surgeon, and
-        <b>the man would say, 'I won't have this arrow removed until I know whether the man who wounded me was a noble warrior, a priest, a merchant, or a worker.'</b>
-        He would say, 'I won't have this arrow removed until I know the given name &amp; clan name of the man who wounded me... until I know whether he was tall, medium, or short... until I know whether he was dark, ruddy-brown, or golden-colored... until I know his home village, town, or city... until I know whether the bow with which I was wounded was a long bow or a crossbow... until I know whether the bowstring with which I was wounded was fiber, bamboo threads, sinew, hemp, or bark... until I know whether the shaft with which I was wounded was wild or cultivated... until I know whether the feathers of the shaft with which I was wounded were those of a vulture, a stork, a hawk, a peacock, or another bird... until I know whether the shaft with which I was wounded was bound with the sinew of an ox, a water buffalo, a langur, or a monkey.' He would say, 'I won't have this arrow removed until I know whether the shaft with which I was wounded was that of a common arrow, a curved arrow, a barbed, a calf-toothed, or an oleander arrow.'
-        <b>The man would die and those things would still remain unknown to him.</b>
+        From 2023 - August 2025 I ran an app on a spare computer that essentially exploited a "social casino".  "Social Casinos" offer USD payouts when users purchase their "social" coins to play slot machines. It is an online gambling loophole. Some casinos offer 1 free coin per a day for simply logging in.  I was running about 4 casinos but only 1 was reliable.  My app would automanically log in every morning, collect the 1 coin and then "wash" it by playing a slot machine. The payouts were coins that were redemable for USD.  I never played the slot machines myself or put any of my own money in.  I made a lot of money doing this.  This was a source of true ◎ Alchemy ◎ ! </p>
+        <p>Then in Aug 2025, NJ freaking passed a new law banning all "simulated gambling" and "social casinos" are now blocked in NJ, NY and all surrounding states so this project is dead.</p> 
+        <p>I won't even get into how complicated it was to make an app that could actually play their slot machines and respond to all the different reactions the machines had.  I had to make sure it responded to everything so that the app wouldn't get stuck.  Also, I had to make sure I could collect my jackpots (there were many) without skipping over them.  It was a tiresome process and my friends and family thought it wasn't worth the money (or they thought I was crazy and didn't want to hear about it) but I live for this shit so <span class="">🤷‍♀️</span>.
       </p>
+      <img :src="BirdAnimation" alt="Bird animation" class="w-full pt-12" />
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
+
+import BirdAnimation from '../assets/bird-animation.svg'
+
 
 // Emit for the close button
 const emit = defineEmits(['close'])
@@ -42,7 +45,7 @@ const emitClose = () => emit('close')
  * Position is relative to the nearest positioned ancestor.
  * Ensure the parent wrapper has `position: relative`.
  */
-const pos = ref({ x: -520, y: -120 })
+const pos = ref({ x: -450, y: -400 })
 const dragEl = ref(null)
 
 function onPointerDown(e) {
@@ -90,14 +93,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.draggable {
-  position: absolute; /* relative to positioned parent */
-  z-index: 9999;
-  cursor: grab;
-  user-select: none;
-  touch-action: none; /* crucial for touch: allows smooth pointer events */
-}
-.draggable:active {
-  cursor: grabbing;
-}
+
 </style>
