@@ -1,44 +1,49 @@
 @use './mixins' as *;
 
 .tv-container {
-    height: 200px;
-    top: 50px;
+    height: 147px;
+    top: 85px;
     left: -20px;
+    width: 130px;
 
     @include up(sm) { 
-        height: 580px; 
+        height: 480px; 
         top: 300px;
         left: 100px;
+        width: 430px;
     }
 }
 
 .boulder{
-  top: 95px;
-      @include up(sm) {  
-        top: 250px;
+  top: 65px;
+  width: 125px;
+    @include up(sm) {  
+        top: 200px;
+        width: 425px;
     }
 }
 
 .tv {
-  left: 0px;
-     @include up(sm) {  
+  left: 15px;
+  width: 100px;
+    @include up(sm) {  
         left: 60px;
+        width: 325px;
     }
 }
 
 .static {
-top: 9px;
-    left: -23px;
-    transform: perspective(1000px) rotateY(50deg) rotateZ(0.5deg);
-    width: 208px;
-    height: 91px;
-
+    top: 6px;
+    left: -2px;
+    transform: perspective(800px) rotateY(50deg) rotateZ(0.7deg);
+    width: 140px;
+    height: 61px;
     @include up(sm) {  
-        top: 25px;
-        left: 0;
-        transform: perspective(2500px) rotateY(50deg) rotateZ(.5deg);
-        width: 556px;
-        height: 242px;
+        top: 22px;
+        left: 6px;
+        transform: perspective(2500px) rotateY(50deg) rotateZ(0.5deg);
+        width: 454px;
+        height: 194px;
   }
 }
 
