@@ -1,9 +1,9 @@
 @use './mixins' as *;
 
 .tv-container {
-    height: 130px;
+    height: 200px;
     top: 50px;
-    left: 0px;
+    left: -20px;
 
     @include up(sm) { 
         height: 580px; 
@@ -13,24 +13,42 @@
 }
 
 .boulder{
-  top: 250px;
+  top: 95px;
+      @include up(sm) {  
+        top: 250px;
+    }
 }
 
 .tv {
-  left: 60px;
+  left: 0px;
+     @include up(sm) {  
+        left: 60px;
+    }
 }
 
 .static {
-    top: 25px;
+top: 9px;
+    left: -23px;
+    transform: perspective(1000px) rotateY(50deg) rotateZ(0.5deg);
+    width: 208px;
+    height: 91px;
+
+    @include up(sm) {  
+        top: 25px;
         left: 0;
         transform: perspective(2500px) rotateY(50deg) rotateZ(.5deg);
         width: 556px;
         height: 242px;
+  }
 }
 
 .cabinet-container {
-    right: 0;
-    top: 100px;
+    right: 10px;
+    top: 10px;
+    @include up(sm) {  
+        top: 100px;
+        right: 100px;
+    }
 }
 
 .gold {
