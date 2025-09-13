@@ -29,6 +29,11 @@
           <Alchemy v-if="showAlchemy" @close="toggleAlchemy" />
         </div> 
 
+         <div @click="toggleMusicPlayer" class="airpod-pro absolute pointer" alt="AirpodPro">
+          <img :src="AirpodPro" class="w-60" alt="AirpodPro" />
+          <MusicPlayer v-if="showMusicPlayer" @close="toggleMusicPlayer" />
+        </div> 
+
 
 
 
@@ -50,6 +55,7 @@ import { useDraggable } from './composables/useDraggable'
 import EgoTrap from './components/EgoTrap.vue'
 import Validation from './components/Validation.vue'
 import Alchemy from './components/Alchemy.vue'
+import MusicPlayer from './components/MusicPlayer.vue'
 
 import Cabinet from './assets/curiocabinet.png'
 import TV from './assets/tv.png'
@@ -59,13 +65,14 @@ import Boulder from './assets/boulder.png'
 import Buddha from './assets/buddha.png'
 import Gold from './assets/gold.png'
 import Remote from './assets/remote.png'
+import AirpodPro from './assets/airpod-pro.png'
 
 
 
 
 export default {
   name: 'HelloWorld',
-  components: { EgoTrap, Validation, Alchemy },
+  components: { EgoTrap, Validation, Alchemy, MusicPlayer },
   setup() {
     // one instance per draggable element
     const remoteDrag = useDraggable({
@@ -101,10 +108,11 @@ export default {
   },
   data() {
     return {
-       Cabinet, TV, Boulder, Static, Buddha, Gold, Remote,
+      Cabinet, TV, Boulder, Static, Buddha, Gold, Remote, AirpodPro,
       showEgoTrap: false,
       showValidation: false,
       showAlchemy: false,
+      showMusicPlayer: false
     }
   },
   mounted() {
@@ -115,16 +123,25 @@ export default {
       this.showEgoTrap = !this.showEgoTrap
       this.showAlchemy = false
       this.showValidation = false
+      this.showMusicPlayer = false
     },
     toggleValidation() {
       this.showValidation = !this.showValidation
       this.showEgoTrap = false
       this.showAlchemy = false
+      this.showMusicPlayer = false
     },
      toggleAlchemy() {
       this.showAlchemy = !this.showAlchemy
       this.showEgoTrap = false
       this.showValidation = false
+      this.showMusicPlayer = false
+    },
+     toggleMusicPlayer() {
+      this.showMusicPlayer = !this.showMusicPlayer
+      this.showEgoTrap = false
+      this.showValidation = false
+      this.showAlchemy = false
     },
   }
 }
@@ -167,6 +184,11 @@ export default {
 .gold {
   top: 555px;
   left: 280px;
+}
+
+.airpod-pro {
+  top: 569px;
+  left: 340px;
 }
 
 .buddha {
