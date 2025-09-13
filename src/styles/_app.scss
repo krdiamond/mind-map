@@ -13,41 +13,24 @@
 }
 
 .boulder{
-  top: 65px;
-      @include up(sm) {  
-        top: 250px;
-    }
+  top: 250px;
 }
 
 .tv {
-  left: 0px;
-     @include up(sm) {  
-        left: 60px;
-    }
+  left: 60px;
 }
 
 .static {
-    top: 6px;
-    left: -42px;
-    transform: perspective(1000px) rotateY(62deg) rotateZ(0.2deg);
-    width: 192px;
-    height: 61px;
-
-    @include up(sm) {  
-        top: 25px;
+    top: 25px;
         left: 0;
         transform: perspective(2500px) rotateY(50deg) rotateZ(.5deg);
         width: 556px;
         height: 242px;
-  }
 }
 
 .cabinet-container {
     right: 0;
-    top: 5px;
-    @include up(sm) {  
-        top: 100px;
-    }
+    top: 100px;
 }
 
 .gold {

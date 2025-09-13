@@ -1,12 +1,12 @@
 <template>
-  <div class="h-200 sm-h-900 relative p-20">
-      <div class="tv-container relative w-100 sm-w-500">
-        <img :src="TV" class="tv w-100 sm-w-400 z-1 absolute" alt="TV" />
+  <div class="h-900 relative p-20">
+      <div class="tv-container relative w-500">
+        <img :src="TV" class="tv w-400 z-1 absolute" alt="TV" />
         <img :src="Static" class="static z-2 absolute" alt="static" />
-        <img :src="Boulder" class="boulder w-100 sm-w-500 absolute" alt="Boulder" />
+        <img :src="Boulder" class="boulder w-500 absolute" alt="Boulder" />
       </div>
-      <div class="cabinet-container w-200 sm-w-800 h-200 sm-h-800 absolute">
-        <img :src="Cabinet" class=" w-200 sm-w-800 h-200 sm-h-800 absolute" alt="Glass Cabinet" />
+      <div class="cabinet-container hide sm-show w-800 h-800 absolute">
+        <img :src="Cabinet" class=" w-800 h-800 absolute" alt="Glass Cabinet" />
           
         <!--<div
             class="remote absolute pointer"

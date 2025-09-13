@@ -1,4 +1,5 @@
-/* ---------------- BREAKPOINT & MIXINS ---------------- */
+@use 'sass:map';
+
 $bp: (
   sm: 640px,
   md: 768px,
@@ -7,9 +8,11 @@ $bp: (
 );
 
 @mixin up($key) {
-  @media (min-width: map-get($bp, $key)) { @content; }
+  $w: map.get($bp, $key);
+  @media (min-width: #{$w}) { @content; }
 }
 
 @mixin down($key) {
-  @media (max-width: map-get($bp, $key)) { @content; }
+  $w: map.get($bp, $key);
+  @media (max-width: #{$w}) { @content; }
 }

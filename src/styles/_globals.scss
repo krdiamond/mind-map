@@ -3,9 +3,8 @@
 /* ---------------- GENERAL ---------------- */
 
 html {
-    width: 350px;
+    width: 600px;
     margin: auto;
-
     @include up(sm) {  width: 1500px; }
 }
 
@@ -99,3 +98,7 @@ p {
 .draggable:active {
   cursor: grabbing;
 }
+
+.hide {display: none}
+
+.sm-show {@include up(sm) {  display: block; }}
