@@ -3,8 +3,9 @@
 /* ---------------- GENERAL ---------------- */
 
 html {
-    width: 350px;
+    width: 600px;
     margin: auto;
+<<<<<<< HEAD
     height: 100%;
     padding-top: 100px;
 
@@ -13,6 +14,9 @@ html {
         height: unset;
         padding-top: unset;
     }
+=======
+    @include up(sm) {  width: 1500px; }
+>>>>>>> main
 }
 
 // html {border: 3px solid green;}
@@ -108,3 +112,7 @@ p {
 .draggable:active {
   cursor: grabbing;
 }
+
+.hide {display: none}
+
+.sm-show {@include up(sm) {  display: block; }}

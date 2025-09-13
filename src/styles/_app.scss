@@ -13,20 +13,22 @@
 }
 
 .boulder{
+<<<<<<< HEAD
   top: 95px;
       @include up(sm) {  
         top: 250px;
     }
+=======
+  top: 250px;
+>>>>>>> main
 }
 
 .tv {
-  left: 0px;
-     @include up(sm) {  
-        left: 60px;
-    }
+  left: 60px;
 }
 
 .static {
+<<<<<<< HEAD
 top: 9px;
     left: -23px;
     transform: perspective(1000px) rotateY(50deg) rotateZ(0.5deg);
@@ -35,20 +37,27 @@ top: 9px;
 
     @include up(sm) {  
         top: 25px;
+=======
+    top: 25px;
+>>>>>>> main
         left: 0;
         transform: perspective(2500px) rotateY(50deg) rotateZ(.5deg);
         width: 556px;
         height: 242px;
-  }
 }
 
 .cabinet-container {
+<<<<<<< HEAD
     right: 10px;
     top: 10px;
     @include up(sm) {  
         top: 100px;
         right: 100px;
     }
+=======
+    right: 0;
+    top: 100px;
+>>>>>>> main
 }
 
 .gold {
