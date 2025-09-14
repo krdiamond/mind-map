@@ -1,4 +1,5 @@
 <template>
+   <Validation v-if="showValidation" @close="toggleValidation" class="sm-hide" />
   <div class="h-250 sm-h-900 relative p-20">
       <div class="tv-container relative">
         <img :src="TV" class="tv z-1 absolute" alt="TV" />
@@ -8,7 +9,7 @@
       <div class="cabinet-container w-110 sm-w-400 h-250 sm-h-800 absolute">
         <img :src="Cabinet" class="h-250 sm-h-800 absolute" alt="Glass Cabinet" />
           
-        <!--<div
+        <!-- <div
             class="remote absolute pointer"
             ref="remoteEl"
             :style="{ left: remotePos.x + 'px', top: remotePos.y + 'px', transform: 'rotate(20deg)' }"
@@ -16,19 +17,19 @@
             @click.stop
           >
             <img :src="Remote" class="w-100" alt="Remote" />
-          </div>
+          </div> -->
 
          <div @click="toggleValidation" class="buddha absolute pointer" alt="Buddha">
-          <img :src="Buddha" class="w-60" alt="Buddha" />
-          <Validation v-if="showValidation" @close="toggleValidation" />
+          <img :src="Buddha" alt="Buddha" />
+          <Validation v-if="showValidation" @close="toggleValidation" class="hide sm-show" />
         </div>
 
-        <div @click="toggleAlchemy" class="gold absolute pointer" alt="Gold">
+        <!-- <div @click="toggleAlchemy" class="gold absolute pointer" alt="Gold">
           <img :src="Gold" class="w-60" alt="Gold" />
           <Alchemy v-if="showAlchemy" @close="toggleAlchemy" />
-        </div> 
+        </div>  -->
 
-         <div @click="toggleMusicPlayer" class="airpod-pro absolute pointer" alt="AirpodPro">
+         <!-- <div @click="toggleMusicPlayer" class="airpod-pro absolute pointer" alt="AirpodPro">
           <img :src="AirpodPro" class="w-60" alt="AirpodPro" />
           <MusicPlayer v-if="showMusicPlayer" @close="toggleMusicPlayer" />
         </div>  -->
@@ -42,8 +43,6 @@
 <script>
 
 import './styles/_app.scss'
-
-import { useDraggable } from './composables/useDraggable'
 
 import EgoTrap from './components/EgoTrap.vue'
 import Validation from './components/Validation.vue'
@@ -61,47 +60,13 @@ import Remote from './assets/remote.png'
 import AirpodPro from './assets/airpod-pro.png'
 
 
-
-
 export default {
   name: 'HelloWorld',
   components: { EgoTrap, Validation, Alchemy, MusicPlayer },
-  setup() {
-    // one instance per draggable element
-    const remoteDrag = useDraggable({
-      initial: { x: 395, y: 415 },
-      constrainToParent: true
-    })
-    // const buddhaDrag = useDraggable({
-    //   initial: { x: 400, y: 534 },
-    //   constrainToParent: true
-    // })
-    // const goldDrag = useDraggable({
-    //   initial: { x: 280, y: 555 },
-    //   constrainToParent: true
-    // })
-
-    // expose them to the template
-    return {
-      // remote
-      remotePos: remoteDrag.pos,
-      remoteEl:  remoteDrag.dragEl,
-      onRemoteDown: remoteDrag.onPointerDown,
-
-      // // buddha
-      // buddhaPos: buddhaDrag.pos,
-      // buddhaEl:  buddhaDrag.dragEl,
-      // onBuddhaDown: buddhaDrag.onPointerDown,
-
-      // // gold
-      // goldPos: goldDrag.pos,
-      // goldEl:  goldDrag.dragEl,
-      // onGoldDown: goldDrag.onPointerDown,
-    }
-  },
   data() {
     return {
-      Cabinet, TV, Boulder, Static, Buddha, Gold, Remote, AirpodPro,
+      Cabinet, TV, Boulder, Static, 
+      Buddha, Gold, Remote, AirpodPro,
       showEgoTrap: false,
       showValidation: false,
       showAlchemy: false,

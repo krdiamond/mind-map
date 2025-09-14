@@ -1,11 +1,17 @@
 <template>
-  <div
-    class="draggable bg-white w-400 border radius-20 p-20"
-    :style="{ top: pos.y + 'px', left: pos.x + 'px' }"
-    @pointerdown.stop.prevent="onPointerDown"
-    @click.stop
-    ref="dragEl"
-  >
+<div
+  ref="dragEl"
+  class="draggable bg-white border radius-20 p-20 scroll"
+  :style="{
+    top: pos.y + 'px',
+    left: pos.x + 'px',
+    // helps avoid gesture conflicts while dragging on desktop
+    touchAction: isDesktop ? 'none' : 'auto',
+    cursor: isDesktop ? 'grab' : 'default'
+  }"
+  v-on="isDesktop ? { pointerdown: onPointerDown } : {}"
+>
+
     <!-- Close button: prevent drag start on pointerdown, then emit close on click -->
     <div
       class="absolute top-0 right-0 p-20 pointer"
@@ -31,20 +37,41 @@
   </div>
 </template>
 
-const pos = ref({ x: -520, y: -120 })
-
 <script setup>
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useDraggable } from '../composables/useDraggable'
 
 const emit = defineEmits(['close'])
 const emitClose = () => emit('close')
 
-// one-liner reuse
-const { pos, dragEl, onPointerDown } = useDraggable({
-  initial: { x: -520, y: -120 }
+// Breakpoint: treat >=400px as “desktop”
+const mq = window.matchMedia('(max-width: 400px)')
+const isDesktop = ref(mq.matches)
+
+// Initial position based on current size
+const DESKTOP_START = { x: -520, y: -120 }
+const MOBILE_START  = { x:  0,  y:  0 }
+
+const initial = isDesktop.value ? DESKTOP_START : MOBILE_START
+
+// Draggable once; we’ll enable/disable by conditionally binding the handler
+const { pos, dragEl, onPointerDown } = useDraggable({ initial })
+
+// When the viewport crosses the breakpoint, update state (+ optionally snap position)
+const onMQChange = (e) => {
+  isDesktop.value = e.matches
+  // Optional: update starting position when switching modes
+  const start = isDesktop.value ? DESKTOP_START : MOBILE_START
+  pos.x = start.x
+  pos.y = start.y
+}
+
+onMounted(() => {
+  mq.addEventListener('change', onMQChange)
+})
+
+onBeforeUnmount(() => {
+  mq.removeEventListener('change', onMQChange)
 })
 </script>
 
-<style scoped>
-
-</style>

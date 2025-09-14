@@ -17,8 +17,8 @@ html {
     }
 }
 
-// html {border: 3px solid green;}
-// body {border: 3px solid purple;}
+html {border: 3px solid green;}
+body {border: 3px solid purple;}
 
 /* ----------------- TEXT ----------------- */
 
@@ -109,4 +109,14 @@ p {
 }
 .draggable:active {
   cursor: grabbing;
+}
+
+.hide {display: none;}
+.sm-show {@include up(sm) {  display: block }}
+.sm-hide {@include up(sm) {  display: none }}
+
+
+.scroll {
+    height: 100%;
+    overflow: scroll;
 }

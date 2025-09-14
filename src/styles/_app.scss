@@ -34,9 +34,9 @@
 
 .static {
     top: 6px;
-    left: -2px;
-    transform: perspective(800px) rotateY(50deg) rotateZ(0.7deg);
-    width: 140px;
+    left: 0;
+    transform: perspective(800px) rotateY(49deg) rotateZ(0.7deg);
+    width: 137px;
     height: 61px;
     @include up(sm) {  
         top: 22px;
@@ -67,8 +67,16 @@
 }
 
 .buddha {
-  top: 534px;
-  left: 400px;
+    top: 154px;
+    left: 56px;
+    @include up(sm) {  
+        top: 536px;
+        left: 200px;
+    }
+    img {
+        width: 30px;
+        @include up(sm) {  width: 60px;}
+    }
 }
 .ego {
   top: 268px;
