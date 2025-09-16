@@ -1,80 +1,54 @@
-import { isRef } from 'vue'
-
+// src/directives/draggable.js
 export default {
   mounted(el, binding) {
-    // Accept either a Ref({x,y}) or an options object
-    // v-draggable="posRef"  OR  v-draggable="{ pos: posRef, initial: {x,y}, constrainToParent: true, rotate: '20deg' }"
-    const opts = isRef(binding.value)
-      ? { pos: binding.value }
-      : (binding.value || {})
+    // Accept { initial: { desktop:{x,y}, mobile:{x,y} }, enabled: boolean }
+    const opts = binding.value || {}
+    const initial = opts.initial || {}
+    const isDesktop = window.matchMedia('(min-width: 400px)').matches
+    const start = isDesktop
+      ? (initial.desktop || initial || { x: 0, y: 0 })
+      : (initial.mobile  || initial || { x: 0, y: 0 })
 
-    // Setup initial position state
-    let posRef = opts.pos && isRef(opts.pos) ? opts.pos : null
-    let pos = posRef
-      ? { ...(posRef.value || { x: 0, y: 0 }) }
-      : (opts.initial || { x: 0, y: 0 })
-
-    // Ensure absolute positioning
-    if (getComputedStyle(el).position === 'static') {
-      el.style.position = 'absolute'
-    }
-    // Ensure parent can anchor abspos children
-    const parent = el.offsetParent || el.parentElement
-    if (parent && getComputedStyle(parent).position === 'static') {
-      parent.style.position = 'relative'
+    // seed initial position from options if element has no inline pos yet
+    if (!el.style.left && !el.style.top) {
+      el.style.left = (start.x ?? 0) + 'px'
+      el.style.top  = (start.y ?? 0) + 'px'
     }
 
-    // Apply initial styles
-    el.style.left = pos.x + 'px'
-    el.style.top  = pos.y + 'px'
-    if (opts.rotate) {
-      el.style.transform = `rotate(${opts.rotate})`
-    }
-    el.style.touchAction = 'none'   // avoid browser panning on touch
+    el.style.position = el.style.position || 'absolute'
+    el.style.cursor = 'grab'
 
-    const onDown = (e) => {
-      if (e.button !== undefined && e.button !== 0) return
-      el.setPointerCapture?.(e.pointerId)
-      const startX = e.clientX
-      const startY = e.clientY
-      const start = { x: pos.x, y: pos.y }
+    let startX, startY, initialX, initialY
 
-      const onMove = (ev) => {
-        let x = start.x + (ev.clientX - startX)
-        let y = start.y + (ev.clientY - startY)
-
-        if (opts.constrainToParent && el.offsetParent instanceof HTMLElement) {
-          const p = el.offsetParent
-          const pw = p.clientWidth
-          const ph = p.clientHeight
-          const ew = el.offsetWidth
-          const eh = el.offsetHeight
-          x = Math.max(0, Math.min(x, pw - ew))
-          y = Math.max(0, Math.min(y, ph - eh))
-        }
-
-        pos = { x, y }
-        el.style.left = x + 'px'
-        el.style.top  = y + 'px'
-        if (posRef) posRef.value = { x, y }
-      }
-
-      const onUp = (ev) => {
-        try { el.releasePointerCapture?.(ev.pointerId) } catch {}
-        el.removeEventListener('pointermove', onMove)
-        el.removeEventListener('pointerup', onUp)
-        el.removeEventListener('pointercancel', onUp)
-      }
-
-      el.addEventListener('pointermove', onMove)
-      el.addEventListener('pointerup', onUp)
-      el.addEventListener('pointercancel', onUp)
+    const onMouseDown = (e) => {
+      if (opts.enabled === false) return
+      e.preventDefault()
+      e.stopPropagation()
+      el.style.cursor = 'grabbing'
+      startX = e.clientX
+      startY = e.clientY
+      initialX = parseInt(el.style.left || 0, 10)
+      initialY = parseInt(el.style.top || 0, 10)
+      document.addEventListener('mousemove', onMouseMove)
+      document.addEventListener('mouseup', onMouseUp)
     }
 
-    el.addEventListener('pointerdown', onDown)
-    el._draggableCleanup = () => el.removeEventListener('pointerdown', onDown)
-  },
-  unmounted(el) {
-    el._draggableCleanup?.()
+    const onMouseMove = (e) => {
+      const dx = e.clientX - startX
+      const dy = e.clientY - startY
+      el.style.left = initialX + dx + 'px'
+      el.style.top  = initialY + dy + 'px'
+    }
+
+    const onMouseUp = () => {
+      el.style.cursor = 'grab'
+      document.removeEventListener('mousemove', onMouseMove)
+      document.removeEventListener('mouseup', onMouseUp)
+    }
+
+    const stopClick = (e) => e.stopPropagation()
+
+    el.addEventListener('mousedown', onMouseDown, { passive: false })
+    el.addEventListener('click', stopClick)
   }
 }

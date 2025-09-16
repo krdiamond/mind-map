@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import { useDraggable } from '../composables/useDraggable'
+
 import BirdAnimation from '../assets/bird-animation.svg'
 
 const emit = defineEmits(['close'])
