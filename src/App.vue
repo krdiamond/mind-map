@@ -1,14 +1,17 @@
 <template>
-  <div class="h-250 sm-h-900 relative p-20">
+  <div class="h-250 sm-h-900 sm-p-20  relative flex justify-between align-bottom ">
+     <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable class="popup-box"  />
+
+
       <div class="tv-container relative">
         <img :src="TV" class="tv z-1 absolute" alt="TV" />
         <img :src="Static" class="static z-2 absolute" alt="static" />
         <img :src="Boulder" class="boulder absolute" alt="Boulder" />
       </div>
 
-      <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable class="popup-box"  />
+     
 
-      <div class="cabinet-container w-110 sm-w-400 h-250 sm-h-800 absolute">
+      <div class="cabinet-container h-250 sm-h-800 relative">
         <img :src="Cabinet" class="h-250 sm-h-800 absolute" alt="Glass Cabinet" />
           
         <!-- <div
@@ -24,9 +27,11 @@
           
 
 
-         <div @click="toggleValidation" class="buddha absolute pointer" alt="Buddha">
+         <div @click="toggleValidation" class="buddha absolute pointer" 
+          v-draggable="{ bounds: { left: 20, top: 528, right: 290, bottom: 620 } }"
+  alt="Buddha">
             <img :src="Buddha" alt="Buddha" />
-          </div>
+         </div>
 
 
         <!-- <div @click="toggleAlchemy" class="gold absolute pointer" alt="Gold">
@@ -82,16 +87,21 @@ export default {
 
   },
   methods: {
+    checkToggle(e) {
+      return !!e?.currentTarget?.dataset?.dragged
+    },
+    toggleValidation(e) {
+      if (this.checkToggle(e) === false ) {
+        this.showValidation = !this.showValidation
+        this.showEgoTrap = false
+        this.showAlchemy = false
+        this.showMusicPlayer = false
+      }
+    },
     toggleEgoTrap() {
       this.showEgoTrap = !this.showEgoTrap
       this.showAlchemy = false
       this.showValidation = false
-      this.showMusicPlayer = false
-    },
-    toggleValidation() {
-      this.showValidation = !this.showValidation
-      this.showEgoTrap = false
-      this.showAlchemy = false
       this.showMusicPlayer = false
     },
      toggleAlchemy() {
