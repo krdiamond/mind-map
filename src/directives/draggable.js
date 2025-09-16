@@ -5,11 +5,42 @@ export default {
     if (!el.style.position) el.style.position = 'absolute';
     el.style.cursor = 'grab';
 
-    let startX, startY, baseLeft, baseTop;
-    let moved = false;
+    // --- Reset-to-origin wiring -------------------------------------------
+    // Defaults: reset on breakpoint change; optional: also on any resize.
+    const breakQuery = opts.breakQuery || '(min-width: 600px)';
+    const resetOnBreakpoint = opts.resetOnBreakpoint !== false; // default true
+    const resetOnResize = !!opts.resetOnResize;                  // default false
 
-    // --- Helpers ------------------------------------------------------------
-    function getRelPos() {
+    function resetToCssOrigin() {
+      // Clear any inline positioning so CSS (your media queries) takes over
+      el.style.left = '';
+      el.style.top = '';
+      el.style.right = '';
+      el.style.bottom = '';
+      delete el.dataset.dragLocked;
+    }
+
+    // Watch a breakpoint flip
+    if (typeof window !== 'undefined' && resetOnBreakpoint) {
+      const mql = window.matchMedia(breakQuery);
+      const onChange = () => resetToCssOrigin();
+      mql.addEventListener ? mql.addEventListener('change', onChange)
+                           : mql.addListener(onChange);
+      el.__drag_mql__ = { mql, onChange };
+    }
+
+    // (Optional) also reset on any window resize
+    if (typeof window !== 'undefined' && resetOnResize) {
+      let tid;
+      const onResize = () => { clearTimeout(tid); tid = setTimeout(resetToCssOrigin, 60); };
+      window.addEventListener('resize', onResize);
+      el.__drag_resize__ = onResize;
+    }
+
+    // --- Drag + snapInto (what you already have) --------------------------
+    let startX, startY, baseLeft, baseTop, moved = false;
+
+    const getRelPos = () => {
       const parent = el.offsetParent || el.parentElement || document.body;
       const er = el.getBoundingClientRect();
       const pr = parent.getBoundingClientRect();
@@ -17,97 +48,68 @@ export default {
       const ml = parseFloat(cs.marginLeft) || 0;
       const mt = parseFloat(cs.marginTop)  || 0;
       return { x: er.left - pr.left - ml, y: er.top - pr.top - mt };
-    }
+    };
 
-    function clamp(v, min, max) {
-      return Math.max(min, Math.min(max, v));
-    }
+    const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 
-    // Compute the bounding box (in offsetParent coordinates)
-    // Supports:
-    //  - bounds: 'parent'
-    //  - bounds: { left, top, right, bottom }  (absolute edges)
-    //  - boundsEl: CSS selector or Element (we'll use its rect)
-    //  - inset: { x, y } optional inner padding
-    function getBounds() {
+    // Support one or many snap boxes (selectors, elements, or rects)
+    function specToBox(spec) {
       const parent = el.offsetParent || el.parentElement || document.body;
       const pr = parent.getBoundingClientRect();
-
-      // Option 1: another element defines the box
-      if (opts.boundsEl) {
-        const node =
-          typeof opts.boundsEl === 'string'
-            ? document.querySelector(opts.boundsEl)
-            : opts.boundsEl;
-        if (node) {
-          const br = node.getBoundingClientRect();
-          return {
-            left: br.left - pr.left + (opts.inset?.x || 0),
-            top:  br.top  - pr.top  + (opts.inset?.y || 0),
-            right: br.right - pr.left - (opts.inset?.x || 0),
-            bottom: br.bottom - pr.top - (opts.inset?.y || 0),
-          };
-        }
+      if (typeof spec === 'string' || (spec && spec.nodeType === 1)) {
+        const node = typeof spec === 'string' ? document.querySelector(spec) : spec;
+        if (!node) return null;
+        const r = node.getBoundingClientRect();
+        return { left: r.left - pr.left, top: r.top - pr.top, right: r.right - pr.left, bottom: r.bottom - pr.top };
       }
-
-      // Option 2: explicit edges
-      if (opts.bounds && typeof opts.bounds === 'object') {
-        const b = opts.bounds;
-        return {
-          left:   b.left   ?? 0,
-          top:    b.top    ?? 0,
-          right:  b.right  ?? pr.width,
-          bottom: b.bottom ?? pr.height,
-        };
+      if (spec && typeof spec === 'object') {
+        let { left = 0, top = 0, right, bottom, width, height } = spec;
+        if (right == null && width  != null) right  = left + width;
+        if (bottom== null && height != null) bottom = top + height;
+        return { left, top, right, bottom };
       }
-
-      // Option 3: whole parent
-      return { left: 0, top: 0, right: pr.width, bottom: pr.height };
+      return null;
     }
 
-    // Clamp the element's top-left so the whole box stays inside bounds
-    function applyBounds(x, y) {
-      const b = getBounds();
-      const ew = el.offsetWidth;
-      const eh = el.offsetHeight;
-      const minX = b.left;
-      const minY = b.top;
-      const maxX = b.right  - ew;
-      const maxY = b.bottom - eh;
-      return { x: clamp(x, minX, Math.max(minX, maxX)),
-               y: clamp(y, minY, Math.max(minY, maxY)) };
+    function getSnapBoxes() {
+      const spec = opts.snapInto;
+      if (!spec) return [];
+      const arr = Array.isArray(spec) ? spec : [spec];
+      return arr.map(specToBox).filter(Boolean);
     }
 
-    // --- Events -------------------------------------------------------------
+    function pickNearestSnapTarget(pos) {
+      const boxes = getSnapBoxes();
+      if (!boxes.length) return null;
+      const ew = el.offsetWidth, eh = el.offsetHeight;
+      let best = null, bestD2 = Infinity;
+      for (const b of boxes) {
+        const minX = b.left, minY = b.top;
+        const maxX = b.right  - ew, maxY = b.bottom - eh;
+        const tx = clamp(pos.x, minX, Math.max(minX, maxX));
+        const ty = clamp(pos.y, minY, Math.max(minY, maxY));
+        const dx = pos.x - tx, dy = pos.y - ty, d2 = dx*dx + dy*dy;
+        if (d2 < bestD2) { bestD2 = d2; best = { x: tx, y: ty }; }
+      }
+      return best;
+    }
+
     const onMouseDown = (e) => {
       if (opts.enabled === false) return;
-      e.preventDefault();
-      e.stopPropagation();
+      e.preventDefault(); e.stopPropagation();
       el.style.cursor = 'grabbing';
-
-      // read visual position (robust across breakpoints)
-      const pos = getRelPos();
-      baseLeft = pos.x;
-      baseTop  = pos.y;
-      startX = e.clientX;
-      startY = e.clientY;
+      const p = getRelPos();
+      startX = e.clientX; startY = e.clientY;
+      baseLeft = p.x; baseTop = p.y;
       moved = false;
-
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
     };
 
     const onMouseMove = (e) => {
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-      let x = baseLeft + dx;
-      let y = baseTop  + dy;
-
-      // clamp during drag
-      ({ x, y } = applyBounds(x, y));
-
-      el.style.left = x + 'px';
-      el.style.top  = y + 'px';
+      const dx = e.clientX - startX, dy = e.clientY - startY;
+      el.style.left = baseLeft + dx + 'px';
+      el.style.top  = baseTop  + dy + 'px';
       if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
     };
 
@@ -116,13 +118,38 @@ export default {
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
 
+      const target = pickNearestSnapTarget(getRelPos());
+      if (target) {
+        const ms = opts.snapDurationMs ?? 120;
+        if (ms) {
+          el.style.transition = `left ${ms}ms linear, top ${ms}ms linear`;
+          requestAnimationFrame(() => { el.style.left = target.x + 'px'; el.style.top = target.y + 'px'; });
+          setTimeout(() => { el.style.transition = ''; }, ms);
+        } else {
+          el.style.left = target.x + 'px'; el.style.top = target.y + 'px';
+        }
+      }
+
       if (moved) {
-        // tiny flag to ignore the post-drag click if you use that pattern
         el.dataset.dragged = 'true';
         setTimeout(() => { delete el.dataset.dragged; }, 0);
       }
     };
 
     el.addEventListener('mousedown', onMouseDown, { passive: false });
+  },
+
+  unmounted(el) {
+    const m = el.__drag_mql__;
+    if (m) {
+      const { mql, onChange } = m;
+      mql.removeEventListener ? mql.removeEventListener('change', onChange)
+                              : mql.removeListener(onChange);
+      delete el.__drag_mql__;
+    }
+    if (el.__drag_resize__) {
+      window.removeEventListener('resize', el.__drag_resize__);
+      delete el.__drag_resize__;
+    }
   }
 };

@@ -28,8 +28,18 @@
 
 
          <div @click="toggleValidation" class="buddha absolute pointer" 
-          v-draggable="{ bounds: { left: 20, top: 528, right: 290, bottom: 620 } }"
-  alt="Buddha">
+                v-draggable="{
+                snapInto: [
+                    { left: 20, top: 690, right: 290, bottom: 720 }, // row 1
+                    { left: 20, top: 528, right: 290, bottom: 620 }, // row 2
+                    { left: 20, top: 387, right: 290, bottom: 420 }, // row 3
+                    { left: 20, top: 240, right: 290, bottom: 320 }, // row 4
+                    { left: 20, top: 96, right: 290, bottom: 120 }, // row 5
+                  ],
+                snapDurationMs: 150,    
+                resetOnResize: true   
+              }"
+              alt="Buddha">
             <img :src="Buddha" alt="Buddha" />
          </div>
 
