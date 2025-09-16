@@ -1,11 +1,13 @@
 <template>
-   <Validation v-if="showValidation" @close="toggleValidation" class="sm-hide" />
   <div class="h-250 sm-h-900 relative p-20">
       <div class="tv-container relative">
         <img :src="TV" class="tv z-1 absolute" alt="TV" />
         <img :src="Static" class="static z-2 absolute" alt="static" />
         <img :src="Boulder" class="boulder absolute" alt="Boulder" />
       </div>
+
+      <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable class="popup-box"  />
+
       <div class="cabinet-container w-110 sm-w-400 h-250 sm-h-800 absolute">
         <img :src="Cabinet" class="h-250 sm-h-800 absolute" alt="Glass Cabinet" />
           
@@ -19,10 +21,13 @@
             <img :src="Remote" class="w-100" alt="Remote" />
           </div> -->
 
+          
+
+
          <div @click="toggleValidation" class="buddha absolute pointer" alt="Buddha">
-          <img :src="Buddha" alt="Buddha" />
-          <Validation v-if="showValidation" @close="toggleValidation" class="hide sm-show" />
-        </div>
+            <img :src="Buddha" alt="Buddha" />
+          </div>
+
 
         <!-- <div @click="toggleAlchemy" class="gold absolute pointer" alt="Gold">
           <img :src="Gold" class="w-60" alt="Gold" />

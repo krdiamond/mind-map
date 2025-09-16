@@ -3,4 +3,10 @@ import App from './App.vue'
 
 import './styles/_globals.scss'
 
-createApp(App).mount('#app')
+import draggable from './directives/draggable.js'
+
+const app = createApp(App)
+
+app.directive('draggable', draggable)
+
+app.mount('#app')

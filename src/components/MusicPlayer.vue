@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { useDraggable } from '../composables/useDraggable'
+
 
 const emit = defineEmits(['close'])
 const emitClose = () => emit('close')
