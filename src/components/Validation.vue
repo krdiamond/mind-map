@@ -1,5 +1,5 @@
 <template>
-  <div class="w-400">
+  <div>
       <div class="close" @click="$emit('close')">X</div>
       <div>
         <h2>Buddha’s Parable of the Poisoned Arrow</h2>
@@ -10,7 +10,7 @@
           <b>The man would die and those things would still remain unknown to him.</b>
         </p>
       </div>
-  </div>
+    </div>
 </template>
 
 

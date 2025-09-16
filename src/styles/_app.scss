@@ -2,14 +2,10 @@
 
 .tv-container {
     height: 147px;
-    top: 85px;
-    left: -20px;
     width: 130px;
 
     @include up(sm) { 
         height: 480px; 
-        top: 400px;
-        left: 100px;
         width: 430px;
     }
 }
@@ -47,15 +43,11 @@
   }
 }
 
-.cabinet-container {
-    right: 10px;
-    top: 10px;
-    @include up(sm) {  
-        top: 100px;
-        right: 100px;
-    }
-}
 
+.cabinet-container {
+   width: 106px;
+  @include up(sm) {  width: 340px;}
+}
 .gold {
   top: 555px;
   left: 280px;
@@ -78,10 +70,37 @@
         @include up(sm) {  width: 60px;}
     }
 }
+
 .ego {
   top: 268px;
   left: 300px;
 }
 .remote {
   transform: rotate(20deg);
+}
+
+
+/* ---------------- POPUP BOX ---------------- */
+.popup-box {
+    background-color: white;
+    border: 3px solid black;
+    border-radius: 20px;
+    padding: 20px;
+    z-index: 3;
+    left: 0; top: 0;
+    height: 100%;
+    overflow: scroll;
+    width: auto;
+    @include up(sm) {  
+        left: 700px; top: 400px;
+        width: 400px; 
+        height: 400px;
+    }
+    
+    .close {
+        position: sticky;
+        top: 0;
+        float: right;
+        cursor: pointer;
+    }
 }

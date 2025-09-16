@@ -1,6 +1,7 @@
 @use './mixins' as *;
 
 /* ---------------- GENERAL ---------------- */
+*, *::before, *::after { box-sizing: border-box; }
 
 html {
     width: 350px;
@@ -23,15 +24,17 @@ body {border: 3px solid purple;}
 /* ----------------- TEXT ----------------- */
 
 h2 {
-    font-size: 18px;
+    font-size: 28px;
     margin: 0 0 12px 0;
+    @include up(sm) {  font-size: 18px; }
 }
 
 a {text-decoration: none;}
 
 p {
-    font-size: 12px;
+    font-size: 18px;
     margin: 0;
+     @include up(sm) {  font-size: 12px; }
 }
 
 .text-18 {font-size: 18px;}
@@ -68,6 +71,9 @@ p {
 
 .pt-12 {padding-top: 12px;}
 
+.sm-p-20 {@include up(sm) {  padding: 20px; }}
+
+
 /* ---------------- POSITION ---------------- */
 
 .relative {position: relative;}
@@ -86,39 +92,18 @@ p {
 .sm-show {@include up(sm) {  display: block }}
 .sm-hide {@include up(sm) {  display: none }}
 
-
-// .centered {
-//     top: 0;
-//     bottom: 0;
-//     left: 0;
-//     right: 0;
-//     margin: auto;
-// }
-
-// .center {text-align: center; }
-
 .pointer {cursor: pointer;}
 
-.scroll {
-    height: 100%;
-    overflow: scroll;
+
+
+.flex {
+    display: flex;
 }
 
+.justify-between {
+    justify-content: space-between;
+}
 
-/* ---------------- POPUP BOX ---------------- */
-.popup-box {
-    background-color: white;
-    border: 3px solid black;
-    border-radius: 20px;
-    padding: 20px;
-    z-index: 3;
-    left: 0; top: 0;
-     @include up(sm) {  left: 50px; top: 50px;}
-    
-    .close {
-        position: absolute;
-        top: 0; right: 0;
-        padding: 20px;
-        cursor: pointer; 
-    }
+.align-bottom {
+    align-items: end;
 }
