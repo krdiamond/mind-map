@@ -1,5 +1,10 @@
 @use './mixins' as *;
 
+/* ---------------- TESTING ---------------- */
+
+// html {border: 3px solid green;}
+// body {border: 3px solid purple;}
+
 /* ---------------- GENERAL ---------------- */
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -18,13 +23,12 @@ html {
     }
 }
 
-html {border: 3px solid green;}
-body {border: 3px solid purple;}
+.pointer {cursor: pointer;}
 
 /* ----------------- TEXT ----------------- */
 
 h2 {
-    font-size: 28px;
+    font-size: 24px;
     margin: 0 0 12px 0;
     @include up(sm) {  font-size: 18px; }
 }
@@ -34,7 +38,7 @@ a {text-decoration: none;}
 p {
     font-size: 18px;
     margin: 0;
-     @include up(sm) {  font-size: 12px; }
+     @include up(sm) {  font-size: 14px; }
 }
 
 .text-18 {font-size: 18px;}
@@ -65,9 +69,12 @@ p {
 .sm-h-800 {@include up(sm) {  height: 800px; }}
 .sm-h-900 {@include up(sm) {  height: 900px; }}
 
-/* ---------------- PADDING ---------------- */
+/* ---------------- PADDING / MARGIN---------------- */
+
+.m-12 {margin: 12px;}
 
 .p-20 {padding: 20px;}
+
 
 .pt-12 {padding-top: 12px;}
 
@@ -88,13 +95,12 @@ p {
 .z-2 { z-index: 2}
 
 /* ---------------- SHOW/HIDE ---------------- */
+
 .hide {display: none;}
 .sm-show {@include up(sm) {  display: block }}
 .sm-hide {@include up(sm) {  display: none }}
 
-.pointer {cursor: pointer;}
-
-
+/* ---------------- FLEX ---------------- */
 
 .flex {
     display: flex;
