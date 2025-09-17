@@ -14,27 +14,30 @@
       <div class="cabinet-container h-250 sm-h-800 relative">
         <img :src="Cabinet" class="h-250 sm-h-800 absolute" alt="Glass Cabinet" />
           
-        <!-- <div
-            class="remote absolute pointer"
-            ref="remoteEl"
-            :style="{ left: remotePos.x + 'px', top: remotePos.y + 'px', transform: 'rotate(20deg)' }"
-            @pointerdown.stop.prevent="onRemoteDown"
-            @click.stop
-          >
-            <img :src="Remote" class="w-100" alt="Remote" />
-          </div> -->
+        <div id="Remote" class="remote absolute pointer" 
+              v-draggable="{
+              snapInto: [
+                  { left: 20, top: 700, right: 290, bottom: 720 }, // row 1
+                  { left: 20, top: 538, right: 290, bottom: 620 }, // row 2
+                  { left: 20, top: 410, right: 290, bottom: 420 }, // row 3
+                  { left: 20, top: 260, right: 290, bottom: 320 }, // row 4
+                  { left: 20, top: 114, right: 290, bottom: 120 }, // row 5
+                ],
+              snapDurationMs: 150,    
+              resetOnResize: true   
+            }"
+            alt="Remote">
+          <img :src="Remote" alt="Remote" class="remote" />
+         </div>
 
-          
-
-
-         <div @click="toggleValidation" class="buddha absolute pointer" 
+         <div id="Buddha" @click="toggleValidation" class="buddha absolute pointer" 
                 v-draggable="{
                 snapInto: [
-                    { left: 20, top: 690, right: 290, bottom: 720 }, // row 1
-                    { left: 20, top: 528, right: 290, bottom: 620 }, // row 2
-                    { left: 20, top: 387, right: 290, bottom: 420 }, // row 3
-                    { left: 20, top: 240, right: 290, bottom: 320 }, // row 4
-                    { left: 20, top: 96, right: 290, bottom: 120 }, // row 5
+                    { left: 40, top: 685, right: 278, bottom: 750}, // row 1
+                    { left: 40, top: 528, right: 278, bottom: 610 }, // row 2
+                    { left: 40, top: 387, right: 278, bottom: 420 }, // row 3
+                    { left: 40, top: 237, right: 278, bottom: 320 }, // row 4
+                    { left: 40, top: 93, right: 278, bottom: 120 }, // row 5
                   ],
                 snapDurationMs: 150,    
                 resetOnResize: true   
@@ -57,8 +60,6 @@
 
   </div>
 </template>
-
-        <!-- <div @click="toggleEgoTrap" class="ego text-40 absolute" alt="Ego Brain">🧠</div> -->
 
 <script>
 
