@@ -1,6 +1,9 @@
 <template>
   <div class="h-250 sm-h-900 sm-p-20  relative flex justify-between align-bottom ">
-     <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable class="popup-box"  />
+     <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable class="popup-box sm-w-300"/>
+     <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable class="popup-box sm-w-300"/>
+     <MusicPlayer v-if="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable class="popup-box"/>
+     
 
 
       <div class="tv-container relative">
@@ -9,8 +12,7 @@
         <img :src="Boulder" class="boulder absolute" alt="Boulder" />
       </div>
 
-     
-
+    
       <div class="cabinet-container h-250 sm-h-800 relative">
         <img :src="Cabinet" class="h-250 sm-h-800 absolute" alt="Glass Cabinet" />
           
@@ -47,15 +49,38 @@
          </div>
 
 
-        <!-- <div @click="toggleAlchemy" class="gold absolute pointer" alt="Gold">
-          <img :src="Gold" class="w-60" alt="Gold" />
-          <Alchemy v-if="showAlchemy" @close="toggleAlchemy" />
-        </div>  -->
+         <div id="AirpodPro" @click="toggleMusicPlayer" class="airpod-pro absolute pointer" 
+                v-draggable="{
+                snapInto: [
+                    { left: 40, top: 685, right: 278, bottom: 750}, // row 1
+                    { left: 40, top: 528, right: 278, bottom: 610 }, // row 2
+                    { left: 40, top: 387, right: 278, bottom: 420 }, // row 3
+                    { left: 40, top: 237, right: 278, bottom: 320 }, // row 4
+                    { left: 40, top: 93, right: 278, bottom: 120 }, // row 5
+                  ],
+                snapDurationMs: 150,    
+                resetOnResize: true   
+              }"
+              alt="Airpod Pro">
+            <img :src="AirpodPro" alt="Airpod Pro" />
+         </div>
 
-         <!-- <div @click="toggleMusicPlayer" class="airpod-pro absolute pointer" alt="AirpodPro">
-          <img :src="AirpodPro" class="w-60" alt="AirpodPro" />
-          <MusicPlayer v-if="showMusicPlayer" @close="toggleMusicPlayer" />
-        </div>  -->
+        <div id="Gold" @click="toggleAlchemy" class="gold absolute pointer" 
+                v-draggable="{
+                snapInto: [
+                    { left: 40, top: 685, right: 278, bottom: 750}, // row 1
+                    { left: 40, top: 528, right: 278, bottom: 610 }, // row 2
+                    { left: 40, top: 387, right: 278, bottom: 420 }, // row 3
+                    { left: 40, top: 237, right: 278, bottom: 320 }, // row 4
+                    { left: 40, top: 93, right: 278, bottom: 120 }, // row 5
+                  ],
+                snapDurationMs: 150,    
+                resetOnResize: true   
+              }"
+              alt="Gold">
+            <img :src="Gold" alt="Gold" />
+         </div>
+
       </div>
 
   </div>
@@ -83,7 +108,7 @@ import AirpodPro from './assets/airpod-pro.png'
 
 export default {
   name: 'HelloWorld',
-  components: { EgoTrap, Validation, Alchemy, MusicPlayer },
+  components: { EgoTrap, Validation, MusicPlayer, Alchemy },
   data() {
     return {
       Cabinet, TV, Boulder, Static, 
@@ -109,32 +134,29 @@ export default {
         this.showMusicPlayer = false
       }
     },
+     toggleAlchemy(e) {
+      if (this.checkToggle(e) === false ) {
+        this.showAlchemy = !this.showAlchemy
+        this.showEgoTrap = false
+        this.showValidation = false
+        this.showMusicPlayer = false
+      }
+      
+    },
+     toggleMusicPlayer(e) {
+      if (this.checkToggle(e) === false ) {
+        this.showMusicPlayer = !this.showMusicPlayer
+        this.showEgoTrap = false
+        this.showValidation = false
+        this.showAlchemy = false
+      }
+    },
     toggleEgoTrap() {
       this.showEgoTrap = !this.showEgoTrap
       this.showAlchemy = false
       this.showValidation = false
       this.showMusicPlayer = false
     },
-     toggleAlchemy() {
-      this.showAlchemy = !this.showAlchemy
-      this.showEgoTrap = false
-      this.showValidation = false
-      this.showMusicPlayer = false
-    },
-     toggleMusicPlayer() {
-      this.showMusicPlayer = !this.showMusicPlayer
-      this.showEgoTrap = false
-      this.showValidation = false
-      this.showAlchemy = false
-    },
   }
 }
 </script>
-
-<style scoped>
-
-
-
-
-
-</style>

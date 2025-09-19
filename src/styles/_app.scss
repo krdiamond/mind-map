@@ -48,14 +48,23 @@
   width: 106px;
   @include up(sm) {  width: 340px;}
 }
+
 .gold {
-  top: 555px;
-  left: 280px;
+    left: 56px; top: 154px; 
+    @include up(sm) { left: 206px;top: 720px;}
+    img {
+        width: 30px;
+        @include up(sm) {  width: 50px;}
+    }
 }
 
 .airpod-pro {
-  top: 569px;
-  left: 340px;
+    left: 56px; top: 154px; 
+    @include up(sm) { left: 40px;top: 560px;}
+    img {
+        width: 100px;
+        @include up(sm) {  width: 100px;}
+    }
 }
 
 .remote {
@@ -72,8 +81,8 @@
     top: 154px;
     left: 56px;
     @include up(sm) {  
-        top: 536px;
-        left: 200px;
+        left: 199px;
+        top: 531px;
     }
     img {
         width: 30px;
@@ -100,7 +109,6 @@
     scrollbar-width: thin;
     @include up(sm) {  
         left: 922px; top: 507px;
-        width: 300px;
         height: 300px;
     }
 

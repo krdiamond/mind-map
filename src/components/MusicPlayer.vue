@@ -1,42 +1,63 @@
 <template>
-  <div
-    class="draggable bg-white w-400 border radius-20 p-20"
-    :style="{ top: pos.y + 'px', left: pos.x + 'px' }"
-    @pointerdown.stop.prevent="onPointerDown"
-    @click.stop
-    ref="dragEl"
-  >
-    <!-- Close button: prevent drag start on pointerdown, then emit close on click -->
-    <div
-      class="absolute top-0 right-0 p-20 pointer"
-      role="button"
-      tabindex="0"
-      @pointerdown.stop
-      @click.stop="emitClose"
-      @keydown.enter.stop.prevent="emitClose"
-      @keydown.space.stop.prevent="emitClose"
-    >
-      X
-    </div>
+  <div>
+      <div class="close" @click="$emit('close')">X</div>
+        <h2 class="m-12">one unique album per/day</h2>
+        <div class="m-12">
+          <p class="mb-6">September 2025</p>
+          <table class="album-table">
+            <tbody>
+              <tr>
+                <td>9.19.2025</td>
+                <td>Codeine - Frigid Stars</td>
+                <td>🤯</td>
+              </tr>
+              <tr>
+                <td>9.18.2025</td>
+                <td>Jets to Brazil - Orange Rhyming Dictionary</td>
+                <td>😐</td>
+              </tr>
+              <tr>
+                <td>9.11.2025</td>
+                <td>Unwound - Repetition</td>
+                <td>😊</td>
+              </tr>
+              <tr>
+                <td>9.10.2025</td>
+                <td>Free Throw - Those Days Are Gone</td>
+                <td>😊</td>
+              </tr>
+              <tr>
+                <td>9.09.2025</td>
+                <td>American Football - Self Titled</td>
+                <td>😐</td>
+              </tr>
+              <tr>
+                <td>9.08.2025</td>
+                <td>Smog - Knock Knock</td>
+                <td>😊</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-    <div>
-      <h2>AirpodPro</h2>
-    </div>
-  </div>
+
+
+      </div>
 </template>
 
-<script setup>
 
+<style>
+  .album-table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 14px;
+  }
+  .album-table th,
+  .album-table td {
+    border: 1px solid black;
+    padding: 0 6px;
+    text-align: left;
+  }
 
-const emit = defineEmits(['close'])
-const emitClose = () => emit('close')
-
-// one-liner reuse
-const { pos, dragEl, onPointerDown } = useDraggable({
-  initial: { x: -450, y: -400 }
-})
-</script>
-
-<style scoped>
 
 </style>
