@@ -52,10 +52,12 @@ p {
 .w-110 { width: 110px;}
 .w-150 { width: 150px;}
 .w-200 { width: 200px;}
+
 .w-400 { width: 400px;}
 .w-500 { width: 500px;}
 .w-full { width: 100%;}
 
+.sm-w-300 {@include up(sm) {  width: 300px; }}
 .sm-w-400 {@include up(sm) {  width: 400px; }}
 .sm-w-500 {@include up(sm) {  width: 500px; }}
 
@@ -72,8 +74,9 @@ p {
 /* ---------------- PADDING / MARGIN---------------- */
 
 .m-12 {margin: 12px;}
-
 .p-20 {padding: 20px;}
+
+.mb-6 {margin-bottom: 6px;}
 
 
 .pt-12 {padding-top: 12px;}
