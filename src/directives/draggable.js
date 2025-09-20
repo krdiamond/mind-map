@@ -118,19 +118,25 @@ export default {
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
 
-      const target = pickNearestSnapTarget(getRelPos());
-      if (target) {
-        const ms = opts.snapDurationMs ?? 120;
-        if (ms) {
-          el.style.transition = `left ${ms}ms linear, top ${ms}ms linear`;
-          requestAnimationFrame(() => { el.style.left = target.x + 'px'; el.style.top = target.y + 'px'; });
-          setTimeout(() => { el.style.transition = ''; }, ms);
-        } else {
-          el.style.left = target.x + 'px'; el.style.top = target.y + 'px';
-        }
-      }
-
+      // ❗ Only snap if there was a real drag
       if (moved) {
+        const target = pickNearestSnapTarget(getRelPos());
+        if (target) {
+          const ms = opts.snapDurationMs ?? 120;
+          if (ms) {
+            el.style.transition = `left ${ms}ms linear, top ${ms}ms linear`;
+            requestAnimationFrame(() => {
+              el.style.left = target.x + 'px';
+              el.style.top  = target.y + 'px';
+            });
+            setTimeout(() => { el.style.transition = ''; }, ms);
+          } else {
+            el.style.left = target.x + 'px';
+            el.style.top  = target.y + 'px';
+          }
+        }
+
+        // mark drag to suppress the post-drag click (if you use that check)
         el.dataset.dragged = 'true';
         setTimeout(() => { delete el.dataset.dragged; }, 0);
       }

@@ -33,12 +33,18 @@ h2 {
     @include up(sm) {  font-size: 18px; }
 }
 
+h4 {
+    font-size: 10px;
+    margin: 0;
+    @include up(sm) {  font-size: 10px; }
+}
+
 a {text-decoration: none;}
 
 p {
     font-size: 18px;
     margin: 0;
-     @include up(sm) {  font-size: 14px; }
+     @include up(sm) {  font-size: 16px; }
 }
 
 .text-18 {font-size: 18px;}
@@ -115,4 +121,12 @@ p {
 
 .align-bottom {
     align-items: end;
+}
+
+
+.emoji {
+    margin: 3px;
+    width: 14px;
+    display: block;
+    @include up(sm) {  width: 16px; }
 }
