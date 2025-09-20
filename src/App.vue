@@ -1,8 +1,8 @@
 <template>
   <div class="h-250 sm-h-900 sm-p-20  relative flex justify-between align-bottom ">
-     <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable class="popup-box sm-w-300"/>
-     <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable class="popup-box sm-w-300"/>
-     <MusicPlayer v-if="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable class="popup-box"/>
+     <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable class="popup-box sm-w-400"/>
+     <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable class="popup-box sm-w-400"/>
+     <MusicPlayer v-if="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable class="popup-box sm-w-400"/>
      
 
 
@@ -52,11 +52,11 @@
          <div id="AirpodPro" @click="toggleMusicPlayer" class="airpod-pro absolute pointer" 
                 v-draggable="{
                 snapInto: [
-                    { left: 40, top: 685, right: 278, bottom: 750}, // row 1
-                    { left: 40, top: 528, right: 278, bottom: 610 }, // row 2
-                    { left: 40, top: 387, right: 278, bottom: 420 }, // row 3
-                    { left: 40, top: 237, right: 278, bottom: 320 }, // row 4
-                    { left: 40, top: 93, right: 278, bottom: 120 }, // row 5
+                    { left: 40, top: 707, right: 278, bottom: 750}, // row 1
+                    { left: 40, top: 560, right: 278, bottom: 610 }, // row 2
+                    { left: 40, top: 413, right: 278, bottom: 420 }, // row 3
+                    { left: 40, top: 270, right: 278, bottom: 320 }, // row 4
+                    { left: 40, top: 128, right: 278, bottom: 120 }, // row 5
                   ],
                 snapDurationMs: 150,    
                 resetOnResize: true   
@@ -68,11 +68,11 @@
         <div id="Gold" @click="toggleAlchemy" class="gold absolute pointer" 
                 v-draggable="{
                 snapInto: [
-                    { left: 40, top: 685, right: 278, bottom: 750}, // row 1
-                    { left: 40, top: 528, right: 278, bottom: 610 }, // row 2
-                    { left: 40, top: 387, right: 278, bottom: 420 }, // row 3
-                    { left: 40, top: 237, right: 278, bottom: 320 }, // row 4
-                    { left: 40, top: 93, right: 278, bottom: 120 }, // row 5
+                    { left: 40, top: 711, right: 278, bottom: 711}, // row 1
+                    { left: 40, top: 560, right: 278, bottom: 560 }, // row 2
+                    { left: 40, top: 414, right: 278, bottom: 414 }, // row 3
+                    { left: 40, top: 268, right: 278, bottom: 268 }, // row 4
+                    { left: 40, top: 123, right: 278, bottom: 123 }, // row 5
                   ],
                 snapDurationMs: 150,    
                 resetOnResize: true   

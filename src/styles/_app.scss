@@ -45,24 +45,26 @@
 
 
 .cabinet-container {
-  width: 106px;
+  width: 110px;
   @include up(sm) {  width: 340px;}
 }
 
 .gold {
-    left: 56px; top: 154px; 
+    left: 61px;
+    top: 217px;
     @include up(sm) { left: 206px;top: 720px;}
     img {
-        width: 30px;
+        width: 25px;
         @include up(sm) {  width: 50px;}
     }
 }
 
 .airpod-pro {
-    left: 56px; top: 154px; 
+    left: 12px;
+    top: 170px;
     @include up(sm) { left: 40px;top: 560px;}
     img {
-        width: 100px;
+        width: 40px;
         @include up(sm) {  width: 100px;}
     }
 }
@@ -78,14 +80,14 @@
 }
 
 .buddha {
-    top: 154px;
+    top: 152px;
     left: 56px;
     @include up(sm) {  
         left: 199px;
         top: 531px;
     }
     img {
-        width: 30px;
+        width: 20px;
         @include up(sm) {  width: 40px;}
     }
 }
