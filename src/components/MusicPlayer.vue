@@ -6,6 +6,11 @@
           <p class="mb-6">September 2025</p>
           <table>
             <tbody>
+               <tr>
+                <td>9.20.2025</td>
+                <td>Gang of Four - Entertainment!</td>
+                <td><span class="emoji">😊</span></td>
+              </tr>
               <tr>
                 <td>9.19.2025</td>
                 <td>Codeine - Frigid Stars</td>
