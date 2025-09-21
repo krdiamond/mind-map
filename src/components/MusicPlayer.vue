@@ -22,6 +22,16 @@
                 <td><span class="emoji">😐</span></td>
               </tr>
               <tr>
+                <td>9.17.2025</td>
+                <td>The Damned - Damned Damned Damned</td>
+                <td><span class="emoji">😊</span></td>
+              </tr>
+              <tr>
+                <td>9.16.2025</td>
+                <td>Deftones - Private Music</td>
+                <td><span class="emoji">😊</span></td>
+              </tr>
+              <tr>
                 <td>9.11.2025</td>
                 <td>Unwound - Repetition</td>
                 <td><span class="emoji">😊</span></td>

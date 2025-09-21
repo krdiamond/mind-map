@@ -72,9 +72,12 @@
 .remote {
     top: 120px;
     left: 35px;
-    @include up(sm) { top: 415px; left: 120px;}
+    @include up(sm) {     
+    left: 159px;
+    top: 410px;}
     img {
         width: 40px;
+        transform: rotateX(15deg) rotateY(196deg) skew(-19deg, 17deg);
         @include up(sm) {  width: 100px;}
     }
 }
@@ -100,6 +103,7 @@
 
 /* ---------------- POPUP BOX ---------------- */
 .popup-box {
+    position: fixed !important;
     background-color: white;
     z-index: 3;
     left: 0;
@@ -109,6 +113,7 @@
     height: 100%;
     scrollbar-color: black #fff;
     scrollbar-width: thin;
+    width: 100%;
     @include up(sm) {  
         left: 922px; top: 507px;
         height: 300px;
