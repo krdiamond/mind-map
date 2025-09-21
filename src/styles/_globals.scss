@@ -73,6 +73,7 @@ p {
 .h-200 { height: 200px;}
 .h-250 { height: 250px;}
 .h-900 { height: 900px;}
+.h-full { height: 100%;}
 
 .sm-h-800 {@include up(sm) {  height: 800px; }}
 .sm-h-900 {@include up(sm) {  height: 900px; }}
@@ -129,4 +130,8 @@ p {
     width: 18px;
     display: block;
     @include up(sm) {  width: 16px; }
+}
+
+.border {
+    border: 3px solid black;
 }
