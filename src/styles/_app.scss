@@ -112,6 +112,7 @@
     padding: 20px;
     width: 100%;
     @include up(sm) {  
+        position: absolute !important;
         left: 922px; top: 507px;
         height: 300px;
         padding: unset;

@@ -13,6 +13,11 @@
           <p class="mb-6">September 2025</p>
           <table>
             <tbody>
+              <tr>
+                <td>9.21.2025</td>
+                <td>Samiam - Clumsy</td>
+                <td><span class="emoji">😊</span></td>
+              </tr>
                <tr>
                 <td>9.20.2025</td>
                 <td>Gang of Four - Entertainment!</td>

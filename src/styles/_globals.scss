@@ -30,13 +30,11 @@ html {
 h2 {
     font-size: 24px;
     margin: 0 0 12px 0;
-    @include up(sm) {  font-size: 18px; }
 }
 
 h4 {
-    font-size: 10px;
+    font-size: 12px;
     margin: 0;
-    @include up(sm) {  font-size: 10px; }
 }
 
 a {text-decoration: none;}
@@ -44,7 +42,6 @@ a {text-decoration: none;}
 p {
     font-size: 18px;
     margin: 0;
-     @include up(sm) {  font-size: 16px; }
 }
 
 .text-18 {font-size: 18px;}
@@ -84,6 +81,8 @@ p {
 .p-20 {padding: 20px;}
 
 .mb-6 {margin-bottom: 6px;}
+
+.sm-mr-60 {@include up(sm) {  margin-right: 60px; }}
 
 
 .pt-12 {padding-top: 12px;}
@@ -126,10 +125,14 @@ p {
 
 
 .emoji {
-    margin: 3px;
-    width: 18px;
+    width: 100%;
     display: block;
-    @include up(sm) {  width: 16px; }
+    text-align: center;
+    padding: 3px 0px;
+    @include up(sm) {  
+        width: 24px; 
+        padding: 3px 3px 3px 0px;
+    }
 }
 
 .border {
