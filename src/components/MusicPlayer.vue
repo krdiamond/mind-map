@@ -1,6 +1,9 @@
 <template>
   <div>
-      <div class="close" @click="$emit('close')">X</div>
+
+     <div class="wrapper">
+
+ <div class="close" @click="$emit('close')">X</div>
         <h2 class="m-12">one unique album per/day</h2>
         <div class="m-12">
           <p class="mb-6">September 2025</p>
@@ -55,6 +58,8 @@
           </table>
         </div>
 
+     </div>
+     
 
 
       </div>
