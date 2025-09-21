@@ -4,17 +4,15 @@
     <MusicPlayer v-if="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable class="popup-box sm-w-400"/>
   
     <div class="h-250 sm-h-900 sm-p-20  relative flex justify-between align-bottom ">
-      <div class="tv-container relative">
-        <img :src="TV" class="tv z-1 absolute" alt="TV" />
-        <img :src="Static" class="static z-2 absolute" alt="static" />
-        <img :src="Boulder" class="boulder absolute" alt="Boulder" />
-      </div>
+      
+      <TVStack ref="tvstack"/>    
 
-    
-      <div class="cabinet-container h-250 sm-h-800 relative">
+  
+      <div class="cabinet-container h-250 sm-h-800 sm-mr-60 relative">
         <img :src="Cabinet" class="h-250 sm-h-800 absolute" alt="Glass Cabinet" />
           
         <div id="Remote" class="remote absolute pointer" 
+              @click="onRemoteClick"
               v-draggable="{
               snapInto: [
                   { left: 20, top: 700, right: 290, bottom: 720 }, // row 1
@@ -28,6 +26,7 @@
             }"
             alt="Remote">
           <img :src="Remote" alt="Remote" class="remote" />
+          <click-spark style="--click-spark-color: black;"></click-spark>
          </div>
 
          <div id="Buddha" @click="toggleValidation" class="buddha absolute pointer" 
@@ -89,6 +88,7 @@
 import './styles/_app.scss'
 
 import EgoTrap from './components/EgoTrap.vue'
+import TVStack from './components/TVStack.vue'
 import Validation from './components/Validation.vue'
 import Alchemy from './components/Alchemy.vue'
 import MusicPlayer from './components/MusicPlayer.vue'
@@ -106,7 +106,7 @@ import AirpodPro from './assets/airpod-pro.png'
 
 export default {
   name: 'HelloWorld',
-  components: { EgoTrap, Validation, MusicPlayer, Alchemy },
+  components: { EgoTrap, Validation, MusicPlayer, Alchemy, TVStack },
   data() {
     return {
       Cabinet, TV, Boulder, Static, 
@@ -147,6 +147,11 @@ export default {
         this.showEgoTrap = false
         this.showValidation = false
         this.showAlchemy = false
+      }
+    },
+    onRemoteClick(e) {
+      if (this.checkToggle(e) === false) {
+        this.$refs.tvstack.onRemoteClicked()
       }
     },
     toggleEgoTrap() {
