@@ -8,6 +8,8 @@
       <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable class="popup-box sm-w-400"/>
     <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable class="popup-box sm-w-400"/>
     <MusicPlayer v-if="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable class="popup-box sm-w-400"/>
+    <Gratitude v-if="showGratitude" @close="toggleGratitude" @click.stop v-draggable class="popup-box sm-w-400"/>
+
       <div class="cabinet-container h-250 sm-h-800 sm-mr-60 relative">
         <img :src="Cabinet" class="h-250 sm-h-800 absolute" alt="Glass Cabinet" />
           
@@ -27,6 +29,23 @@
             alt="Remote">
           <img :src="Remote" alt="Remote" class="remote" />
           <click-spark style="--click-spark-color: black;"></click-spark>
+         </div>
+
+         <div id="Heart" @click="toggleGratitude" class="heart absolute pointer" 
+                v-draggable="{
+                snapInto: [
+                    { left: 40, top: 685, right: 278, bottom: 750}, // row 1
+                    { left: 40, top: 528, right: 278, bottom: 610 }, // row 2
+                    { left: 40, top: 387, right: 278, bottom: 420 }, // row 3
+                    { left: 40, top: 237, right: 278, bottom: 320 }, // row 4
+                    { left: 40, top: 93, right: 278, bottom: 120 }, // row 5
+                  ],
+                snapDurationMs: 150,    
+                resetOnResize: true   
+              }"
+              alt="Heart">
+              heart
+            <!-- <img :src="Buddha" alt="Heart" /> -->
          </div>
 
          <div id="Buddha" @click="toggleValidation" class="buddha absolute pointer" 
@@ -92,6 +111,7 @@ import TVStack from './components/TVStack.vue'
 import Validation from './components/Validation.vue'
 import Alchemy from './components/Alchemy.vue'
 import MusicPlayer from './components/MusicPlayer.vue'
+import Gratitude from './components/Gratitude.vue'
 
 import Cabinet from './assets/curiocabinet.png'
 import TV from './assets/tv.png'
@@ -106,7 +126,7 @@ import AirpodPro from './assets/airpod-pro.png'
 
 export default {
   name: 'HelloWorld',
-  components: { EgoTrap, Validation, MusicPlayer, Alchemy, TVStack },
+  components: { EgoTrap, Validation, MusicPlayer, Alchemy, TVStack, Gratitude },
   data() {
     return {
       Cabinet, TV, Boulder, Static, 
@@ -114,7 +134,8 @@ export default {
       showEgoTrap: false,
       showValidation: false,
       showAlchemy: false,
-      showMusicPlayer: false
+      showMusicPlayer: false,
+      showGratitude: false,
     }
   },
   mounted() {
@@ -147,6 +168,16 @@ export default {
         this.showEgoTrap = false
         this.showValidation = false
         this.showAlchemy = false
+      }
+    },
+    toggleGratitude(e) {
+      console.log('hi')
+      if (this.checkToggle(e) === false ) {
+        this.showGratitude = !this.showGratitude;
+        this.showEgoTrap = false
+        this.showValidation = false
+        this.showAlchemy = false
+        this.showMusicPlayer = false
       }
     },
     onRemoteClick(e) {
