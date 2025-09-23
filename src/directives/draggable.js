@@ -6,13 +6,11 @@ export default {
     el.style.cursor = 'grab';
 
     // --- Reset-to-origin wiring -------------------------------------------
-    // Defaults: reset on breakpoint change; optional: also on any resize.
     const breakQuery = opts.breakQuery || '(min-width: 600px)';
     const resetOnBreakpoint = opts.resetOnBreakpoint !== false; // default true
     const resetOnResize = !!opts.resetOnResize;                  // default false
 
     function resetToCssOrigin() {
-      // Clear any inline positioning so CSS (your media queries) takes over
       el.style.left = '';
       el.style.top = '';
       el.style.right = '';
@@ -37,7 +35,7 @@ export default {
       el.__drag_resize__ = onResize;
     }
 
-    // --- Drag + snapInto (what you already have) --------------------------
+    // --- Drag + snapInto ---------------------------------------------------
     let startX, startY, baseLeft, baseTop, moved = false;
 
     const getRelPos = () => {
@@ -94,58 +92,159 @@ export default {
       return best;
     }
 
-    const onMouseDown = (e) => {
+    // --- Overlap helpers ---------------------------------------------------
+    const getRect = (node, pad = 0) => {
+      const r = node.getBoundingClientRect();
+      return {
+        left: r.left + pad,
+        top: r.top + pad,
+        right: r.right - pad,
+        bottom: r.bottom - pad,
+        width: Math.max(0, r.width - pad * 2),
+        height: Math.max(0, r.height - pad * 2),
+      };
+    };
+
+    const rectsOverlap = (a, b) => !(a.right <= b.left || a.left >= b.right || a.bottom <= b.top || a.top >= b.bottom);
+
+    const overlapArea = (a, b) => {
+      const x = Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left));
+      const y = Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
+      return x * y;
+    };
+
+    const resolveTargets = () => {
+      const spec = opts.overlapWith;
+      if (!spec) return [];
+      const arr = Array.isArray(spec) ? spec : [spec];
+      const nodes = [];
+      for (const s of arr) {
+        if (typeof s === 'string') {
+          nodes.push(...document.querySelectorAll(s));
+        } else if (s && s.nodeType === 1) {
+          nodes.push(s);
+        }
+      }
+      // exclude self if matched by selector
+      return nodes.filter(n => n !== el);
+    };
+
+    const checkOverlapAndNotify = () => {
+      const pad = Number(opts.overlapPadding ?? 4);
+      const minRatio = Number(opts.minOverlapRatio ?? 0.15); // 15% of smaller area
+      const targets = resolveTargets();
+      if (!targets.length) return;
+
+      const er = getRect(el, pad);
+      let hits = [];
+
+      for (const t of targets) {
+        const tr = getRect(t, pad);
+        if (!rectsOverlap(er, tr)) continue;
+        const area = overlapArea(er, tr);
+        const minArea = Math.min(er.width * er.height, tr.width * tr.height) * minRatio;
+        if (area >= minArea) {
+          hits.push({ target: t, area, ratio: area / Math.min(er.width * er.height, tr.width * tr.height), rect: tr });
+        }
+      }
+
+      if (hits.length) {
+        // Sort biggest overlap first
+        hits.sort((a, b) => b.area - a.area);
+
+        const detail = {
+          element: el,
+          elementRect: er,
+          hits, // array of { target, area, ratio, rect }
+        };
+
+        // 1) Fire DOM events so you can do @overlap / @draggable:overlap in template
+        el.dispatchEvent(new CustomEvent('overlap', { detail, bubbles: true }));
+        el.dispatchEvent(new CustomEvent('draggable:overlap', { detail, bubbles: true }));
+
+        // 2) If a callback is supplied, call it
+        if (typeof opts.onOverlap === 'function') {
+          try { opts.onOverlap(detail); } catch (err) { console.error('onOverlap error', err); }
+        }
+      }
+    };
+
+    // --- Pointer events ----------------------------------------------------
+    let moveListener, upListener;
+
+    const onPointerDown = (e) => {
       if (opts.enabled === false) return;
+      // Only left-click or touch/pen
+      if (e.button != null && e.button !== 0) return;
+
+      el.setPointerCapture?.(e.pointerId);
       e.preventDefault(); e.stopPropagation();
       el.style.cursor = 'grabbing';
+
       const p = getRelPos();
       startX = e.clientX; startY = e.clientY;
       baseLeft = p.x; baseTop = p.y;
       moved = false;
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-    };
 
-    const onMouseMove = (e) => {
-      const dx = e.clientX - startX, dy = e.clientY - startY;
-      el.style.left = baseLeft + dx + 'px';
-      el.style.top  = baseTop  + dy + 'px';
-      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
-    };
+      moveListener = (ev) => {
+        const dx = ev.clientX - startX, dy = ev.clientY - startY;
+        el.style.left = baseLeft + dx + 'px';
+        el.style.top  = baseTop  + dy + 'px';
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
+      };
+      upListener = (ev) => {
+        el.releasePointerCapture?.(ev.pointerId);
+        el.style.cursor = 'grab';
+        window.removeEventListener('pointermove', moveListener);
+        window.removeEventListener('pointerup', upListener);
 
-    const onMouseUp = () => {
-      el.style.cursor = 'grab';
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-
-      // ❗ Only snap if there was a real drag
-      if (moved) {
-        const target = pickNearestSnapTarget(getRelPos());
-        if (target) {
-          const ms = opts.snapDurationMs ?? 120;
-          if (ms) {
-            el.style.transition = `left ${ms}ms linear, top ${ms}ms linear`;
-            requestAnimationFrame(() => {
+        if (moved) {
+          const target = pickNearestSnapTarget(getRelPos());
+          let snapMs = opts.snapDurationMs ?? 120;
+          if (target) {
+            if (snapMs) {
+              el.style.transition = `left ${snapMs}ms linear, top ${snapMs}ms linear`;
+              requestAnimationFrame(() => {
+                el.style.left = target.x + 'px';
+                el.style.top  = target.y + 'px';
+              });
+              setTimeout(() => { el.style.transition = ''; }, snapMs);
+            } else {
               el.style.left = target.x + 'px';
               el.style.top  = target.y + 'px';
-            });
-            setTimeout(() => { el.style.transition = ''; }, ms);
+            }
           } else {
-            el.style.left = target.x + 'px';
-            el.style.top  = target.y + 'px';
+            snapMs = 0; // no snap happened
           }
-        }
 
-        // mark drag to suppress the post-drag click (if you use that check)
-        el.dataset.dragged = 'true';
-        setTimeout(() => { delete el.dataset.dragged; }, 0);
-      }
+          // mark drag to suppress the post-drag click (if you use that check)
+          el.dataset.dragged = 'true';
+          setTimeout(() => { delete el.dataset.dragged; }, 0);
+
+          // Emit a dragstop event with final pos (after snap)
+          const afterMs = Math.max(0, Number(snapMs));
+          setTimeout(() => {
+            const finalPos = getRelPos();
+            el.dispatchEvent(new CustomEvent('draggable:dragstop', { detail: { pos: finalPos }, bubbles: true }));
+            // Now check overlaps
+            checkOverlapAndNotify();
+          }, afterMs + 5);
+        }
+      };
+
+      window.addEventListener('pointermove', moveListener, { passive: false });
+      window.addEventListener('pointerup', upListener, { passive: true });
     };
 
-    el.addEventListener('mousedown', onMouseDown, { passive: false });
+    el.addEventListener('pointerdown', onPointerDown, { passive: false });
+    el.__drag_pdown__ = onPointerDown; // save for cleanup
   },
 
   unmounted(el) {
+    if (el.__drag_pdown__) {
+      el.removeEventListener('pointerdown', el.__drag_pdown__);
+      delete el.__drag_pdown__;
+    }
     const m = el.__drag_mql__;
     if (m) {
       const { mql, onChange } = m;
