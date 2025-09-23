@@ -13,6 +13,11 @@
           <p class="mb-6">September 2025</p>
           <table>
             <tbody>
+               <tr>
+                <td>9.23.2025</td>
+                <td>Bratmobile - Pottymouth</td>
+                <td><span class="emoji">😊</span></td>
+              </tr>
               <tr>
                 <td>9.22.2025</td>
                 <td>Bob Desper - New Sounds</td>
@@ -47,6 +52,11 @@
                 <td>9.16.2025</td>
                 <td>Deftones - Private Music</td>
                 <td><span class="emoji">😊</span></td>
+              </tr>
+              <tr>
+                <td>9.15.2025</td>
+                <td>Militarie Gun - Life Under the Gun</td>
+                <td><span class="emoji">😐</span></td>
               </tr>
               <tr>
                 <td>9.11.2025</td>
