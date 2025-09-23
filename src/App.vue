@@ -26,6 +26,7 @@
 
             <div id="Paper" class="paper" 
                 @click="onPaperClick"
+                @overlap="onCandleOverlap"
                 v-draggable="{
                 snapInto: [
                     { left: 20, top: 700, right: 290, bottom: 720 }, // row 1
@@ -35,7 +36,11 @@
                     { left: 20, top: 114, right: 290, bottom: 120 }, // row 5
                   ],
                 snapDurationMs: 150,    
-                resetOnResize: true   
+                resetOnResize: true,
+                overlapWith: '#Candle',  // only fires when Paper hits Candle
+                minOverlapRatio: 0.15,          // optional (default 0.15)
+                overlapPadding: 4               // optional (default 4px) 
+
               }"
               alt="Paper">
               Paper
@@ -223,6 +228,7 @@ export default {
       this.showMusicPlayer = false
     },
     onCandleOverlap() {
+      console.log('fire fire fire')
         setTimeout(() => {
         console.log('fire fire fire');
         this.showFire = true;
