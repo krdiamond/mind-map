@@ -6,10 +6,23 @@
         <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable class="popup-box sm-w-400"/>
         <MusicPlayer v-if="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable class="popup-box sm-w-400"/>
       
-        <TVStack ref="tvstack"/>    
+
+         <div class="fire-alarm">Fire Alarm</div>
+
+        <TVStack ref="tvstack"/>  
+        
+
 
         <div class="cabinet-container h-250 sm-h-800 sm-mr-60 relative">
           <img :src="Cabinet" class="h-250 sm-h-800 absolute" alt="Glass Cabinet" />
+
+            <div v-if="showFire" class="fire"></div>
+
+            <div v-if="showMoreFire" class="more-fire">
+                <div class="fire"></div>
+                <div class="fire"></div>
+                <div class="fire"></div>
+            </div>
 
             <div id="Paper" class="paper" 
                 @click="onPaperClick"
@@ -25,13 +38,14 @@
                 resetOnResize: true   
               }"
               alt="Paper">
+              Paper
             <!-- <img :src="Remote" alt="Candle" /> -->
           </div>
 
 
-
           <div id="Candle" class="candle" 
                 @click="onCandleClick"
+                @overlap="onCandleOverlap"
                 v-draggable="{
                 snapInto: [
                     { left: 20, top: 700, right: 290, bottom: 720 }, // row 1
@@ -41,11 +55,16 @@
                     { left: 20, top: 114, right: 290, bottom: 120 }, // row 5
                   ],
                 snapDurationMs: 150,    
-                resetOnResize: true   
+                resetOnResize: true,
+                overlapWith: '#Paper',          // or ['#Paper', '#SomethingElse']
+                minOverlapRatio: 0.15,          // optional (default 0.15)
+                overlapPadding: 4               // optional (default 4px)   
               }"
               alt="Candle">
+              Candle
             <!-- <img :src="Remote" alt="Candle" /> -->
           </div>
+
 
 
             
@@ -131,6 +150,8 @@ import Validation from './components/Validation.vue'
 import Alchemy from './components/Alchemy.vue'
 import MusicPlayer from './components/MusicPlayer.vue'
 
+import fireSound from './assets/fire.mp3';
+
 import Cabinet from './assets/curiocabinet.png'
 import TV from './assets/tv.png'
 import Static from './assets/static.gif'
@@ -152,17 +173,20 @@ export default {
       showEgoTrap: false,
       showValidation: false,
       showAlchemy: false,
-      showMusicPlayer: false
+      showMusicPlayer: false,
+      showFire: false,
+      showMoreFire: false,
     }
   },
   mounted() {
-
+    this.fireAudio = new Audio(fireSound);
   },
   methods: {
     checkToggle(e) {
       return !!e?.currentTarget?.dataset?.dragged
     },
     toggleValidation(e) {
+      console.log('clicked?')
       if (this.checkToggle(e) === false ) {
         this.showValidation = !this.showValidation
         this.showEgoTrap = false
@@ -197,6 +221,14 @@ export default {
       this.showAlchemy = false
       this.showValidation = false
       this.showMusicPlayer = false
+    },
+    onCandleOverlap() {
+        setTimeout(() => {
+        console.log('fire fire fire');
+        this.showFire = true;
+        this.fireAudio.currentTime = 0; // rewind if already played
+        this.fireAudio.play()
+      }, 5000);
     },
   }
 }

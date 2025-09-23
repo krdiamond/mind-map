@@ -113,6 +113,32 @@
     background: white;
 }
 
+.fire {
+    width: 100px;
+    height: 200px;
+    border: 3px solid black;
+    background: white;
+    position: absolute;
+    bottom: 0;
+    z-index: 1;
+}
+
+.fire-alarm {
+    width: 60px;
+    height: 60px;
+    border: 3px solid black;
+    background: white;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.nore-fire {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
 .ego {
   top: 268px;
   left: 300px;
