@@ -14,6 +14,11 @@
           <table>
             <tbody>
               <tr>
+                <td>9.22.2025</td>
+                <td>Bob Desper - New Sounds</td>
+                <td><span class="emoji">😐</span></td>
+              </tr>
+              <tr>
                 <td>9.21.2025</td>
                 <td>Samiam - Clumsy</td>
                 <td><span class="emoji">😊</span></td>
