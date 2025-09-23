@@ -1,5 +1,12 @@
 <template>
-
+  <div>
+    <ul>
+      <li>after 30 seconds icons turn into soot one by one, on timer</li>
+      <li>Can pick up watering can and put out fire</li>
+      <li>when watering can picks up it tilts and water comes out of spout </li>
+      <li>need all block assets </li>
+    </ul>
+  </div>
   
     <div class="h-250 sm-h-900 sm-p-20  relative flex justify-between align-bottom ">
         <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable class="popup-box sm-w-400"/>
@@ -9,7 +16,26 @@
 
          <div class="fire-alarm">Fire Alarm</div>
 
-        <TVStack ref="tvstack"/>  
+
+        <div id="WateringCan" class="watering-can" 
+                @click="onPantClick"
+                v-draggable="{
+                snapInto: [
+                    { left: 0, top: 700, right: 1500, bottom: 700 }, // row 1
+                  ],
+                snapDurationMs: 150,    
+                resetOnResize: true   
+              }"
+              alt="Watering Can">
+              Watering Can
+            <!-- <img :src="Remote" alt="Remote" /> -->
+          </div>
+
+
+
+        <TVStack ref="tvstack"/> 
+        
+        
         
 
 
