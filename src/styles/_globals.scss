@@ -125,14 +125,9 @@ p {
 
 
 .emoji {
-    width: 100%;
     display: block;
     text-align: center;
     padding: 3px 0px;
-    @include up(sm) {  
-        width: 24px; 
-        padding: 3px 3px 3px 0px;
-    }
 }
 
 .border {
