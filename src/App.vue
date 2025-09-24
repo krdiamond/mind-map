@@ -8,7 +8,7 @@
       <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable class="popup-box sm-w-400"/>
     <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable class="popup-box sm-w-400"/>
     <MusicPlayer v-if="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable class="popup-box sm-w-400"/>
-    <Gratitude v-if="showGratitude" @close="toggleGratitude" @click.stop v-draggable class="popup-box sm-w-400"/>
+    <!-- <Gratitude v-if="showGratitude" @close="toggleGratitude" @click.stop v-draggable class="popup-box sm-w-400"/> -->
 
       <div class="cabinet-container h-250 sm-h-800 sm-mr-60 relative">
         <img :src="Cabinet" class="h-250 sm-h-800 absolute" alt="Glass Cabinet" />
@@ -31,7 +31,7 @@
           <click-spark style="--click-spark-color: black;"></click-spark>
          </div>
 
-         <div id="Heart" @click="toggleGratitude" class="heart absolute pointer" 
+         <!-- <div id="Heart" @click="toggleGratitude" class="heart absolute pointer" 
                 v-draggable="{
                 snapInto: [
                     { left: 40, top: 685, right: 278, bottom: 750}, // row 1
@@ -46,7 +46,7 @@
               alt="Heart">
               heart
             <!-- <img :src="Buddha" alt="Heart" /> -->
-         </div>
+         </div> -->
 
          <div id="Buddha" @click="toggleValidation" class="buddha absolute pointer" 
                 v-draggable="{
