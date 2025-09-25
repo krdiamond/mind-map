@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="popup-box sm-w-400">
     <div class="wrapper">
 			<div class="close" @click="$emit('close')">
 				<svg fill="#000000" width="800px" height="800px" viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg">
@@ -23,37 +23,26 @@
 	</div>
 </template>
 
-
 <script>
+import { fetchGoogleSheet } from '../lib/fetchGoogleSheet'
+
 export default {
   data() {
-    return { albums: [], loading: false, loadError: null };
+    return { albums: [] };
   },
   async mounted() {
-    const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR0ZgC1XczWdt5oqg-FIlc3Wck9jZbdIt7VmXONLfaZed0rPBJY_v4kbr5a27XA33Ht1hTP2gfq0VzE/pub?gid=0&single=true&output=tsv';
-    this.loading = true;
-    try {
-      const txt = await fetch(url, { cache: 'no-store' }).then(r => r.text());
-      // Parse TSV safely (no CSV quoting headaches)
-      const rows = txt.trim().split(/\r?\n/).map(line => line.split('\t'));
-      // Expect columns: Date | Album | Mood
-      this.albums = rows.map((cols, i) => ({
-        id: i + '-' + cols[0] + '-' + cols[1],
-        date: cols[0] || '',
-        album: cols[1] || '',
-        mood: cols[2] || ''
-      }));
-    } catch (err) {
-      console.error(err);
-      this.loadError = 'Failed to load albums from Google Sheets.';
-    } finally {
-      this.loading = false;
-    }
+    const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR0ZgC1XczWdt5oqg-FIlc3Wck9jZbdIt7VmXONLfaZed0rPBJY_v4kbr5a27XA33Ht1hTP2gfq0VzE/pub?output=tsv&single=true&gid=0';
+    const data = await fetchGoogleSheet(url);
+    
+    this.albums = data.map((cols, i) => ({
+      id: `${i}-${cols[0] || ''}-${cols[1] || ''}`,
+      date: cols[0] || '',
+      album: cols[1] || '',
+      mood: cols[2] || ''
+    }));
   }
 };
 </script>
-
-
 
 
 <style scoped>

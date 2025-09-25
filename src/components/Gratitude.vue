@@ -1,15 +1,15 @@
 <template>
-    <div>
+    <div class="popup-box sm-w-400">
         <div class="wrapper">
                 <div class="close" @click="$emit('close')">
                     <svg fill="#000000" width="800px" height="800px" viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg">
                         <path d="M797.32 985.882 344.772 1438.43l188.561 188.562 452.549-452.549 452.548 452.549 188.562-188.562-452.549-452.548 452.549-452.549-188.562-188.561L985.882 797.32 533.333 344.772 344.772 533.333z"/>
                     </svg>
                 </div>
-            <h2 class="m-12"><i>I am grateful for...</i></h2>
+            <h2 class="m-12"><i>grateful for...</i></h2>
             <ul>
-                <li>
-                    <b>9.23.2025</b> Buying the Jawbreaker tickets for 9/24 instead of 9/23 so I don't have to change my plans. Really oversaturated their demographic didn't they.
+                <li v-for="row in gratitudeStatements" :key="row.id" class="pb-6 pr-12">
+                    <b>{{ row.date }}</b> {{ row.gratitude }}
                 </li>
             </ul>
         </div>
@@ -17,3 +17,22 @@
 </template>
 
 
+<script>
+import { fetchGoogleSheet } from '../lib/fetchGoogleSheet'
+
+export default {
+  data() {
+    return { gratitudeStatements: [] };
+  },
+  async mounted() {
+    const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR0ZgC1XczWdt5oqg-FIlc3Wck9jZbdIt7VmXONLfaZed0rPBJY_v4kbr5a27XA33Ht1hTP2gfq0VzE/pub?output=tsv&single=true&gid=1215581733';
+    const data = await fetchGoogleSheet(url);
+    
+     this.gratitudeStatements = data.map((cols, i) => ({
+      id: i + '-' + (cols[0] || '') + '-' + (cols[1] || ''),
+      date: cols[0] || '',
+      gratitude: cols[1] || '',
+    }));
+  }
+};
+</script>

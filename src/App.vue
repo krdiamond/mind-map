@@ -3,12 +3,12 @@
   
     <div class="h-250 sm-h-900 sm-p-20  relative flex justify-between align-bottom ">
       
-      <TVStack ref="tvstack"/>    
+      <TVStack ref="tvstack"/>
 
-      <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable class="popup-box sm-w-400"/>
-    <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable class="popup-box sm-w-400"/>
-    <MusicPlayer v-if="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable class="popup-box sm-w-400"/>
-    <!-- <Gratitude v-if="showGratitude" @close="toggleGratitude" @click.stop v-draggable class="popup-box sm-w-400"/> -->
+      <Validation v-show="showValidation" @close="toggleValidation" @click.stop v-draggable/>
+      <Alchemy v-show="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable/>
+      <MusicPlayer v-show="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable/>
+      <Gratitude v-show="showGratitude" @close="toggleGratitude" @click.stop v-draggable />
 
       <div class="cabinet-container h-250 sm-h-800 sm-mr-60 relative">
         <img :src="Cabinet" class="h-250 sm-h-800 absolute" alt="Glass Cabinet" />
@@ -31,7 +31,7 @@
           <click-spark style="--click-spark-color: black;"></click-spark>
          </div>
 
-         <!-- <div id="Heart" @click="toggleGratitude" class="heart absolute pointer" 
+         <div id="Heart" @click="toggleGratitude" class="heart absolute pointer" 
                 v-draggable="{
                 snapInto: [
                     { left: 40, top: 685, right: 278, bottom: 750}, // row 1
@@ -44,9 +44,8 @@
                 resetOnResize: true   
               }"
               alt="Heart">
-              heart
-            <!-- <img :src="Buddha" alt="Heart" /> -->
-         </div> -->
+             <img :src="Heart" alt="Heart" /> 
+         </div>
 
          <div id="Buddha" @click="toggleValidation" class="buddha absolute pointer" 
                 v-draggable="{
@@ -119,6 +118,7 @@ import Static from './assets/static.gif'
 import Boulder from './assets/boulder.png'
 
 import Buddha from './assets/buddha.png'
+import Heart from './assets/heart.png'
 import Gold from './assets/gold.png'
 import Remote from './assets/remote.png'
 import AirpodPro from './assets/airpod-pro.png'
@@ -130,7 +130,7 @@ export default {
   data() {
     return {
       Cabinet, TV, Boulder, Static, 
-      Buddha, Gold, Remote, AirpodPro,
+      Buddha, Heart, Gold, Remote, AirpodPro,
       showEgoTrap: false,
       showValidation: false,
       showAlchemy: false,
@@ -171,7 +171,6 @@ export default {
       }
     },
     toggleGratitude(e) {
-      console.log('hi')
       if (this.checkToggle(e) === false ) {
         this.showGratitude = !this.showGratitude;
         this.showEgoTrap = false
