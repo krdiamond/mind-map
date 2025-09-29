@@ -9,10 +9,10 @@
       <Alchemy v-show="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable/>
       <MusicPlayer v-show="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable/>
       <!-- <Gratitude v-show="showGratitude" @close="toggleGratitude" @click.stop v-draggable /> -->
-      <Zine_CeilingFan v-show="showCeilingFan" @close="toggleCeiingFan" @click.stop v-draggable />
+      <!-- <Zine_CeilingFan v-show="showCeilingFan" @close="toggleCeiingFan" @click.stop v-draggable /> -->
 
 
-      <div id="CeilingFan" class="ceiling-fan pointer" @click="toggleCeiingFan" alt="Ceiling Fan">
+      <div id="CeilingFan" class="ceiling-fan pointer"  alt="Ceiling Fan">
          <img :src="CeilingFan" alt="Ceiling Fan" />
       </div>
 
