@@ -8,7 +8,13 @@
       <Validation v-show="showValidation" @close="toggleValidation" @click.stop v-draggable/>
       <Alchemy v-show="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable/>
       <MusicPlayer v-show="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable/>
-      <Gratitude v-show="showGratitude" @close="toggleGratitude" @click.stop v-draggable />
+      <!-- <Gratitude v-show="showGratitude" @close="toggleGratitude" @click.stop v-draggable /> -->
+      <Zine_CeilingFan v-show="showCeilingFan" @close="toggleCeiingFan" @click.stop v-draggable />
+
+
+      <div id="CeilingFan" class="ceiling-fan pointer" @click="toggleCeiingFan" alt="Ceiling Fan">
+         <img :src="CeilingFan" alt="Ceiling Fan" />
+      </div>
 
       <div class="cabinet-container h-250 sm-h-800 sm-mr-60 relative">
         <img :src="Cabinet" class="h-250 sm-h-800 absolute" alt="Glass Cabinet" />
@@ -31,7 +37,7 @@
           <click-spark style="--click-spark-color: black;"></click-spark>
          </div>
 
-         <div id="Heart" @click="toggleGratitude" class="heart absolute pointer" 
+         <!-- <div id="Heart" @click="toggleGratitude" class="heart absolute pointer" 
                 v-draggable="{
                 snapInto: [
                     { left: 40, top: 685, right: 278, bottom: 750}, // row 1
@@ -45,7 +51,7 @@
               }"
               alt="Heart">
              <img :src="Heart" alt="Heart" /> 
-         </div>
+         </div> -->
 
          <div id="Buddha" @click="toggleValidation" class="buddha absolute pointer" 
                 v-draggable="{
@@ -111,8 +117,13 @@ import Validation from './components/Validation.vue'
 import Alchemy from './components/Alchemy.vue'
 import MusicPlayer from './components/MusicPlayer.vue'
 import Gratitude from './components/Gratitude.vue'
+import Zine_CeilingFan from './components/zine_CeilingFan.vue'
+
+
+
 
 import Cabinet from './assets/curiocabinet.png'
+import CeilingFan from './assets/ceiling-fan.gif'
 import TV from './assets/tv.png'
 import Static from './assets/static.gif'
 import Boulder from './assets/boulder.png'
@@ -126,24 +137,34 @@ import AirpodPro from './assets/airpod-pro.png'
 
 export default {
   name: 'HelloWorld',
-  components: { EgoTrap, Validation, MusicPlayer, Alchemy, TVStack, Gratitude },
+  components: { EgoTrap, Validation, MusicPlayer, Alchemy, TVStack, Gratitude, Zine_CeilingFan },
   data() {
     return {
-      Cabinet, TV, Boulder, Static, 
+      Cabinet, TV, Boulder, Static, CeilingFan,
       Buddha, Heart, Gold, Remote, AirpodPro,
       showEgoTrap: false,
       showValidation: false,
       showAlchemy: false,
       showMusicPlayer: false,
       showGratitude: false,
+      showCeilingFan: false,
     }
   },
   mounted() {
 
   },
   methods: {
-    checkToggle(e) {
+    checkToggle(e) { //this determines if it is a drag click or a toggle click
       return !!e?.currentTarget?.dataset?.dragged
+    },
+    toggleCeiingFan(e) {
+    if (this.checkToggle(e) === false ) {
+        this.showCeilingFan = !this.showCeilingFan
+        this.showValidation = false;
+        this.showEgoTrap = false
+        this.showAlchemy = false
+        this.showMusicPlayer = false
+      }
     },
     toggleValidation(e) {
       if (this.checkToggle(e) === false ) {
@@ -151,6 +172,7 @@ export default {
         this.showEgoTrap = false
         this.showAlchemy = false
         this.showMusicPlayer = false
+        this.showCeilingFan = false
       }
     },
      toggleAlchemy(e) {
@@ -159,6 +181,7 @@ export default {
         this.showEgoTrap = false
         this.showValidation = false
         this.showMusicPlayer = false
+        this.showCeilingFan = false
       }
       
     },
@@ -168,6 +191,7 @@ export default {
         this.showEgoTrap = false
         this.showValidation = false
         this.showAlchemy = false
+        this.showCeilingFan = false
       }
     },
     toggleGratitude(e) {
@@ -177,11 +201,7 @@ export default {
         this.showValidation = false
         this.showAlchemy = false
         this.showMusicPlayer = false
-      }
-    },
-    onRemoteClick(e) {
-      if (this.checkToggle(e) === false) {
-        this.$refs.tvstack.onRemoteClicked()
+        this.showCeilingFan = false
       }
     },
     toggleEgoTrap() {
@@ -189,7 +209,13 @@ export default {
       this.showAlchemy = false
       this.showValidation = false
       this.showMusicPlayer = false
+      this.showCeilingFan = false
     },
+    onRemoteClick(e) {
+      if (this.checkToggle(e) === false) {
+        this.$refs.tvstack.onRemoteClicked()
+      }
+    }
   }
 }
 </script>

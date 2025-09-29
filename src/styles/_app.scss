@@ -1,5 +1,21 @@
 @use './mixins' as *;
 
+.ceiling-fan {
+    position: relative;
+    padding-bottom: 60%;
+    top: 0px;
+    position: relative;
+        @include up(sm) { 
+            left: 400px;
+            position: absolute;
+        }
+        img {
+            width: 100px;
+            @include up(sm) { 
+                width: 400px;
+            }
+        }
+}
 .tv-container {
     height: 147px;
     width: 130px;
