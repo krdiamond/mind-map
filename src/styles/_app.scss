@@ -12,7 +12,7 @@
         img {
             width: 100px;
             @include up(sm) { 
-                width: 400px;
+                width: 500px;
             }
         }
 }
