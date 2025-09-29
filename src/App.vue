@@ -53,6 +53,22 @@
              <img :src="Heart" alt="Heart" /> 
          </div> -->
 
+        <div id="Spaghetti" @click="toggleSpaghetti" class="spaghetti absolute pointer" 
+                v-draggable="{
+                snapInto: [
+                    { left: 40, top: 685, right: 278, bottom: 750}, // row 1
+                    { left: 40, top: 528, right: 278, bottom: 610 }, // row 2
+                    { left: 40, top: 387, right: 278, bottom: 420 }, // row 3
+                    { left: 40, top: 237, right: 278, bottom: 320 }, // row 4
+                    { left: 40, top: 93, right: 278, bottom: 120 }, // row 5
+                  ],
+                snapDurationMs: 150,    
+                resetOnResize: true   
+              }"
+              alt="spaghetti">
+             <img :src="Spaghetti" alt="spaghetti" /> 
+         </div>
+
          <div id="Buddha" @click="toggleValidation" class="buddha absolute pointer" 
                 v-draggable="{
                 snapInto: [
@@ -119,9 +135,6 @@ import MusicPlayer from './components/MusicPlayer.vue'
 import Gratitude from './components/Gratitude.vue'
 import Zine_CeilingFan from './components/zine_CeilingFan.vue'
 
-
-
-
 import Cabinet from './assets/curiocabinet.png'
 import CeilingFan from './assets/ceiling-fan.gif'
 import TV from './assets/tv.png'
@@ -130,24 +143,26 @@ import Boulder from './assets/boulder.png'
 
 import Buddha from './assets/buddha.png'
 import Heart from './assets/heart.png'
+import Spaghetti from './assets/spaghetti.png'
 import Gold from './assets/gold.png'
 import Remote from './assets/remote.png'
 import AirpodPro from './assets/airpod-pro.png'
 
 
 export default {
-  name: 'HelloWorld',
+  name: 'MindMap',
   components: { EgoTrap, Validation, MusicPlayer, Alchemy, TVStack, Gratitude, Zine_CeilingFan },
   data() {
     return {
       Cabinet, TV, Boulder, Static, CeilingFan,
-      Buddha, Heart, Gold, Remote, AirpodPro,
+      Buddha, Heart, Gold, Remote, AirpodPro, Spaghetti,
       showEgoTrap: false,
       showValidation: false,
       showAlchemy: false,
       showMusicPlayer: false,
       showGratitude: false,
       showCeilingFan: false,
+      showDanny: false
     }
   },
   mounted() {
@@ -164,6 +179,7 @@ export default {
         this.showEgoTrap = false
         this.showAlchemy = false
         this.showMusicPlayer = false
+        this.showDanny = false
       }
     },
     toggleValidation(e) {
@@ -173,6 +189,7 @@ export default {
         this.showAlchemy = false
         this.showMusicPlayer = false
         this.showCeilingFan = false
+        this.showDanny = false
       }
     },
      toggleAlchemy(e) {
@@ -182,6 +199,7 @@ export default {
         this.showValidation = false
         this.showMusicPlayer = false
         this.showCeilingFan = false
+        this.showDanny = false
       }
       
     },
@@ -192,6 +210,7 @@ export default {
         this.showValidation = false
         this.showAlchemy = false
         this.showCeilingFan = false
+        this.showDanny = false
       }
     },
     toggleGratitude(e) {
@@ -202,14 +221,30 @@ export default {
         this.showAlchemy = false
         this.showMusicPlayer = false
         this.showCeilingFan = false
+        this.showDanny = false
       }
     },
     toggleEgoTrap() {
-      this.showEgoTrap = !this.showEgoTrap
-      this.showAlchemy = false
-      this.showValidation = false
-      this.showMusicPlayer = false
-      this.showCeilingFan = false
+      if (this.checkToggle(e) === false ) {
+        this.showEgoTrap = !this.showEgoTrap
+        this.showAlchemy = false
+        this.showValidation = false
+        this.showMusicPlayer = false
+        this.showCeilingFan = false
+        this.showDanny = false    
+      }
+      
+    },
+    toggleSpaghetti() {
+      if (this.checkToggle(e) === false ) {
+        this.showDanny = !this.showDanny
+        this.showEgoTrap = false
+        this.showAlchemy = false
+        this.showValidation = false
+        this.showMusicPlayer = false
+        this.showCeilingFan = false
+      }
+      
     },
     onRemoteClick(e) {
       if (this.checkToggle(e) === false) {
