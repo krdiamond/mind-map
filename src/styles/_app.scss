@@ -105,22 +105,20 @@
 }
 
 .paper {
-    width: 50px;
-    height: 50px;
-    border: 3px solid black;
-    left: 201px;
-    top: 256px;
-    background: white;
+    left: 152px;
+    top: 211px;
+    img {
+        width: 120px;
+    }
 }
 
 .fire {
-    width: 100px;
-    height: 200px;
-    border: 3px solid black;
-    background: white;
+    display: none;
     position: absolute;
-    bottom: 0;
+    top: -100px;
+    left: -40px;
     z-index: 1;
+    width: 100px;
 }
 
 .plant {
@@ -132,15 +130,33 @@
     bottom: 0;
     z-index: 1;
 }
-.watering-can {
-    width: 100px;
-    height: 200px;
-    border: 3px solid black;
-    background: white;
+
+.watering-can-container {
     position: absolute;
-    bottom: 0;
-    left: 936px;
-    z-index: 1;
+    left: 850px;
+    top: 700px;
+    z-index: 3;
+    .watering-can {
+        width: 300px;
+    }
+
+    .water {
+        display: none;
+        top: 20px;
+        left: -146px;
+        position: absolute;
+        transform: rotate(75deg);
+        transform-origin: 67% 25%;
+    }
+}
+
+.watering-can-container[data-dragging="true"] {
+  transform: rotate(-50deg);
+  transition: transform 120ms ease;
+  transform-origin: 70% 30%; 
+}
+.watering-can-container[data-dragging="true"] .water {
+  display: block;
 }
 
 .fire-alarm {
