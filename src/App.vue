@@ -2,8 +2,6 @@
   <div>
     <ul>
       <li>after 30 seconds icons turn into soot one by one, on timer</li>
-      <li>Can pick up watering can and put out fire</li>
-      <li>when watering can picks up it tilts and water comes out of spout </li>
       <li>need all block assets </li>
     </ul>
   </div>
@@ -17,22 +15,25 @@
          <div class="fire-alarm">Fire Alarm</div>
 
 
-        <div id="WateringCan" class="watering-can" 
-                @click="onPantClick"
-                v-draggable="{
-                snapInto: [
-                    { left: 0, top: 700, right: 1500, bottom: 700 }, // row 1
-                  ],
-                snapDurationMs: 150,    
-                resetOnResize: true   
-              }"
-              alt="Watering Can">
-              Watering Can
-            <!-- <img :src="Remote" alt="Remote" /> -->
+          <div id="WateringCan"
+              class="watering-can-container"
+              @overlap="putOutFire($event)"
+              v-draggable="{
+                snapInto: [{ left: 0, top: 700, right: 1500, bottom: 700 }],
+                snapDurationMs: 150,
+                resetOnResize: true,
+                overlapWith: '#Paper',        // what you want to douse
+                overlapOnMove: true,          // hover detection
+                overlapSubject: '.water',     // only the water image counts
+                minOverlapRatio: 0.05,
+                overlapPadding: 0
+              }">
+            <img :src="WateringCan" class="watering-can"/>
+            <img :src="Water" class="water"/>
           </div>
 
 
-
+          
         <TVStack ref="tvstack"/> 
         
         
@@ -42,7 +43,7 @@
         <div class="cabinet-container h-250 sm-h-800 sm-mr-60 relative">
           <img :src="Cabinet" class="h-250 sm-h-800 absolute" alt="Glass Cabinet" />
 
-            <div v-if="showFire" class="fire"></div>
+
 
             <div v-if="showMoreFire" class="more-fire">
                 <div class="fire"></div>
@@ -52,7 +53,7 @@
 
             <div id="Paper" class="paper" 
                 @click="onPaperClick"
-                @overlap="onCandleOverlap"
+                @overlap="onCandleOverlap($event)"
                 v-draggable="{
                 snapInto: [
                     { left: 20, top: 700, right: 290, bottom: 720 }, // row 1
@@ -69,14 +70,13 @@
 
               }"
               alt="Paper">
-              Paper
-            <!-- <img :src="Remote" alt="Candle" /> -->
+              <img :src="Paper" alt="Paper" />
+              <img :src="Fire" alt="Fire" class="fire"/>
           </div>
-
 
           <div id="Candle" class="candle" 
                 @click="onCandleClick"
-                @overlap="onCandleOverlap"
+                @overlap="onCandleOverlap($event)"
                 v-draggable="{
                 snapInto: [
                     { left: 20, top: 700, right: 290, bottom: 720 }, // row 1
@@ -93,12 +93,8 @@
               }"
               alt="Candle">
               Candle
-            <!-- <img :src="Remote" alt="Candle" /> -->
           </div>
 
-
-
-            
           <div id="Remote" class="remote" 
                 @click="onRemoteClick"
                 v-draggable="{
@@ -182,6 +178,12 @@ import Alchemy from './components/Alchemy.vue'
 import MusicPlayer from './components/MusicPlayer.vue'
 
 import fireSound from './assets/fire.mp3';
+import Fire from './assets/fire.gif';
+
+import WateringCan from './assets/watering-can.png';
+import Water from './assets/water.gif';
+
+
 
 import Cabinet from './assets/curiocabinet.png'
 import TV from './assets/tv.png'
@@ -192,6 +194,8 @@ import Buddha from './assets/buddha.png'
 import Gold from './assets/gold.png'
 import Remote from './assets/remote.png'
 import AirpodPro from './assets/airpod-pro.png'
+import Paper from './assets/paper.png'
+import Ash from './assets/ash.png'
 
 
 export default {
@@ -199,14 +203,16 @@ export default {
   components: { EgoTrap, Validation, MusicPlayer, Alchemy, TVStack },
   data() {
     return {
-      Cabinet, TV, Boulder, Static, 
-      Buddha, Gold, Remote, AirpodPro,
+      Cabinet, TV, Boulder, Static,
+      Buddha, Gold, Remote, AirpodPro, Paper, Ash,
+      WateringCan, Water,
+      Fire,
       showEgoTrap: false,
       showValidation: false,
       showAlchemy: false,
       showMusicPlayer: false,
-      showFire: false,
       showMoreFire: false,
+      _burnTimers: new WeakMap()
     }
   },
   mounted() {
@@ -253,14 +259,88 @@ export default {
       this.showValidation = false
       this.showMusicPlayer = false
     },
-    onCandleOverlap() {
-      console.log('fire fire fire')
-        setTimeout(() => {
-        console.log('fire fire fire');
-        this.showFire = true;
-        this.fireAudio.currentTime = 0; // rewind if already played
-        this.fireAudio.play()
-      }, 5000);
+      onCandleOverlap({ detail }) {
+      const { element, hits = [] } = detail;
+      const target = element?.id === 'Candle' ? hits[0]?.target : element;
+      if (!target) return;
+
+      // setup/cancel timers for this element
+      const timers = this._burnTimers.get(target) || {};
+      clearTimeout(timers.ignite);
+      clearTimeout(timers.escalate1);
+      this._burnTimers.set(target, timers);
+
+      // 1) ignite after 1s
+      timers.ignite = setTimeout(() => {
+        target.dataset.burning = 'true';          // mark as burning
+
+        // show the fire image (prefer a .fire child)
+        const fireImg = target.querySelector('.fire') || target.children[0];
+        if (fireImg) fireImg.style.display = 'block';
+
+        // play sound
+        if (this.fireAudio) {
+          this.fireAudio.currentTime = 0;
+          this.fireAudio.play().catch(() => {});
+        }
+
+        // 2) escalate after 5s IF still burning
+        timers.escalate1 = setTimeout(() => {
+          if (target.dataset.burning === 'true') {
+            this.onFireEscalate(target);
+          }
+        }, 5000);
+
+      }, 1000);
+    },
+    putOutFire({ detail }) {
+      for (const h of detail.hits || []) {
+        const el = h.target;
+        // hide fire
+        const fireImg = el.querySelector('.fire');
+        if (fireImg) fireImg.style.display = 'none';
+        // stop audio
+        if (this.fireAudio) {
+          this.fireAudio.pause();
+          this.fireAudio.currentTime = 0;
+        }
+        // clear timers & mark not burning
+        const timers = this._burnTimers.get(el);
+        if (timers) {
+          clearTimeout(timers.ignite);
+          clearTimeout(timers.escalate1);
+          this._burnTimers.delete(el);
+        }
+        delete el.dataset.burning;
+      }
+    },
+    onFireEscalate(el) {
+      console.log('🔥 Escalation triggered for:', el.id);
+      console.log(el.children[0])
+
+      //  const fireImg = el.children[0];
+      //   if (!fireImg) return;
+
+      //   // swap to the big/inferno graphic
+      //   fireImg = this.Ash;
+      // // do whatever: show modal, damage score, spread fire, etc.
+      // // example: el.classList.add('engulfed');
+
+
+       // make a replacement node
+      const ashes = document.createElement('src');
+      ashes.id = el.id;                       // preserve id if you want
+      ashes.className = el.className + ' ashes';
+      const img = new Image();
+      img.alt = 'Ashes';
+      img.src = this.Ash;                // imported asset path
+      ashes.appendChild(img);
+
+      // swap in one step
+      el.children[0].replaceWith(ashes);
+
+    
+
     },
   }
 }

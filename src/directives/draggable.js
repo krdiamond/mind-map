@@ -113,6 +113,7 @@ export default {
       return x * y;
     };
 
+    // Which DOM nodes are valid targets (overlapWith)
     const resolveTargets = () => {
       const spec = opts.overlapWith;
       if (!spec) return [];
@@ -129,13 +130,23 @@ export default {
       return nodes.filter(n => n !== el);
     };
 
+    // NEW: allow a child element to act as the overlap "subject" (e.g., '.water')
+    const resolveSubjectEl = () => {
+      const sel = opts.overlapSubject;
+      if (!sel) return el;
+      if (typeof sel === 'string') return el.querySelector(sel) || el;
+      if (sel && sel.nodeType === 1) return sel;
+      return el;
+    };
+
     const checkOverlapAndNotify = () => {
       const pad = Number(opts.overlapPadding ?? 4);
       const minRatio = Number(opts.minOverlapRatio ?? 0.15); // 15% of smaller area
       const targets = resolveTargets();
       if (!targets.length) return;
 
-      const er = getRect(el, pad);
+      const subjectEl = resolveSubjectEl();
+      const er = getRect(subjectEl, pad);
       let hits = [];
 
       for (const t of targets) {
@@ -153,9 +164,10 @@ export default {
         hits.sort((a, b) => b.area - a.area);
 
         const detail = {
-          element: el,
+          element: el,        // draggable root
+          subject: subjectEl, // NEW: the hitbox element used
           elementRect: er,
-          hits, // array of { target, area, ratio, rect }
+          hits,               // array of { target, area, ratio, rect }
         };
 
         // 1) Fire DOM events so you can do @overlap / @draggable:overlap in template
@@ -171,6 +183,7 @@ export default {
 
     // --- Pointer events ----------------------------------------------------
     let moveListener, upListener;
+    let overlapRAF = null; // throttle overlap-on-move
 
     const onPointerDown = (e) => {
       if (opts.enabled === false) return;
@@ -188,15 +201,41 @@ export default {
 
       moveListener = (ev) => {
         const dx = ev.clientX - startX, dy = ev.clientY - startY;
+
+        // When we first exceed the tiny threshold, mark as actively dragging
+        if (!moved && (Math.abs(dx) > 3 || Math.abs(dy) > 3)) {
+          moved = true;
+          el.dataset.dragging = 'true'; // <-- attribute for CSS (rotation/swing)
+          el.dispatchEvent(new CustomEvent('draggable:dragstart', { bubbles: true })); // optional
+        }
+
+        // Update position while moving
         el.style.left = baseLeft + dx + 'px';
         el.style.top  = baseTop  + dy + 'px';
-        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
+
+        // NEW: while dragging, optionally check overlap continuously (hover)
+        if (moved && opts.overlapOnMove) {
+          if (!overlapRAF) {
+            overlapRAF = requestAnimationFrame(() => {
+              overlapRAF = null;
+              checkOverlapAndNotify();
+            });
+          }
+        }
       };
+
       upListener = (ev) => {
         el.releasePointerCapture?.(ev.pointerId);
         el.style.cursor = 'grab';
         window.removeEventListener('pointermove', moveListener);
         window.removeEventListener('pointerup', upListener);
+        if (overlapRAF) { cancelAnimationFrame(overlapRAF); overlapRAF = null; }
+
+        // Always clear the dragging attribute on release
+        if (el.dataset.dragging) {
+          delete el.dataset.dragging;                 // <-- remove attribute (stops rotation)
+          el.dispatchEvent(new CustomEvent('draggable:dragend', { bubbles: true })); // optional
+        }
 
         if (moved) {
           const target = pickNearestSnapTarget(getRelPos());
@@ -226,7 +265,7 @@ export default {
           setTimeout(() => {
             const finalPos = getRelPos();
             el.dispatchEvent(new CustomEvent('draggable:dragstop', { detail: { pos: finalPos }, bubbles: true }));
-            // Now check overlaps
+            // Final overlap check on drop
             checkOverlapAndNotify();
           }, afterMs + 5);
         }
