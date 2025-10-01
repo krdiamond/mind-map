@@ -74,7 +74,8 @@
     left: 35px;
     @include up(sm) {     
     left: 159px;
-    top: 410px;}
+    top: 410px;
+    width:100px}
     img {
         width: 40px;
         transform: rotateX(15deg) rotateY(196deg) skew(-19deg, 17deg);
@@ -104,19 +105,11 @@
     background: white;
 }
 
-.paper {
-    left: 152px;
-    top: 211px;
-    img {
-        width: 120px;
-    }
-}
-
 .fire {
     display: none;
     position: absolute;
     top: -100px;
-    left: -40px;
+    left: -10px;
     z-index: 1;
     width: 100px;
 }
@@ -133,8 +126,8 @@
 
 .watering-can-container {
     position: absolute;
-    left: 850px;
-    top: 700px;
+    left: 750px;
+    top: 620px;
     z-index: 3;
     .watering-can {
         width: 300px;
@@ -166,13 +159,38 @@
     background: white;
     position: absolute;
     top: 0;
-    right: 0;
+    right: 100px;
 }
 
-.nore-fire {
-    position: absolute;
+.more-fire {
+    display: none;
+    z-index: 1;
     bottom: 0;
-    right: 0;
+    position: absolute;
+    .fire1 {
+        position: absolute;
+        bottom: 0;
+        width: 200px;
+        left: -73px;
+    }
+    .fire2 {
+        position: absolute;
+        width: 300px;
+        bottom: 0;
+        left: -32px;
+    }
+    .fire3 {
+        position: absolute;
+        width: 400px;
+        bottom: 0;
+        left: 8px;  
+    }
+    .fire4 {
+        position: absolute;
+        width: 200px;
+        bottom: 0;
+        left: 189px;
+    }
 }
 
 .ego {
@@ -191,6 +209,7 @@
     height: 100%;
     padding: 20px;
     width: 100%;
+    z-index: 4;
     @include up(sm) {  
         position: absolute !important;
         left: 922px; top: 507px;

@@ -1,28 +1,19 @@
-<template>
-  <div>
-    <ul>
-      <li>after 30 seconds icons turn into soot one by one, on timer</li>
-      <li>need all block assets </li>
-    </ul>
-  </div>
-  
+<template>  
     <div class="h-250 sm-h-900 sm-p-20  relative flex justify-between align-bottom ">
         <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable class="popup-box sm-w-400"/>
         <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable class="popup-box sm-w-400"/>
         <MusicPlayer v-if="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable class="popup-box sm-w-400"/>
       
+        <div class="fire-alarm">Fire Alarm</div>
 
-         <div class="fire-alarm">Fire Alarm</div>
-
-
-          <div id="WateringCan"
+        <div id="WateringCan"
               class="watering-can-container"
               @overlap="putOutFire($event)"
               v-draggable="{
-                snapInto: [{ left: 0, top: 700, right: 1500, bottom: 700 }],
+                snapInto: [{ left: 0, top: 620, right: 1500, bottom: 620 }],
                 snapDurationMs: 150,
                 resetOnResize: true,
-                overlapWith: '#Paper',        // what you want to douse
+                overlapWith: ['#AirpodPro', '#Remote', '#MoreFire'],        // what you want to douse
                 overlapOnMove: true,          // hover detection
                 overlapSubject: '.water',     // only the water image counts
                 minOverlapRatio: 0.05,
@@ -30,49 +21,20 @@
               }">
             <img :src="WateringCan" class="watering-can"/>
             <img :src="Water" class="water"/>
-          </div>
+        </div>
 
-
-          
         <TVStack ref="tvstack"/> 
         
-        
-        
-
-
         <div class="cabinet-container h-250 sm-h-800 sm-mr-60 relative">
+          
           <img :src="Cabinet" class="h-250 sm-h-800 absolute" alt="Glass Cabinet" />
 
-
-
-            <div v-if="showMoreFire" class="more-fire">
-                <div class="fire"></div>
-                <div class="fire"></div>
-                <div class="fire"></div>
+            <div id="MoreFire" class="more-fire">
+                <img :src="Fire" alt="Fire" class="fire1"/>
+                <img :src="Fire" alt="Fire" class="fire2"/>
+                <img :src="Fire" alt="Fire" class="fire3"/>
+                <img :src="Fire" alt="Fire" class="fire4"/>
             </div>
-
-            <div id="Paper" class="paper" 
-                @click="onPaperClick"
-                @overlap="onCandleOverlap($event)"
-                v-draggable="{
-                snapInto: [
-                    { left: 20, top: 700, right: 290, bottom: 720 }, // row 1
-                    { left: 20, top: 538, right: 290, bottom: 620 }, // row 2
-                    { left: 20, top: 410, right: 290, bottom: 420 }, // row 3
-                    { left: 20, top: 260, right: 290, bottom: 320 }, // row 4
-                    { left: 20, top: 114, right: 290, bottom: 120 }, // row 5
-                  ],
-                snapDurationMs: 150,    
-                resetOnResize: true,
-                overlapWith: '#Candle',  // only fires when Paper hits Candle
-                minOverlapRatio: 0.15,          // optional (default 0.15)
-                overlapPadding: 4               // optional (default 4px) 
-
-              }"
-              alt="Paper">
-              <img :src="Paper" alt="Paper" />
-              <img :src="Fire" alt="Fire" class="fire"/>
-          </div>
 
           <div id="Candle" class="candle" 
                 @click="onCandleClick"
@@ -87,16 +49,15 @@
                   ],
                 snapDurationMs: 150,    
                 resetOnResize: true,
-                overlapWith: '#Paper',          // or ['#Paper', '#SomethingElse']
-                minOverlapRatio: 0.15,          // optional (default 0.15)
-                overlapPadding: 4               // optional (default 4px)   
+                overlapWith: ['#AirpodPro', '#Remote'],    // or ['#Paper', '#SomethingElse'] 
               }"
               alt="Candle">
               Candle
           </div>
 
-          <div id="Remote" class="remote" 
+          <div id="Remote" class="remote flammable" 
                 @click="onRemoteClick"
+                @overlap="onCandleOverlap($event)" 
                 v-draggable="{
                 snapInto: [
                     { left: 20, top: 700, right: 290, bottom: 720 }, // row 1
@@ -106,10 +67,12 @@
                     { left: 20, top: 114, right: 290, bottom: 120 }, // row 5
                   ],
                 snapDurationMs: 150,    
-                resetOnResize: true   
+                resetOnResize: true,
+                overlapWith: '#Candle' 
               }"
               alt="Remote">
             <img :src="Remote" alt="Remote" />
+            <img :src="Fire" alt="Fire" class="fire"/>
             <click-spark style="--click-spark-color: black;"></click-spark>
           </div>
 
@@ -130,20 +93,24 @@
           </div>
 
 
-          <div id="AirpodPro" @click="toggleMusicPlayer" class="airpod-pro" 
+          <div id="AirpodPro" class="airpod-pro flammable" 
+                  @click="toggleMusicPlayer" 
+                  @overlap="onCandleOverlap($event)" 
                   v-draggable="{
                   snapInto: [
-                      { left: 40, top: 707, right: 278, bottom: 750}, // row 1
-                      { left: 40, top: 560, right: 278, bottom: 610 }, // row 2
-                      { left: 40, top: 413, right: 278, bottom: 420 }, // row 3
-                      { left: 40, top: 270, right: 278, bottom: 320 }, // row 4
-                      { left: 40, top: 128, right: 278, bottom: 120 }, // row 5
+                      { left: 40, top: 707, right: 278, bottom: 707},  // row 1
+                      { left: 40, top: 555, right: 278, bottom: 555 }, // row 2
+                      { left: 40, top: 406, right: 278, bottom: 406 }, // row 3
+                      { left: 40, top: 260, right: 278, bottom: 260 }, // row 4
+                      { left: 40, top: 120, right: 278, bottom: 120 }, // row 5
                     ],
                   snapDurationMs: 150,    
-                  resetOnResize: true   
+                  resetOnResize: true,
+                  overlapWith: '#Candle' 
                 }"
                 alt="Airpod Pro">
               <img :src="AirpodPro" alt="Airpod Pro" />
+              <img :src="Fire" alt="Fire" class="fire"/>
           </div>
 
           <div id="Gold" @click="toggleAlchemy" class="gold" 
@@ -223,12 +190,11 @@ export default {
       return !!e?.currentTarget?.dataset?.dragged
     },
     toggleValidation(e) {
-      console.log('clicked?')
       if (this.checkToggle(e) === false ) {
-        this.showValidation = !this.showValidation
-        this.showEgoTrap = false
-        this.showAlchemy = false
-        this.showMusicPlayer = false
+          this.showValidation = !this.showValidation
+          this.showEgoTrap = false
+          this.showAlchemy = false
+          this.showMusicPlayer = false
       }
     },
      toggleAlchemy(e) {
@@ -242,15 +208,19 @@ export default {
     },
      toggleMusicPlayer(e) {
       if (this.checkToggle(e) === false ) {
-        this.showMusicPlayer = !this.showMusicPlayer
-        this.showEgoTrap = false
-        this.showValidation = false
-        this.showAlchemy = false
+        if(e?.target.children[0].id !== "Ash") {
+          this.showMusicPlayer = !this.showMusicPlayer
+          this.showEgoTrap = false
+          this.showValidation = false
+          this.showAlchemy = false
+        }
       }
     },
     onRemoteClick(e) {
       if (this.checkToggle(e) === false) {
-        this.$refs.tvstack.onRemoteClicked()
+        if(e?.target.children[0].id !== "Ash") {
+          this.$refs.tvstack.onRemoteClicked()
+        }
       }
     },
     toggleEgoTrap() {
@@ -259,89 +229,102 @@ export default {
       this.showValidation = false
       this.showMusicPlayer = false
     },
-      onCandleOverlap({ detail }) {
-      const { element, hits = [] } = detail;
-      const target = element?.id === 'Candle' ? hits[0]?.target : element;
-      if (!target) return;
+    onCandleOverlap({ detail }) {
+    const { element, hits = [] } = detail;
+    if ([detail.element, detail.hits?.[0]?.target]
+    .some(el => el && (el.id?.toLowerCase() === 'ash' || el.querySelector?.('[id="ash" i]')))) {
+  return;
+}
+    const target = element?.id === 'Candle' ? hits[0]?.target : element;
+    if (!target) return;
 
-      // setup/cancel timers for this element
-      const timers = this._burnTimers.get(target) || {};
-      clearTimeout(timers.ignite);
-      clearTimeout(timers.escalate1);
-      this._burnTimers.set(target, timers);
+    // clear any existing timers attached to this element
+    clearTimeout(target._igniteTimeout);
+    clearTimeout(target._escalateTimeout);
+    clearTimeout(target._burnItDown);
 
-      // 1) ignite after 1s
-      timers.ignite = setTimeout(() => {
-        target.dataset.burning = 'true';          // mark as burning
+    const candle = document.getElementById('Candle');
 
-        // show the fire image (prefer a .fire child)
-        const fireImg = target.querySelector('.fire') || target.children[0];
-        if (fireImg) fireImg.style.display = 'block';
+    // start a 1s fuse
+    target._igniteTimeout = setTimeout(() => {
+      // ✨ ultra-small overlap check at the moment of ignition
+      const ar = target.getBoundingClientRect();
+      const br = candle?.getBoundingClientRect?.();
+      const stillOverlapping = !!(br && !(ar.right <= br.left || ar.left >= br.right || ar.bottom <= br.top || ar.top >= br.bottom));
+      if (!stillOverlapping) return; // moved away before 1s → do nothing
 
-        // play sound
-        if (this.fireAudio) {
-          this.fireAudio.currentTime = 0;
-          this.fireAudio.play().catch(() => {});
-        }
+      // ignite
+      target.dataset.burning = 'true';
+      const fireIcon = target.querySelector('.fire');
+      if (fireIcon) fireIcon.style.display = 'block';
 
-        // 2) escalate after 5s IF still burning
-        timers.escalate1 = setTimeout(() => {
-          if (target.dataset.burning === 'true') {
-            this.onFireEscalate(target);
-          }
-        }, 5000);
-
-      }, 1000);
-    },
-    putOutFire({ detail }) {
-      for (const h of detail.hits || []) {
-        const el = h.target;
-        // hide fire
-        const fireImg = el.querySelector('.fire');
-        if (fireImg) fireImg.style.display = 'none';
-        // stop audio
-        if (this.fireAudio) {
-          this.fireAudio.pause();
-          this.fireAudio.currentTime = 0;
-        }
-        // clear timers & mark not burning
-        const timers = this._burnTimers.get(el);
-        if (timers) {
-          clearTimeout(timers.ignite);
-          clearTimeout(timers.escalate1);
-          this._burnTimers.delete(el);
-        }
-        delete el.dataset.burning;
+      if (this.fireAudio) {
+        this.fireAudio.currentTime = 0;
+        this.fireAudio.play().catch(() => {});
       }
+
+      // escalate in 5s only if still burning
+      target._escalateTimeout = setTimeout(() => {
+        if (target.dataset.burning === 'true') {
+          this.onFireEscalate(target);
+        }
+          // escalate in 5s only if still burning
+          target._burnItDown = setTimeout(() => {
+            if (target.dataset.burning === 'true') {
+              this.burnItDown();
+            }
+          }, 5000);
+      }, 5000);
+    }, 1000);
+  },
+    putOutFire({ detail }) {
+      detail.hits.forEach((sprayedElement) => {
+          // hide fire
+          const fireIcon = sprayedElement.target.querySelector('.fire') || null;
+          const MoreFire = sprayedElement.target.id === "MoreFire" ?  sprayedElement.target : null ;
+          if (fireIcon) fireIcon.style.display = 'none';
+          if (MoreFire) MoreFire.style.display = 'none';
+          // stop sound
+          this.fireAudio?.pause?.(); if (this.fireAudio) this.fireAudio.currentTime = 0;
+          // stop video
+          this.$refs.tvstack.pauseBurnVideo()
+          // clear timers + mark not burning
+          clearTimeout(sprayedElement.target._igniteTimeout);
+          clearTimeout(sprayedElement.target._escalateTimeout);
+          clearTimeout(sprayedElement.target._burnItDown);
+          delete sprayedElement.target.dataset.burning;
+      });
     },
     onFireEscalate(el) {
-      console.log('🔥 Escalation triggered for:', el.id);
-      console.log(el.children[0])
-
-      //  const fireImg = el.children[0];
-      //   if (!fireImg) return;
-
-      //   // swap to the big/inferno graphic
-      //   fireImg = this.Ash;
-      // // do whatever: show modal, damage score, spread fire, etc.
-      // // example: el.classList.add('engulfed');
-
-
-       // make a replacement node
-      const ashes = document.createElement('src');
-      ashes.id = el.id;                       // preserve id if you want
-      ashes.className = el.className + ' ashes';
-      const img = new Image();
-      img.alt = 'Ashes';
-      img.src = this.Ash;                // imported asset path
-      ashes.appendChild(img);
-
-      // swap in one step
-      el.children[0].replaceWith(ashes);
-
-    
-
+      const ash = document.createElement('img');
+      ash.id = 'Ash';   
+      ash.src = this.Ash; 
+      ash.alt = 'Ash';
+      el.children[0].replaceWith(ash);
     },
+    burnItDown() { ///need to work out something here with item turning to ash after it gets put out
+      const MoreFire = document.querySelector('.more-fire');
+      MoreFire.style.display = 'block'
+
+      const fireIcons = document.querySelectorAll('.fire');
+      fireIcons.forEach((fire) => {
+        fire.style.display = 'block'
+      });
+
+      setTimeout(() => {
+        const flammableIcons = document.querySelectorAll('.flammable');
+        flammableIcons.forEach((icon) => {
+          icon.dataset.burning = 'true';
+          this.onFireEscalate(icon)
+        });
+      }, 5000);
+      
+
+      setTimeout(() => {
+          this.$refs.tvstack.startBurnVideo()
+      }, 500);
+
+    }
   }
 }
 </script>
