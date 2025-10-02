@@ -4,11 +4,32 @@
         <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable class="popup-box sm-w-400"/>
         <MusicPlayer v-if="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable class="popup-box sm-w-400"/>
       
+<<<<<<< HEAD
         <div class="fire-alarm">Fire Alarm</div>
 
         <div id="WateringCan"
               class="watering-can-container"
               @overlap="putOutFire($event)"
+=======
+      <TVStack ref="tvstack"/>
+
+      <Validation v-show="showValidation" @close="toggleValidation" @click.stop v-draggable/>
+      <Alchemy v-show="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable/>
+      <MusicPlayer v-show="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable/>
+      <!-- <Gratitude v-show="showGratitude" @close="toggleGratitude" @click.stop v-draggable /> -->
+      <!-- <Zine_CeilingFan v-show="showCeilingFan" @close="toggleCeiingFan" @click.stop v-draggable /> -->
+
+
+      <div id="CeilingFan" class="ceiling-fan pointer"  alt="Ceiling Fan">
+         <img :src="CeilingFan" alt="Ceiling Fan" />
+      </div>
+
+      <div class="cabinet-container h-250 sm-h-800 sm-mr-60 relative">
+        <img :src="Cabinet" class="h-250 sm-h-800 absolute" alt="Glass Cabinet" />
+          
+        <div id="Remote" class="remote absolute pointer" 
+              @click="onRemoteClick"
+>>>>>>> main
               v-draggable="{
                 snapInto: [{ left: 0, top: 620, right: 1500, bottom: 620 }],
                 snapDurationMs: 150,
@@ -23,6 +44,7 @@
             <img :src="Water" class="water"/>
         </div>
 
+<<<<<<< HEAD
         <TVStack ref="tvstack"/> 
         
         <div class="cabinet-container h-250 sm-h-800 sm-mr-60 relative">
@@ -40,6 +62,25 @@
           <div id="Candle" class="candle" 
                 @click="onCandleClick"
                 @overlap="onCandleOverlap($event)"
+=======
+         <!-- <div id="Heart" @click="toggleGratitude" class="heart absolute pointer" 
+                v-draggable="{
+                snapInto: [
+                    { left: 40, top: 685, right: 278, bottom: 750}, // row 1
+                    { left: 40, top: 528, right: 278, bottom: 610 }, // row 2
+                    { left: 40, top: 387, right: 278, bottom: 420 }, // row 3
+                    { left: 40, top: 237, right: 278, bottom: 320 }, // row 4
+                    { left: 40, top: 93, right: 278, bottom: 120 }, // row 5
+                  ],
+                snapDurationMs: 150,    
+                resetOnResize: true   
+              }"
+              alt="Heart">
+             <img :src="Heart" alt="Heart" /> 
+         </div> -->
+
+         <div id="Buddha" @click="toggleValidation" class="buddha absolute pointer" 
+>>>>>>> main
                 v-draggable="{
                 snapInto: [
                     { left: 20, top: 700, right: 290, bottom: 720 }, // row 1
@@ -144,6 +185,11 @@ import TVStack from './components/TVStack.vue'
 import Validation from './components/Validation.vue'
 import Alchemy from './components/Alchemy.vue'
 import MusicPlayer from './components/MusicPlayer.vue'
+import Gratitude from './components/Gratitude.vue'
+import Zine_CeilingFan from './components/zine_CeilingFan.vue'
+
+
+
 
 import fireSound from './assets/fire.mp3';
 import Fire from './assets/fire.gif';
@@ -154,11 +200,13 @@ import Water from './assets/water.gif';
 
 
 import Cabinet from './assets/curiocabinet.png'
+import CeilingFan from './assets/ceiling-fan.gif'
 import TV from './assets/tv.png'
 import Static from './assets/static.gif'
 import Boulder from './assets/boulder.png'
 
 import Buddha from './assets/buddha.png'
+import Heart from './assets/heart.png'
 import Gold from './assets/gold.png'
 import Remote from './assets/remote.png'
 import AirpodPro from './assets/airpod-pro.png'
@@ -168,33 +216,45 @@ import Ash from './assets/ash.png'
 
 export default {
   name: 'HelloWorld',
-  components: { EgoTrap, Validation, MusicPlayer, Alchemy, TVStack },
+  components: { EgoTrap, Validation, MusicPlayer, Alchemy, TVStack, Gratitude, Zine_CeilingFan },
   data() {
     return {
-      Cabinet, TV, Boulder, Static,
-      Buddha, Gold, Remote, AirpodPro, Paper, Ash,
+      TV, Boulder, Static,
+      Cabinet, Buddha, Gold, Remote, AirpodPro, Paper, Ash,
       WateringCan, Water,
       Fire,
+      CeilingFan,
       showEgoTrap: false,
       showValidation: false,
       showAlchemy: false,
       showMusicPlayer: false,
-      _burnTimers: new WeakMap()
+      showGratitude: false,
+      showCeilingFan: false,
     }
   },
   mounted() {
     this.fireAudio = new Audio(fireSound);
   },
   methods: {
-    checkToggle(e) {
+    checkToggle(e) { //this determines if it is a drag click or a toggle click
       return !!e?.currentTarget?.dataset?.dragged
+    },
+    toggleCeiingFan(e) {
+    if (this.checkToggle(e) === false ) {
+        this.showCeilingFan = !this.showCeilingFan
+        this.showValidation = false;
+        this.showEgoTrap = false
+        this.showAlchemy = false
+        this.showMusicPlayer = false
+      }
     },
     toggleValidation(e) {
       if (this.checkToggle(e) === false ) {
-          this.showValidation = !this.showValidation
-          this.showEgoTrap = false
-          this.showAlchemy = false
-          this.showMusicPlayer = false
+        this.showValidation = !this.showValidation
+        this.showEgoTrap = false
+        this.showAlchemy = false
+        this.showMusicPlayer = false
+        this.showCeilingFan = false
       }
     },
      toggleAlchemy(e) {
@@ -203,6 +263,7 @@ export default {
         this.showEgoTrap = false
         this.showValidation = false
         this.showMusicPlayer = false
+        this.showCeilingFan = false
       }
       
     },
@@ -230,6 +291,7 @@ export default {
       this.showAlchemy = false
       this.showValidation = false
       this.showMusicPlayer = false
+      this.showCeilingFan = false
     },
     onCandleOverlap({ detail }) {
     const { element, hits = [] } = detail;

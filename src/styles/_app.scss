@@ -1,5 +1,21 @@
 @use './mixins' as *;
 
+.ceiling-fan {
+    position: relative;
+    padding-bottom: 60%;
+    top: 0px;
+    position: relative;
+        @include up(sm) { 
+            left: 400px;
+            position: absolute;
+        }
+        img {
+            width: 100px;
+            @include up(sm) { 
+                width: 500px;
+            }
+        }
+}
 .tv-container {
     height: 147px;
     width: 130px;
@@ -55,6 +71,19 @@
     @include up(sm) { left: 206px;top: 720px;}
     img {
         width: 25px;
+        @include up(sm) {  width: 50px;}
+    }
+}
+
+.heart {
+    top: 61px;
+    left: 164px;
+    @include up(sm) {  
+        left: 215px;
+        top: 261px;
+    }
+    img {
+        width: 40px;
         @include up(sm) {  width: 50px;}
     }
 }
