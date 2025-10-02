@@ -13,7 +13,7 @@
                 snapInto: [{ left: 0, top: 620, right: 1500, bottom: 620 }],
                 snapDurationMs: 150,
                 resetOnResize: true,
-                overlapWith: ['#AirpodPro', '#Remote', '#MoreFire'],        // what you want to douse
+                overlapWith: ['#AirpodPro', '#Remote', '#CabinetFire'],        // what you want to douse
                 overlapOnMove: true,          // hover detection
                 overlapSubject: '.water',     // only the water image counts
                 minOverlapRatio: 0.05,
@@ -27,15 +27,16 @@
         
         <div class="cabinet-container h-250 sm-h-800 sm-mr-60 relative">
           
-          <img :src="Cabinet" class="h-250 sm-h-800 absolute" alt="Glass Cabinet" />
-
-            <div id="MoreFire" class="more-fire">
-                <img :src="Fire" alt="Fire" class="fire1"/>
-                <img :src="Fire" alt="Fire" class="fire2"/>
-                <img :src="Fire" alt="Fire" class="fire3"/>
-                <img :src="Fire" alt="Fire" class="fire4"/>
-            </div>
-
+          <div id="CabinetStack">
+              <img :src="Cabinet" class="h-250 sm-h-800 absolute" alt="Glass Cabinet" />
+              <div id="CabinetFire" ref="cabinetFire" class="cabinet-fire ">
+                  <img :src="Fire" alt="Fire" class="fire1"/>
+                  <img :src="Fire" alt="Fire" class="fire2"/>
+                  <img :src="Fire" alt="Fire" class="fire3"/>
+                  <img :src="Fire" alt="Fire" class="fire4"/>
+              </div>
+          </div>
+          
           <div id="Candle" class="candle" 
                 @click="onCandleClick"
                 @overlap="onCandleOverlap($event)"
@@ -178,7 +179,6 @@ export default {
       showValidation: false,
       showAlchemy: false,
       showMusicPlayer: false,
-      showMoreFire: false,
       _burnTimers: new WeakMap()
     }
   },
@@ -217,8 +217,10 @@ export default {
       }
     },
     onRemoteClick(e) {
+      console.log(e?.target.children[0].id)
+      console.log(e?.target.children[0].id == "Remote")
       if (this.checkToggle(e) === false) {
-        if(e?.target.children[0].id !== "Ash") {
+        if(e?.target.children[0].id !== "Remote") {
           this.$refs.tvstack.onRemoteClicked()
         }
       }
@@ -263,27 +265,27 @@ export default {
         this.fireAudio.play().catch(() => {});
       }
 
-      // escalate in 5s only if still burning
+      // escalate in 3s only if still burning
       target._escalateTimeout = setTimeout(() => {
         if (target.dataset.burning === 'true') {
           this.onFireEscalate(target);
         }
-          // escalate in 5s only if still burning
+          // escalate in 3s only if still burning
           target._burnItDown = setTimeout(() => {
             if (target.dataset.burning === 'true') {
               this.burnItDown();
             }
-          }, 5000);
-      }, 5000);
+          }, 3000);
+      }, 3000);
     }, 1000);
   },
     putOutFire({ detail }) {
       detail.hits.forEach((sprayedElement) => {
           // hide fire
           const fireIcon = sprayedElement.target.querySelector('.fire') || null;
-          const MoreFire = sprayedElement.target.id === "MoreFire" ?  sprayedElement.target : null ;
+          const cabinetFire = sprayedElement.target.id === "CabinetFire" ?  sprayedElement.target : null ;
           if (fireIcon) fireIcon.style.display = 'none';
-          if (MoreFire) MoreFire.style.display = 'none';
+          if (cabinetFire) cabinetFire.style.display = 'none';
           // stop sound
           this.fireAudio?.pause?.(); if (this.fireAudio) this.fireAudio.currentTime = 0;
           // stop video
@@ -302,28 +304,26 @@ export default {
       ash.alt = 'Ash';
       el.children[0].replaceWith(ash);
     },
-    burnItDown() { ///need to work out something here with item turning to ash after it gets put out
-      const MoreFire = document.querySelector('.more-fire');
-      MoreFire.style.display = 'block'
-
+    burnItDown() {
+      this.$refs.cabinetFire.style.display = 'block'
       const fireIcons = document.querySelectorAll('.fire');
       fireIcons.forEach((fire) => {
+        fire.parentElement.dataset.burning = 'true';
         fire.style.display = 'block'
       });
 
       setTimeout(() => {
         const flammableIcons = document.querySelectorAll('.flammable');
         flammableIcons.forEach((icon) => {
-          icon.dataset.burning = 'true';
-          this.onFireEscalate(icon)
+          if (icon.dataset.burning === 'true') {
+            this.onFireEscalate(icon)
+          }
         });
-      }, 5000);
-      
+      }, 3000);
 
       setTimeout(() => {
           this.$refs.tvstack.startBurnVideo()
       }, 500);
-
     }
   }
 }
