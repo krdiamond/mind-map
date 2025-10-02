@@ -129,9 +129,12 @@
     width: 50px;
     height: 50px;
     border: 3px solid black;
-    left: 90px;
-    top: 403px;
     background: white;
+    top: 0px;
+    @include up(sm) {  
+        left: 90px;
+        top: 403px;
+    }
 }
 
 .fire {
@@ -155,11 +158,12 @@
 
 .watering-can-container {
     position: absolute;
-    left: 750px;
-    top: 620px;
     z-index: 3;
+    width: 100px;
     .watering-can {
         width: 300px;
+        left: 750px;
+        top: 620px;
     }
 
     .water {
