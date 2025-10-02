@@ -130,7 +130,7 @@
     border: 3px solid black;
     background: white;
     top: 0px;
-    @include up(sm) {  
+    @include up(lg) {  
         left: 90px;
         top: 403px;
     }
@@ -159,10 +159,18 @@
     position: absolute;
     z-index: 3;
     width: 100px;
-    .watering-can {
+    left: 0;
+    
+    @include up(lg) {  
         width: 300px;
         left: 750px;
         top: 620px;
+    }
+    .watering-can {
+        width: 100px;
+        @include up(lg) {  
+            width: 300px;
+        }
     }
 
     .water {
