@@ -37,8 +37,9 @@
               </div>
           </div>
           
-          <div id="Candle" class="candle" 
-                @click="onCandleClick"
+          <!-- need to work on shelf placement for the candle, also need flame gif -->
+          <div id="Candle" class="candle-wrapper"  
+                @click="onCandleClick" 
                 @overlap="onCandleOverlap($event)"
                 v-draggable="{
                 snapInto: [
@@ -53,11 +54,11 @@
                 overlapWith: ['#AirpodPro', '#Remote'],    // or ['#Paper', '#SomethingElse'] 
               }"
               alt="Candle">
-              Candle
+                <img :src="Candle" class="candle"/>
+                <!-- <img :src="Water" class="water"/> -->
           </div>
 
           <div id="Remote" class="remote flammable" 
-                @click="onRemoteClick"
                 @overlap="onCandleOverlap($event)" 
                 v-draggable="{
                 snapInto: [
@@ -165,6 +166,7 @@ import Static from './assets/static.gif'
 import Boulder from './assets/boulder.png'
 
 import Buddha from './assets/buddha.png'
+import Candle from './assets/candle.png'
 import Heart from './assets/heart.png'
 import Gold from './assets/gold.png'
 import Remote from './assets/remote.png'
@@ -179,7 +181,7 @@ export default {
   data() {
     return {
       TV, Boulder, Static,
-      Cabinet, Buddha, Gold, Remote, AirpodPro, Paper, Ash,
+      Cabinet, Buddha, Gold, Remote, AirpodPro, Paper, Ash, Candle,
       WateringCan, Water,
       Fire,
       CeilingFan,
@@ -199,7 +201,7 @@ export default {
       return !!e?.currentTarget?.dataset?.dragged
     },
     toggleCeiingFan(e) {
-    if (this.checkToggle(e) === false ) {
+      if (this.checkToggle(e) === false ) {
         this.showCeilingFan = !this.showCeilingFan
         this.showValidation = false;
         this.showEgoTrap = false
@@ -236,15 +238,6 @@ export default {
         }
       }
     },
-    onRemoteClick(e) {
-      console.log(e?.target.children[0].id)
-      console.log(e?.target.children[0].id == "Remote")
-      if (this.checkToggle(e) === false) {
-        if(e?.target.children[0].id !== "Remote") {
-          this.$refs.tvstack.onRemoteClicked()
-        }
-      }
-    },
     toggleEgoTrap() {
       this.showEgoTrap = !this.showEgoTrap
       this.showAlchemy = false
@@ -255,9 +248,9 @@ export default {
     onCandleOverlap({ detail }) {
     const { element, hits = [] } = detail;
     if ([detail.element, detail.hits?.[0]?.target]
-    .some(el => el && (el.id?.toLowerCase() === 'ash' || el.querySelector?.('[id="ash" i]')))) {
-  return;
-}
+        .some(el => el && (el.id?.toLowerCase() === 'ash' || el.querySelector?.('[id="ash" i]')))) {
+      return;
+    }
     const target = element?.id === 'Candle' ? hits[0]?.target : element;
     if (!target) return;
 
