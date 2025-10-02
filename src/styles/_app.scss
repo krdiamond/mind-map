@@ -1,26 +1,25 @@
 @use './mixins' as *;
 
 .ceiling-fan {
-    position: relative;
-    padding-bottom: 60%;
+    position: absolute;
+    // padding-bottom: 60%;
     top: 0px;
-    position: relative;
-        @include up(sm) { 
-            left: 400px;
-            position: absolute;
+    left: 100px;
+    @include up(lg) { 
+        left: 400px;
+    }
+    img {
+        width: 150px;
+        @include up(lg) { 
+            width: 500px;
         }
-        img {
-            width: 100px;
-            @include up(sm) { 
-                width: 500px;
-            }
-        }
+    }
 }
 .tv-container {
     height: 147px;
     width: 130px;
 
-    @include up(sm) { 
+    @include up(lg) { 
         height: 480px; 
         width: 430px;
     }
@@ -29,7 +28,7 @@
 .boulder{
   top: 65px;
   width: 125px;
-    @include up(sm) {  
+    @include up(lg) {  
         top: 200px;
         width: 425px;
     }
@@ -38,7 +37,7 @@
 .tv {
   left: 15px;
   width: 100px;
-    @include up(sm) {  
+    @include up(lg) {  
         left: 60px;
         width: 325px;
     }
@@ -50,7 +49,7 @@
     transform: perspective(800px) rotateY(49deg) rotateZ(0.7deg);
     width: 137px;
     height: 61px;
-    @include up(sm) {  
+    @include up(lg) {  
         top: 22px;
         left: 6px;
         transform: perspective(2500px) rotateY(50deg) rotateZ(0.5deg);
@@ -62,65 +61,65 @@
 
 .cabinet-container {
   width: 110px;
-  @include up(sm) {  width: 340px;}
+  @include up(lg) {  width: 340px;}
 }
 
 .gold {
     left: 61px;
     top: 217px;
-    @include up(sm) { left: 206px;top: 720px;}
+    @include up(lg) { left: 206px;top: 720px;}
     img {
         width: 25px;
-        @include up(sm) {  width: 50px;}
+        @include up(lg) {  width: 50px;}
     }
 }
 
 .heart {
     top: 61px;
     left: 164px;
-    @include up(sm) {  
+    @include up(lg) {  
         left: 215px;
         top: 261px;
     }
     img {
         width: 40px;
-        @include up(sm) {  width: 50px;}
+        @include up(lg) {  width: 50px;}
     }
 }
 
 .airpod-pro {
     left: 12px;
     top: 170px;
-    @include up(sm) { left: 40px;top: 560px;}
+    @include up(lg) { left: 40px;top: 560px;}
     img {
         width: 40px;
-        @include up(sm) {  width: 100px;}
+        @include up(lg) {  width: 100px;}
     }
 }
 
 .remote {
     top: 120px;
     left: 35px;
-    @include up(sm) {     
+    @include up(lg) {     
     left: 159px;
     top: 410px;}
     img {
         width: 40px;
         transform: rotateX(15deg) rotateY(196deg) skew(-19deg, 17deg);
-        @include up(sm) {  width: 100px;}
+        @include up(lg) {  width: 100px;}
     }
 }
 
 .buddha {
     top: 152px;
     left: 56px;
-    @include up(sm) {  
+    @include up(lg) {  
         left: 199px;
         top: 531px;
     }
     img {
         width: 20px;
-        @include up(sm) {  width: 40px;}
+        @include up(lg) {  width: 40px;}
     }
 }
 
@@ -140,7 +139,7 @@
     height: 100%;
     padding: 20px;
     width: 100%;
-    @include up(sm) {  
+    @include up(lg) {  
         position: absolute !important;
         left: 922px; top: 507px;
         height: 300px;
