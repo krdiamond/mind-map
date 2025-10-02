@@ -9,18 +9,21 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html {
-    width: 350px;
-    margin: auto;
-    height: 100%;
+    min-width: 300px;
     padding-top: 100px;
     overflow: hidden;
-
-    @include up(sm) {  
-        width: 1500px; 
-        height: unset;
+    width: 100%;
+    max-width: 600px;
+    padding-top: 100px;
+    margin: auto;
+    @include up(lg) {
+        max-width: 1500px; 
         padding-top: unset;
-        overflow: unset;
     }
+}
+
+body {
+    margin: 20px;
 }
 
 .pointer {cursor: pointer;}
@@ -60,9 +63,9 @@ p {
 .w-500 { width: 500px;}
 .w-full { width: 100%;}
 
-.sm-w-300 {@include up(sm) {  width: 300px; }}
-.sm-w-400 {@include up(sm) {  width: 400px; }}
-.sm-w-500 {@include up(sm) {  width: 500px; }}
+.sm-w-300 {@include up(lg) {  width: 300px; }}
+.sm-w-400 {@include up(lg) {  width: 400px; }}
+.sm-w-500 {@include up(lg) {  width: 500px; }}
 
   
 /* ---------------- HEIGHT ---------------- */
@@ -72,8 +75,8 @@ p {
 .h-900 { height: 900px;}
 .h-full { height: 100%;}
 
-.sm-h-800 {@include up(sm) {  height: 800px; }}
-.sm-h-900 {@include up(sm) {  height: 900px; }}
+.sm-h-800 {@include up(lg) {  height: 800px; }}
+.sm-h-900 {@include up(lg) {  height: 900px; }}
 
 /* ---------------- PADDING / MARGIN---------------- */
 
@@ -81,7 +84,7 @@ p {
 
 .m-12 {margin: 12px;}
 
-.sm-mr-60 {@include up(sm) {  margin-right: 60px; }}
+.sm-mr-60 {@include up(lg) {  margin-right: 60px; }}
 
 .p-20 {padding: 20px;}
 
@@ -90,7 +93,7 @@ p {
 .pt-12 {padding-top: 12px;}
 .pr-12 {padding-right: 12px;}
 
-.sm-p-20 {@include up(sm) {  padding: 20px; }}
+.sm-p-20 {@include up(lg) {  padding: 20px; }}
 
 
 /* ---------------- POSITION ---------------- */
@@ -109,8 +112,8 @@ p {
 /* ---------------- SHOW/HIDE ---------------- */
 
 .hide {display: none;}
-.sm-show {@include up(sm) {  display: block }}
-.sm-hide {@include up(sm) {  display: none }}
+.sm-show {@include up(lg) {  display: block }}
+.sm-hide {@include up(lg) {  display: none }}
 
 /* ---------------- FLEX ---------------- */
 
