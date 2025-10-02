@@ -4,32 +4,11 @@
         <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable class="popup-box sm-w-400"/>
         <MusicPlayer v-if="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable class="popup-box sm-w-400"/>
       
-<<<<<<< HEAD
         <div class="fire-alarm">Fire Alarm</div>
 
         <div id="WateringCan"
               class="watering-can-container"
               @overlap="putOutFire($event)"
-=======
-      <TVStack ref="tvstack"/>
-
-      <Validation v-show="showValidation" @close="toggleValidation" @click.stop v-draggable/>
-      <Alchemy v-show="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable/>
-      <MusicPlayer v-show="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable/>
-      <!-- <Gratitude v-show="showGratitude" @close="toggleGratitude" @click.stop v-draggable /> -->
-      <!-- <Zine_CeilingFan v-show="showCeilingFan" @close="toggleCeiingFan" @click.stop v-draggable /> -->
-
-
-      <div id="CeilingFan" class="ceiling-fan pointer"  alt="Ceiling Fan">
-         <img :src="CeilingFan" alt="Ceiling Fan" />
-      </div>
-
-      <div class="cabinet-container h-250 sm-h-800 sm-mr-60 relative">
-        <img :src="Cabinet" class="h-250 sm-h-800 absolute" alt="Glass Cabinet" />
-          
-        <div id="Remote" class="remote absolute pointer" 
-              @click="onRemoteClick"
->>>>>>> main
               v-draggable="{
                 snapInto: [{ left: 0, top: 620, right: 1500, bottom: 620 }],
                 snapDurationMs: 150,
@@ -44,7 +23,6 @@
             <img :src="Water" class="water"/>
         </div>
 
-<<<<<<< HEAD
         <TVStack ref="tvstack"/> 
         
         <div class="cabinet-container h-250 sm-h-800 sm-mr-60 relative">
@@ -62,25 +40,6 @@
           <div id="Candle" class="candle" 
                 @click="onCandleClick"
                 @overlap="onCandleOverlap($event)"
-=======
-         <!-- <div id="Heart" @click="toggleGratitude" class="heart absolute pointer" 
-                v-draggable="{
-                snapInto: [
-                    { left: 40, top: 685, right: 278, bottom: 750}, // row 1
-                    { left: 40, top: 528, right: 278, bottom: 610 }, // row 2
-                    { left: 40, top: 387, right: 278, bottom: 420 }, // row 3
-                    { left: 40, top: 237, right: 278, bottom: 320 }, // row 4
-                    { left: 40, top: 93, right: 278, bottom: 120 }, // row 5
-                  ],
-                snapDurationMs: 150,    
-                resetOnResize: true   
-              }"
-              alt="Heart">
-             <img :src="Heart" alt="Heart" /> 
-         </div> -->
-
-         <div id="Buddha" @click="toggleValidation" class="buddha absolute pointer" 
->>>>>>> main
                 v-draggable="{
                 snapInto: [
                     { left: 20, top: 700, right: 290, bottom: 720 }, // row 1
