@@ -1,9 +1,4 @@
 <template>  
-<ul>
-  <li> finsih candle and wick placement</li>
-  <li> check all placement on mobile</li>
-  <li> is vue the best to use for popups? Seems like unnecesarry data states</li>
-</ul>
     <div class="h-250 sm-h-900 sm-p-20  relative flex justify-between align-bottom ">
         <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable class="popup-box sm-w-400"/>
         <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable class="popup-box sm-w-400"/>
@@ -22,7 +17,7 @@
                 snapInto: [{ left: 0, top: 620, right: 1500, bottom: 620 }],
                 snapDurationMs: 150,
                 resetOnResize: true,
-                overlapWith: ['#AirpodPro', '#Remote', '#CabinetFire'],        // what you want to douse
+                overlapWith: ['#AirpodPro', '#Remote', '#CabinetFire','#Candle'],        // what you want to douse
                 overlapOnMove: true,          // hover detection
                 overlapSubject: '.water',     // only the water image counts
                 minOverlapRatio: 0.05,
@@ -60,7 +55,7 @@
               }"
               alt="Candle">
                 <img :src="Candle" class="candle"/>
-                <!-- <img :src="Water" class="water"/> -->
+                <img :src="Fire" class="candle-fire fire"/>
           </div>
 
           <div id="Remote" class="remote flammable" 
@@ -80,7 +75,7 @@
               }"
               alt="Remote">
             <img :src="Remote" alt="Remote" />
-            <img :src="Fire" alt="Fire" class="fire"/>
+            <img :src="Fire" alt="Fire" class="fire hide"/>
             <click-spark style="--click-spark-color: black;"></click-spark>
           </div>
 
@@ -119,7 +114,7 @@
                 }"
                 alt="Airpod Pro">
               <img :src="AirpodPro" alt="Airpod Pro" />
-              <img :src="Fire" alt="Fire" class="fire"/>
+              <img :src="Fire" alt="Fire" class="fire hide"/>
           </div>
 
           <div id="Gold" @click="toggleAlchemy" class="gold" 

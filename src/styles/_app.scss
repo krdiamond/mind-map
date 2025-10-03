@@ -133,11 +133,16 @@
     .candle {
         width: 50px;
     }
+    .candle-fire {
+        position: absolute;
+        top: -30px;
+        left: 11px;
+        width: 24px;
+    }
     
 }
 
 .fire {
-    display: none;
     position: absolute;
     top: -100px;
     left: -10px;
