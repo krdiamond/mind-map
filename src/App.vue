@@ -1,8 +1,7 @@
 <template>  
 <ul>
-  <li>finsih candle and wick placement</li>
+  <li> finsih candle and wick placement</li>
   <li> check all placement on mobile</li>
-  <li> make sure remote does not work if it is ash</li>
   <li> is vue the best to use for popups? Seems like unnecesarry data states</li>
 </ul>
     <div class="h-250 sm-h-900 sm-p-20  relative flex justify-between align-bottom ">
@@ -12,7 +11,11 @@
       
         <div class="fire-alarm">Fire Alarm</div>
 
-        <div id="WateringCan"
+
+        <TVStack ref="tvstack"/> 
+        
+        <div class="cabinet-container h-250 sm-h-800 sm-mr-60 relative">
+          <div id="WateringCan"
               class="watering-can-container"
               @overlap="putOutFire($event)"
               v-draggable="{
@@ -28,10 +31,6 @@
             <img :src="WateringCan" class="watering-can"/>
             <img :src="Water" class="water"/>
         </div>
-
-        <TVStack ref="tvstack"/> 
-        
-        <div class="cabinet-container h-250 sm-h-800 sm-mr-60 relative">
           
           <div id="CabinetStack">
               <img :src="Cabinet" class="h-250 sm-h-800 absolute" alt="Glass Cabinet" />
