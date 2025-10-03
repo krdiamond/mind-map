@@ -6,9 +6,8 @@
 					<path d="M797.32 985.882 344.772 1438.43l188.561 188.562 452.549-452.549 452.548 452.549 188.562-188.562-452.549-452.548 452.549-452.549-188.562-188.561L985.882 797.32 533.333 344.772 344.772 533.333z"/>
 				</svg>
 			</div>
-			<h2 class="m-12">one unique album per/day</h2>
+			<h2 class="m-12">one unlistened unique album per/day</h2>
 			<div class="m-12">
-				<p class="mb-6">September 2025</p>
 				<table>
 					<tbody>
 						<tr v-for="row in albums" :key="row.id">
