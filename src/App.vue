@@ -65,6 +65,7 @@
           </div>
 
           <div id="Remote" class="remote flammable" 
+                @click="onRemoteClick(e)" 
                 @overlap="onCandleOverlap($event)" 
                 v-draggable="{
                 snapInto: [
@@ -84,7 +85,8 @@
             <click-spark style="--click-spark-color: black;"></click-spark>
           </div>
 
-          <div id="Buddha" @click="toggleValidation" class="buddha" 
+          <div id="Buddha" class="buddha" 
+                  @click="toggleValidation" 
                   v-draggable="{
                   snapInto: [
                       { left: 40, top: 685, right: 278, bottom: 750}, // row 1
@@ -250,6 +252,13 @@ export default {
       this.showValidation = false
       this.showMusicPlayer = false
       this.showCeilingFan = false
+    },
+    onRemoteClick(e) {
+      if (this.checkToggle(e) === false) {
+        if(e?.target.children[0].id !== "Ash") {
+          // this.$refs.tvstack.onRemoteClicked()    
+        }
+      }
     },
     onCandleOverlap({ detail }) {
     const { element, hits = [] } = detail;
