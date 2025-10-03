@@ -163,8 +163,8 @@
     
     @include up(lg) {  
         width: 300px;
-        left: 750px;
-        top: 620px;
+        left: -300px;
+        bottom: 0;
     }
     .watering-can {
         width: 100px;
