@@ -1,6 +1,4 @@
 <template>  
-
-{{  activeFire  }}
     <div class="h-250 sm-h-900 sm-p-20  relative flex justify-between align-bottom ">
         <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable class="popup-box sm-w-400"/>
         <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable class="popup-box sm-w-400"/>
@@ -162,8 +160,6 @@ import Fire from './assets/fire.gif';
 import WateringCan from './assets/watering-can.png';
 import Water from './assets/water.gif';
 
-
-
 import Cabinet from './assets/curiocabinet.png'
 import CeilingFan from './assets/ceiling-fan.gif'
 import TV from './assets/tv.png'
@@ -208,6 +204,7 @@ export default {
     activeFire(value) {
       if (value == true) {
         this.fireAudio.currentTime = 0;
+        this.fireAudio.volume = 0.10   
         this.fireAudio.play().catch(() => {});
       } else {
         this.fireAudio?.pause()
@@ -296,14 +293,12 @@ export default {
                 const cabinetFires = this.$refs.cabinetFire.querySelectorAll('.fire');
                 cabinetFires.forEach((fire) => {
                   fire.classList.remove('hide');
-                  setTimeout(() => {
-                      this.$refs.tvstack.startBurnVideo()
-                  }, 500);
+                  this.$refs.tvstack.startBurnVideo()
                 });
               }
-            }, 2000);
+            }, 5000);
           }, 2000);
-      }, 2000);
+      }, 1000);
     },
     checkForActiveFire() {
         this.activeFire = false;
@@ -321,7 +316,7 @@ export default {
           if (this.activeFire) {
             this.turnToAsh(target)
           }
-        }, 2000);
+        }, 3000);
     },
     putOutFire(event) {
       event.detail.hits.forEach((sprayedElement) => {
@@ -345,16 +340,6 @@ export default {
     },
   }
 }
-
-
-          // stop sound
-          // this.fireAudio?.pause?.(); if (this.fireAudio) this.fireAudio.currentTime = 0;
-          // stop video
-          // this.$refs.tvstack.pauseBurnVideo()
-          // clear timers + mark not burning
-          // clearTimeout(sprayedElement.target._igniteTimeout);
-          // clearTimeout(sprayedElement.target._escalateTimeout);
-          // clearTimeout(sprayedElement.target._burnItDown);
 </script>
 
 
