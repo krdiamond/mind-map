@@ -1,4 +1,6 @@
 <template>  
+
+{{  activeFire  }}
     <div class="h-250 sm-h-900 sm-p-20  relative flex justify-between align-bottom ">
         <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable class="popup-box sm-w-400"/>
         <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable class="popup-box sm-w-400"/>
@@ -10,6 +12,8 @@
         <TVStack ref="tvstack"/> 
         
         <div class="cabinet-container h-250 sm-h-800 sm-mr-60 relative">
+          
+          
           <div id="WateringCan"
               class="watering-can-container"
               @overlap="putOutFire($event)"
@@ -17,10 +21,10 @@
                 snapInto: [{ left: 0, top: 620, right: 1500, bottom: 620 }],
                 snapDurationMs: 150,
                 resetOnResize: true,
-                overlapWith: ['#AirpodPro', '#Remote', '#CabinetFire','#Candle'],        // what you want to douse
+                overlapWith: ['.fire'],        // what you want to douse
                 overlapOnMove: true,          // hover detection
                 overlapSubject: '.water',     // only the water image counts
-                minOverlapRatio: 0.05,
+                minOverlapRatio: .75,
                 overlapPadding: 0
               }">
             <img :src="WateringCan" class="watering-can"/>
@@ -30,10 +34,10 @@
           <div id="CabinetStack">
               <img :src="Cabinet" class="h-250 sm-h-800 absolute" alt="Glass Cabinet" />
               <div id="CabinetFire" ref="cabinetFire" class="cabinet-fire ">
-                  <img :src="Fire" alt="Fire" class="fire1"/>
-                  <img :src="Fire" alt="Fire" class="fire2"/>
-                  <img :src="Fire" alt="Fire" class="fire3"/>
-                  <img :src="Fire" alt="Fire" class="fire4"/>
+                  <img :src="Fire" alt="Fire" class="fire1 fire hide"/>
+                  <img :src="Fire" alt="Fire" class="fire2 fire hide"/>
+                  <img :src="Fire" alt="Fire" class="fire3 fire hide"/>
+                  <img :src="Fire" alt="Fire" class="fire4 fire hide"/>
               </div>
           </div>
           
@@ -55,7 +59,7 @@
               }"
               alt="Candle">
                 <img :src="Candle" class="candle"/>
-                <img :src="Fire" class="candle-fire fire"/>
+                <img :src="Fire" ref="candleFire" class="candle-fire fire"/>
           </div>
 
           <div id="Remote" class="remote flammable" 
@@ -187,16 +191,30 @@ export default {
       WateringCan, Water,
       Fire,
       CeilingFan,
+      littleFires: [],
       showEgoTrap: false,
       showValidation: false,
       showAlchemy: false,
       showMusicPlayer: false,
       showGratitude: false,
       showCeilingFan: false,
+      activeFire: false,
     }
   },
   mounted() {
     this.fireAudio = new Audio(fireSound);
+    this.littleFires = document.querySelectorAll('.fire');
+  },
+  watch: {
+    activeFire(value) {
+      if (value == true) {
+        this.fireAudio.currentTime = 0;
+        this.fireAudio.play().catch(() => {});
+      } else {
+        this.fireAudio?.pause()
+        this.$refs.tvstack.pauseBurnVideo()
+      }
+    }
   },
   methods: {
     checkToggle(e) { //this determines if it is a drag click or a toggle click
@@ -250,104 +268,93 @@ export default {
     onRemoteClick(e) {
       if (this.checkToggle(e) === false) {
         if(e?.target.children[0].id !== "Ash") {
-          // this.$refs.tvstack.onRemoteClicked()    
+          this.$refs.tvstack.onRemoteClicked()    
         }
       }
     },
-    onCandleOverlap({ detail }) {
-    const { element, hits = [] } = detail;
-    if ([detail.element, detail.hits?.[0]?.target]
-        .some(el => el && (el.id?.toLowerCase() === 'ash' || el.querySelector?.('[id="ash" i]')))) {
-      return;
-    }
-    const target = element?.id === 'Candle' ? hits[0]?.target : element;
-    if (!target) return;
+    onCandleOverlap(event) {
+      if(this.$refs.candleFire.classList.contains('hide')) { return }
 
-    // clear any existing timers attached to this element
-    clearTimeout(target._igniteTimeout);
-    clearTimeout(target._escalateTimeout);
-    clearTimeout(target._burnItDown);
+      const dragElement = event.target
+      const hitElement = event.detail.hits[0].target
+      const candle = dragElement.id === 'Candle' ? dragElement : hitElement;
+      const target = dragElement.id === 'Candle' ? hitElement : dragElement;
 
-    const candle = document.getElementById('Candle');
+      if (dragElement.children[0].id === 'Ash' || hitElement.children[0].id === 'Ash') { return }
 
-    // start a 1s fuse
-    target._igniteTimeout = setTimeout(() => {
-      // ✨ ultra-small overlap check at the moment of ignition
-      const ar = target.getBoundingClientRect();
-      const br = candle?.getBoundingClientRect?.();
-      const stillOverlapping = !!(br && !(ar.right <= br.left || ar.left >= br.right || ar.bottom <= br.top || ar.top >= br.bottom));
-      if (!stillOverlapping) return; // moved away before 1s → do nothing
-
-      // ignite
-      target.dataset.burning = 'true';
-      const fireIcon = target.querySelector('.fire');
-      if (fireIcon) fireIcon.style.display = 'block';
-
-      if (this.fireAudio) {
-        this.fireAudio.currentTime = 0;
-        this.fireAudio.play().catch(() => {});
-      }
-
-      // escalate in 3s only if still burning
-      target._escalateTimeout = setTimeout(() => {
-        if (target.dataset.burning === 'true') {
-          this.onFireEscalate(target);
-        }
-          // escalate in 3s only if still burning
-          target._burnItDown = setTimeout(() => {
-            if (target.dataset.burning === 'true') {
-              this.burnItDown();
+      setTimeout(() => {
+          this.setFireToElement(dragElement, hitElement, target)
+          setTimeout(() => {
+            if (this.activeFire) {
+              const flammableIcons = document.querySelectorAll('.flammable');
+              flammableIcons.forEach((icon) => {
+                this.setFireToElement(dragElement, hitElement, icon)
+              });
             }
-          }, 3000);
-      }, 3000);
-    }, 1000);
-  },
-    putOutFire({ detail }) {
-      detail.hits.forEach((sprayedElement) => {
-          // hide fire
-          const fireIcon = sprayedElement.target.querySelector('.fire') || null;
-          const cabinetFire = sprayedElement.target.id === "CabinetFire" ?  sprayedElement.target : null ;
-          if (fireIcon) fireIcon.style.display = 'none';
-          if (cabinetFire) cabinetFire.style.display = 'none';
-          // stop sound
-          this.fireAudio?.pause?.(); if (this.fireAudio) this.fireAudio.currentTime = 0;
-          // stop video
-          this.$refs.tvstack.pauseBurnVideo()
-          // clear timers + mark not burning
-          clearTimeout(sprayedElement.target._igniteTimeout);
-          clearTimeout(sprayedElement.target._escalateTimeout);
-          clearTimeout(sprayedElement.target._burnItDown);
-          delete sprayedElement.target.dataset.burning;
+            setTimeout(() => {
+              if (this.activeFire) {
+                const cabinetFires = this.$refs.cabinetFire.querySelectorAll('.fire');
+                cabinetFires.forEach((fire) => {
+                  fire.classList.remove('hide');
+                  setTimeout(() => {
+                      this.$refs.tvstack.startBurnVideo()
+                  }, 500);
+                });
+              }
+            }, 2000);
+          }, 2000);
+      }, 2000);
+    },
+    checkForActiveFire() {
+        this.activeFire = false;
+        this.littleFires.forEach((fire) => {
+          if (!fire.classList.contains('hide') && !fire.classList.contains('candle-fire')) {
+              this.activeFire = true;
+          }
       });
     },
-    onFireEscalate(el) {
+    setFireToElement(dragElement, hitElement, target) {
+        if (!this.confirmOverlapToIgnite(dragElement, hitElement)) return;
+        target.querySelector('.fire').classList.remove('hide');
+        this.checkForActiveFire()
+        setTimeout(() => {
+          if (this.activeFire) {
+            this.turnToAsh(target)
+          }
+        }, 2000);
+    },
+    putOutFire(event) {
+      event.detail.hits.forEach((sprayedElement) => {
+        sprayedElement.target.classList.add('hide');
+        this.checkForActiveFire()
+      });
+    },
+    turnToAsh(el) {
       const ash = document.createElement('img');
       ash.id = 'Ash';   
       ash.src = this.Ash; 
       ash.alt = 'Ash';
       el.children[0].replaceWith(ash);
     },
-    burnItDown() {
-      this.$refs.cabinetFire.style.display = 'block'
-      const fireIcons = document.querySelectorAll('.fire');
-      fireIcons.forEach((fire) => {
-        fire.parentElement.dataset.burning = 'true';
-        fire.style.display = 'block'
-      });
-
-      setTimeout(() => {
-        const flammableIcons = document.querySelectorAll('.flammable');
-        flammableIcons.forEach((icon) => {
-          if (icon.dataset.burning === 'true') {
-            this.onFireEscalate(icon)
-          }
-        });
-      }, 3000);
-
-      setTimeout(() => {
-          this.$refs.tvstack.startBurnVideo()
-      }, 500);
-    }
+    confirmOverlapToIgnite(dragElement, hitElement) {
+      //ultra-small overlap check at the moment of ignition
+      const ar = dragElement.getBoundingClientRect();
+      const br = hitElement?.getBoundingClientRect?.();
+      const stillOverlapping = !!(br && !(ar.right <= br.left || ar.left >= br.right || ar.bottom <= br.top || ar.top >= br.bottom));
+      return stillOverlapping
+    },
   }
 }
+
+
+          // stop sound
+          // this.fireAudio?.pause?.(); if (this.fireAudio) this.fireAudio.currentTime = 0;
+          // stop video
+          // this.$refs.tvstack.pauseBurnVideo()
+          // clear timers + mark not burning
+          // clearTimeout(sprayedElement.target._igniteTimeout);
+          // clearTimeout(sprayedElement.target._escalateTimeout);
+          // clearTimeout(sprayedElement.target._burnItDown);
 </script>
+
+
