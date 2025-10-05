@@ -266,10 +266,9 @@ export default {
       this.showCeilingFan = false
     },
     onRemoteClick(e) {
-      if (this.checkToggle(e) === false) {
-        if(e?.target.children[0].id !== "Ash") {
-          this.$refs.tvstack.onRemoteClicked()    
-        }
+      if (this.checkToggle(e) === false ) {
+        console.log('we are here?')
+        this.$refs.tvstack.onRemoteClicked()    
       }
     },
     onCandleOverlap(event) {
