@@ -42,8 +42,7 @@
           </div>
           
           <!-- need to work on shelf placement for the candle, also need flame gif -->
-          <div id="Candle" class="candle-wrapper"  
-                @click="onCandleClick" 
+          <div id="Candle" class="candle-wrapper"
                 @overlap="onCandleOverlap($event)"
                 v-draggable="{
                 snapInto: [
@@ -63,7 +62,7 @@
           </div>
 
           <div id="Remote" class="remote flammable" 
-                @click="onRemoteClick(e)" 
+                @click="onRemoteClick($event)" 
                 @overlap="onCandleOverlap($event)" 
                 v-draggable="{
                 snapInto: [
