@@ -197,15 +197,65 @@
   display: block;
 }
 
-.fire-alarm {
-    width: 60px;
-    height: 60px;
-    border: 3px solid black;
-    background: white;
+.fire-alarm-wrapper {
+    
     position: absolute;
     top: 0;
     right: 100px;
+    .fire-alarm {
+        width: 60px;
+        height: 60px;
+    }
+    .beacon {
+        position: absolute;
+        left: 46px;
+        top: 30px;
+        width: 4px;
+        height: 4px;
+        background-color: #111;
+        background: -webkit-radial-gradient(right center, ellipse cover, rgba(255, 255, 255, 0.2) 0%, rgba(0, 0, 0, 0.3) 100%);
+        border: solid 2px #777;
+        border-radius: 100%;
+        box-shadow: 0 -2px 0 3px #111 inset, 0 5px 5px rgba(0, 0, 0, 0.17), 0 10px rgba(255, 255, 255, 0.25) inset;
+        animation: blink 0.8s infinite normal;
+        transform: translate3d(0, 0, 0);
+    }
+
+    @keyframes blink {
+    0% {
+        background: -webkit-radial-gradient(right center, ellipse cover, rgba(255, 255, 255, 0.2) 0%, rgba(0, 0, 0, 0.3) 100%);
+        background-color: #111;
+        box-shadow: 0 -2px 0 3px #111 inset, 0 5px 5px rgba(0, 0, 0, 0.17), 0 10px rgba(255, 255, 255, 0.25) inset;
+        border: solid 2px #777;
+    }
+    1% {
+        background: none;
+        background-color: #FFF;
+        box-shadow: 0 -2px 0 3px #111 inset, 0px 0px 20px 1px rgba(255,255,255,1), 0 10px rgba(255, 255, 255, 0.25) inset;
+        border: solid 2px #FFF;
+    }
+    5% {
+        background: none;
+        background-color: red;
+        box-shadow: 0 -2px 0 3px #111 inset, 0px 0px 20px 1px rgba(lighten(red, 20%),1), 0 10px rgba(255, 255, 255, 0.25) inset;
+        border: solid 2px lighten(red, 20%);
+    }
+    10% {
+        background: -webkit-radial-gradient(right center, ellipse cover, rgba(255, 255, 255, 0.2) 0%, rgba(0, 0, 0, 0.3) 100%);
+        background-color: #111;
+        box-shadow: 0 -2px 0 3px #111 inset, 0 5px 5px rgba(0, 0, 0, 0.17), 0 10px rgba(255, 255, 255, 0.25) inset;
+        border: solid 2px #777;
+    }
+    100% {
+        background: -webkit-radial-gradient(right center, ellipse cover, rgba(255, 255, 255, 0.2) 0%, rgba(0, 0, 0, 0.3) 100%);
+        background-color: #111;
+        box-shadow: 0 -2px 0 3px #111 inset, 0 5px 5px rgba(0, 0, 0, 0.17), 0 10px rgba(255, 255, 255, 0.25) inset;
+        border: solid 2px #777;
+    }
+    }
 }
+
+
 
 .cabinet-fire {
     z-index: 1;
