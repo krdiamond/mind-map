@@ -4,9 +4,11 @@
         <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable class="popup-box sm-w-400"/>
         <MusicPlayer v-show="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable class="popup-box sm-w-400"/>
       
-        <div class="fire-alarm">Fire Alarm</div>
-
-
+        <div class="fire-alarm-wrapper">
+          <img :src="fireAlarm" class="fire-alarm"/>
+          <div class="beacon"></div>
+        </div>
+        
         <TVStack ref="tvstack"/> 
         
         <div class="cabinet-container h-250 sm-h-800 sm-mr-60 relative">
@@ -56,7 +58,7 @@
               }"
               alt="Candle">
                 <img :src="Candle" class="candle"/>
-                <img :src="Fire" ref="candleFire" class="candle-fire fire"/>
+                <img id="CandleFire" :src="Fire" ref="candleFire" class="candle-fire fire"/>
           </div>
 
           <div id="Remote" class="remote flammable" 
@@ -153,7 +155,7 @@ import Zine_CeilingFan from './components/zine_CeilingFan.vue'
 
 
 
-
+import fireAlarm from './assets/fire-alarm.png';
 import fireSound from './assets/fire.mp3';
 import Fire from './assets/fire.gif';
 
@@ -184,7 +186,7 @@ export default {
       TV, Boulder, Static,
       Cabinet, Buddha, Gold, Remote, AirpodPro, Paper, Ash, Candle,
       WateringCan, Water,
-      Fire,
+      Fire, fireAlarm, 
       CeilingFan,
       littleFires: [],
       showEgoTrap: false,
@@ -321,8 +323,16 @@ export default {
     putOutFire(event) {
       event.detail.hits.forEach((sprayedElement) => {
         sprayedElement.target.classList.add('hide');
+        if (sprayedElement.target.id === 'CandleFire') {
+          this.reIgnightCandleFlame()
+        }
         this.checkForActiveFire()
       });
+    },
+    reIgnightCandleFlame() {
+      setTimeout(() => {
+        this.$refs.candleFire.classList.remove('hide')
+      }, 3000);
     },
     turnToAsh(el) {
       const ash = document.createElement('img');
