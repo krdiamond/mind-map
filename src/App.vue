@@ -1,20 +1,68 @@
 <template>  
-    <div class="h-250 sm-h-900 sm-p-20  relative flex justify-between align-bottom ">
+    <div class="h-250 sm-h-700 sm-p-20  relative flex justify-between align-bottom ">
         <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable class="popup-box sm-w-400"/>
         <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable class="popup-box sm-w-400"/>
         <MusicPlayer v-show="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable class="popup-box sm-w-400"/>
       
-        <div class="fire-alarm-wrapper">
-          <img :src="fireAlarm" class="fire-alarm"/>
+        <div class="fire-detector-wrapper">
+          <img :src="fireAlarm" class="w-40 sm-w-70"/>
           <div class="beacon"></div>
         </div>
         
         <TVStack ref="tvstack"/> 
         
-        <div class="cabinet-container h-250 sm-h-800 sm-mr-60 relative">
+        <div class="cabinet-container w-100 sm-w-350 h-250 sm-h-600 relative">
+          
+          <div id="CabinetStack">
+              <img :src="Cabinet" class="h-250 sm-h-600 absolute" alt="Glass Cabinet" />
+              <div id="CabinetFire" ref="cabinetFire" class="cabinet-fire ">
+                  <img :src="Fire" alt="Fire" class="fire1 fire hide"/>
+                  <img :src="Fire" alt="Fire" class="fire2 fire hide"/>
+                  <img :src="Fire" alt="Fire" class="fire3 fire hide"/>
+                  <img :src="Fire" alt="Fire" class="fire4 fire hide"/>
+              </div>
+          </div>
+
+<div
+  id="Candle"
+  class="candle-wrapper"
+  @overlap="onCandleOverlap($event)"
+  v-draggable="{
+    // desktop defaults (>=1025px)
+    coordsBase: '.cabinet-container',
+    snapInto: [
+      { left: 28, top: 515, width: 180, height: 30 }, // shelf 1
+      { left: 28, top: 400, width: 180, height: 30 }, // shelf 2
+      { left: 28, top: 290, width: 180, height: 30 }, // shelf 3
+      { left: 28, top: 180, width: 180, height: 30 }, // shelf 4
+      { left: 28, top: 70,  width: 180, height: 30 }, // shelf 5
+    ],
+    responsive: [
+      {
+        query: '(max-width: 1024px)',
+        coordsBase: '.cabinet-container',
+        snapInto: [
+          { left: 13, top: 210, width: 73, height: 26 }, // shelf 1 (mobile)
+          { left: 13, top: 160, width: 73, height: 26 }, // shelf 2
+          { left: 13, top: 115, width: 73, height: 26 }, // shelf 3
+          { left: 13, top: 70, width: 73, height: 26 }, // shelf 4
+          { left: 13, top: 24,  width: 73, height: 26 }, // shelf 5
+        ]
+      }
+    ],
+
+    snapDurationMs: 150,
+    resetOnResize: true,
+    overlapWith: ['#AirpodPro', '#Remote'],
+    debugBoxes: true
+  }"
+>
+  <img :src="Candle" class="candle w-20 sm-w-40"/>
+  <img id="CandleFire" :src="Fire" ref="candleFire" class="candle-fire fire w-10 sm-w-20"/>
+</div>
           
           
-          <div id="WateringCan"
+          <!-- <div id="WateringCan"
               class="watering-can-container"
               @overlap="putOutFire($event)"
               v-draggable="{
@@ -29,39 +77,11 @@
               }">
             <img :src="WateringCan" class="watering-can"/>
             <img :src="Water" class="water"/>
-        </div>
+        </div> -->
           
-          <div id="CabinetStack">
-              <img :src="Cabinet" class="h-250 sm-h-800 absolute" alt="Glass Cabinet" />
-              <div id="CabinetFire" ref="cabinetFire" class="cabinet-fire ">
-                  <img :src="Fire" alt="Fire" class="fire1 fire hide"/>
-                  <img :src="Fire" alt="Fire" class="fire2 fire hide"/>
-                  <img :src="Fire" alt="Fire" class="fire3 fire hide"/>
-                  <img :src="Fire" alt="Fire" class="fire4 fire hide"/>
-              </div>
-          </div>
-          
-          <!-- need to work on shelf placement for the candle, also need flame gif -->
-          <div id="Candle" class="candle-wrapper"
-                @overlap="onCandleOverlap($event)"
-                v-draggable="{
-                snapInto: [
-                    { left: 20, top: 700, right: 290, bottom: 720 }, // row 1
-                    { left: 20, top: 538, right: 290, bottom: 620 }, // row 2
-                    { left: 20, top: 410, right: 290, bottom: 420 }, // row 3
-                    { left: 20, top: 260, right: 290, bottom: 320 }, // row 4
-                    { left: 20, top: 114, right: 290, bottom: 120 }, // row 5
-                  ],
-                snapDurationMs: 150,    
-                resetOnResize: true,
-                overlapWith: ['#AirpodPro', '#Remote'],    // or ['#Paper', '#SomethingElse'] 
-              }"
-              alt="Candle">
-                <img :src="Candle" class="candle"/>
-                <img id="CandleFire" :src="Fire" ref="candleFire" class="candle-fire fire"/>
-          </div>
 
-          <div id="Remote" class="remote flammable" 
+        
+          <!-- <div id="Remote" class="remote flammable" 
                 @click="onRemoteClick($event)" 
                 @overlap="onCandleOverlap($event)" 
                 v-draggable="{
@@ -134,7 +154,7 @@
                 }"
                 alt="Gold">
               <img :src="Gold" alt="Gold" />
-          </div>
+          </div> -->
 
         </div>
 
@@ -155,7 +175,7 @@ import Zine_CeilingFan from './components/zine_CeilingFan.vue'
 
 
 
-import fireAlarm from './assets/fire-alarm.png';
+import fireAlarm from './assets/fire-detector.png';
 import fireSound from './assets/fire.mp3';
 import Fire from './assets/fire.gif';
 

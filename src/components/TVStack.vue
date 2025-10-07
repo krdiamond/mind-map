@@ -7,15 +7,11 @@
         <img :src="Static" v-if="showStatic" class="static z-2 absolute" alt="static" />
         <img :src="Boulder" class="boulder absolute" alt="Boulder" />
       </div>
-
-
-
-
-
-
 </template>
 
 <script>
+
+import '../styles/tv-stack.scss'
 
 import TV from '../assets/tv.png'
 import Static from '../assets/static.gif'

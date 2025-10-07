@@ -12,7 +12,7 @@ html {
     min-width: 300px;
     padding-top: 100px;
     width: 100%;
-    max-width: 600px;
+    max-width: 500px;
     padding-top: 100px;
     margin: auto;
     @include up(lg) {
@@ -51,8 +51,9 @@ p {
 
 /* ---------------- WIDTH ---------------- */
 
-.w-30 { width: 30px;}
-.w-60 { width: 60px;}
+.w-10 { width: 10px;}
+.w-20 { width: 20px;}
+.w-40 { width: 40px;}
 .w-100 { width: 100px;}
 .w-110 { width: 110px;}
 .w-150 { width: 150px;}
@@ -62,7 +63,10 @@ p {
 .w-500 { width: 500px;}
 .w-full { width: 100%;}
 
-.sm-w-300 {@include up(lg) {  width: 300px; }}
+.sm-w-20 {@include up(lg) {  width: 20px; }}
+.sm-w-40 {@include up(lg) {  width: 40px; }}
+.sm-w-70 {@include up(lg) {  width: 70px; }}
+.sm-w-350 {@include up(lg) {  width: 350px; }}
 .sm-w-400 {@include up(lg) {  width: 400px; }}
 .sm-w-500 {@include up(lg) {  width: 500px; }}
 
@@ -74,16 +78,14 @@ p {
 .h-900 { height: 900px;}
 .h-full { height: 100%;}
 
-.sm-h-800 {@include up(lg) {  height: 800px; }}
-.sm-h-900 {@include up(lg) {  height: 900px; }}
+.sm-h-600 {@include up(lg) {  height: 600px; }}
+.sm-h-700 {@include up(lg) {  height: 700px; }}
 
 /* ---------------- PADDING / MARGIN---------------- */
 
 .mb-6 {margin-bottom: 6px;}
 
 .m-12 {margin: 12px;}
-
-.sm-mr-60 {@include up(lg) {  margin-right: 60px; }}
 
 .p-20 {padding: 20px;}
 
@@ -137,4 +139,11 @@ p {
 
 .border {
     border: 3px solid black;
+}
+
+.draggable-snapbox {
+  outline: 2px dashed magenta;
+  background: rgba(255, 0, 255, 0.08);
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(255,0,255,0.25);
 }

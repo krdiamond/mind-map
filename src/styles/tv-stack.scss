@@ -1,0 +1,45 @@
+
+@use './mixins' as *;
+
+.tv-container {
+    height: 147px;
+    width: 130px;
+
+    @include up(lg) { 
+        height: 480px; 
+        width: 430px;
+    }
+}
+
+.boulder{
+  top: 65px;
+  width: 125px;
+    @include up(lg) {  
+        top: 200px;
+        width: 425px;
+    }
+}
+
+.tv {
+  left: 15px;
+  width: 100px;
+    @include up(lg) {  
+        left: 60px;
+        width: 325px;
+    }
+}
+
+.static {
+    top: 6px;
+    left: 0;
+    transform: perspective(800px) rotateY(49deg) rotateZ(0.7deg);
+    width: 137px;
+    height: 61px;
+    @include up(lg) {  
+        top: 22px;
+        left: 6px;
+        transform: perspective(2500px) rotateY(50deg) rotateZ(0.5deg);
+        width: 454px;
+        height: 194px;
+  }
+}
