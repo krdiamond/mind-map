@@ -1,76 +1,206 @@
 // src/directives/draggable.js
 export default {
   mounted(el, binding) {
-    const opts = binding.value || {};
+    // Keep latest options on the element
+    el.__drag_opts__ = binding.value || {};
+    const O = () => el.__drag_opts__ || {};
+
+    // Always draggable, all viewports
     if (!el.style.position) el.style.position = 'absolute';
     el.style.cursor = 'grab';
+    el.style.touchAction = 'none'; // smooth touch dragging
 
-    // --- Reset-to-origin wiring -------------------------------------------
-    const breakQuery = opts.breakQuery || '(min-width: 600px)';
-    const resetOnBreakpoint = opts.resetOnBreakpoint !== false; // default true
-    const resetOnResize = !!opts.resetOnResize;                  // default false
+    // ---------- Responsive config (media queries) --------------------------
+    // O().responsive: [{ query: '(max-width:1024px)', snapInto: [...], coordsBase: '...' }, ...]
+    // Fallback: top-level snapInto / coordsBase.
+    const mqls = [];
+    function getActiveConfig() {
+      const base = { snapInto: O().snapInto, coordsBase: O().coordsBase };
+      const resp = Array.isArray(O().responsive) ? O().responsive : null;
+      if (!resp || !resp.length || typeof window === 'undefined') return base;
 
-    function resetToCssOrigin() {
-      el.style.left = '';
-      el.style.top = '';
-      el.style.right = '';
-      el.style.bottom = '';
-      delete el.dataset.dragLocked;
+      // Pick the LAST matching query (so later entries can override earlier ones)
+      let active = null;
+      for (const r of resp) {
+        if (!r || !r.query) continue;
+        const m = window.matchMedia(r.query);
+        if (m.matches) active = r;
+      }
+      if (!active) return base;
+      return {
+        snapInto: active.snapInto != null ? active.snapInto : base.snapInto,
+        coordsBase: active.coordsBase != null ? active.coordsBase : base.coordsBase,
+      };
     }
 
-    // Watch a breakpoint flip
-    if (typeof window !== 'undefined' && resetOnBreakpoint) {
-      const mql = window.matchMedia(breakQuery);
-      const onChange = () => resetToCssOrigin();
-      mql.addEventListener ? mql.addEventListener('change', onChange)
-                           : mql.addListener(onChange);
-      el.__drag_mql__ = { mql, onChange };
+    // Setup listeners to react to responsive query changes
+    function wireResponsiveListeners() {
+      const resp = Array.isArray(O().responsive) ? O().responsive : null;
+      if (!resp || !resp.length || typeof window === 'undefined') return;
+      // Clear previous
+      for (const { m, on } of mqls) {
+        m.removeEventListener ? m.removeEventListener('change', on) : m.removeListener(on);
+      }
+      mqls.length = 0;
+
+      // Add new
+      for (const r of resp) {
+        if (!r || !r.query) continue;
+        const m = window.matchMedia(r.query);
+        const on = () => {
+          // On breakpoint flip, just re-render debug boxes so you can see new rectangles.
+          renderDebugBoxes();
+        };
+        m.addEventListener ? m.addEventListener('change', on) : m.addListener(on);
+        mqls.push({ m, on });
+      }
+    }
+    wireResponsiveListeners();
+
+    // ---------- Debug overlay ---------------------------------------------
+    const dbg = {
+      enabled: !!O().debugBoxes,
+      baseEl: null,
+      container: null,
+      boxes: [],
+      className: O().debugClass || 'draggable-snapbox',
+      z: O().debugZ || 99999,
+    };
+
+    const resolveNode = (n) => {
+      if (!n) return null;
+      if (typeof n === 'string') return document.querySelector(n);
+      if (n && n.nodeType === 1) return n;
+      return null;
+    };
+
+    // Coordinate base: responsive can override coordsBase
+    const getBaseEl = () => {
+      const active = getActiveConfig();
+      return (
+        resolveNode(active.coordsBase) ||
+        el.offsetParent ||
+        el.parentElement ||
+        document.body
+      );
+    };
+
+    function ensureDebugContainer() {
+      if (!dbg.enabled) return;
+      const base = getBaseEl();
+      dbg.baseEl = base;
+      const baseCS = getComputedStyle(base);
+      if (baseCS.position === 'static') base.style.position = 'relative';
+
+      // If we already have a container and it belongs to a different base, move it
+      if (dbg.container && dbg.container.parentElement !== base) {
+        dbg.container.remove();
+        dbg.container = null;
+      }
+
+      if (!dbg.container) {
+        const c = document.createElement('div');
+        c.style.position = 'absolute';
+        c.style.left = '0';
+        c.style.top = '0';
+        c.style.width = base.clientWidth + 'px';
+        c.style.height = base.clientHeight + 'px';
+        c.style.pointerEvents = 'none';
+        c.style.zIndex = String(dbg.z);
+        c.dataset.draggableDbg = '1';
+        base.appendChild(c);
+        dbg.container = c;
+      }
     }
 
-    // (Optional) also reset on any window resize
-    if (typeof window !== 'undefined' && resetOnResize) {
-      let tid;
-      const onResize = () => { clearTimeout(tid); tid = setTimeout(resetToCssOrigin, 60); };
-      window.addEventListener('resize', onResize);
-      el.__drag_resize__ = onResize;
+    function clearDebugBoxes() {
+      if (!dbg.container) return;
+      dbg.container.innerHTML = '';
+      dbg.boxes = [];
     }
 
-    // --- Drag + snapInto ---------------------------------------------------
+    function drawBox(b, indexOneBased) {
+      if (!dbg.container) return;
+      const w = Math.max(0, (b.right ?? 0) - (b.left ?? 0));
+      const h = Math.max(0, (b.bottom ?? 0) - (b.top ?? 0));
+      const d = document.createElement('div');
+      d.className = dbg.className;
+      d.style.position = 'absolute';
+      d.style.left = (b.left ?? 0) + 'px';
+      d.style.top = (b.top ?? 0) + 'px';
+      d.style.width = w + 'px';
+      d.style.height = h + 'px';
+      d.style.pointerEvents = 'none';
+
+      // Label (1-based index)
+      const tag = document.createElement('div');
+      tag.textContent = String(indexOneBased);
+      tag.style.position = 'absolute';
+      tag.style.left = '2px';
+      tag.style.top = '0px';
+      tag.style.font = '11px/1 monospace';
+      tag.style.padding = '1px 3px';
+      tag.style.pointerEvents = 'none';
+      d.appendChild(tag);
+
+      dbg.container.appendChild(d);
+      dbg.boxes.push(d);
+    }
+
+    function renderDebugBoxes() {
+      if (!dbg.enabled) return;
+      ensureDebugContainer();
+      if (!dbg.container) return;
+
+      // keep container sized to base
+      dbg.container.style.width = dbg.baseEl.clientWidth + 'px';
+      dbg.container.style.height = dbg.baseEl.clientHeight + 'px';
+
+      clearDebugBoxes();
+      const boxes = getSnapBoxes();
+      boxes.forEach((b, i) => drawBox(b, i + 1)); // start counting at 1
+    }
+
+    // ---------- Drag + snapInto -------------------------------------------
     let startX, startY, baseLeft, baseTop, moved = false;
 
     const getRelPos = () => {
-      const parent = el.offsetParent || el.parentElement || document.body;
+      const base = getBaseEl();
       const er = el.getBoundingClientRect();
-      const pr = parent.getBoundingClientRect();
+      const br = base.getBoundingClientRect();
       const cs = getComputedStyle(el);
       const ml = parseFloat(cs.marginLeft) || 0;
       const mt = parseFloat(cs.marginTop)  || 0;
-      return { x: er.left - pr.left - ml, y: er.top - pr.top - mt };
+      return { x: er.left - br.left - ml, y: er.top - br.top - mt };
     };
 
     const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 
-    // Support one or many snap boxes (selectors, elements, or rects)
+    // Convert spec to box relative to current base (responsive-aware)
     function specToBox(spec) {
-      const parent = el.offsetParent || el.parentElement || document.body;
-      const pr = parent.getBoundingClientRect();
+      const base = getBaseEl();
+      const br = base.getBoundingClientRect();
+
       if (typeof spec === 'string' || (spec && spec.nodeType === 1)) {
         const node = typeof spec === 'string' ? document.querySelector(spec) : spec;
         if (!node) return null;
         const r = node.getBoundingClientRect();
-        return { left: r.left - pr.left, top: r.top - pr.top, right: r.right - pr.left, bottom: r.bottom - pr.top };
+        return { left: r.left - br.left, top: r.top - br.top, right: r.right - br.left, bottom: r.bottom - br.top };
       }
       if (spec && typeof spec === 'object') {
         let { left = 0, top = 0, right, bottom, width, height } = spec;
         if (right == null && width  != null) right  = left + width;
         if (bottom== null && height != null) bottom = top + height;
+        if (right == null) right = left;     // show as zero-width (debug will reveal)
+        if (bottom == null) bottom = top;    // show as zero-height
         return { left, top, right, bottom };
       }
       return null;
     }
 
     function getSnapBoxes() {
-      const spec = opts.snapInto;
+      const active = getActiveConfig();
+      const spec = active.snapInto;
       if (!spec) return [];
       const arr = Array.isArray(spec) ? spec : [spec];
       return arr.map(specToBox).filter(Boolean);
@@ -83,7 +213,8 @@ export default {
       let best = null, bestD2 = Infinity;
       for (const b of boxes) {
         const minX = b.left, minY = b.top;
-        const maxX = b.right  - ew, maxY = b.bottom - eh;
+        const maxX = (b.right  ?? b.left)  - ew;
+        const maxY = (b.bottom ?? b.top)   - eh;
         const tx = clamp(pos.x, minX, Math.max(minX, maxX));
         const ty = clamp(pos.y, minY, Math.max(minY, maxY));
         const dx = pos.x - tx, dy = pos.y - ty, d2 = dx*dx + dy*dy;
@@ -92,7 +223,7 @@ export default {
       return best;
     }
 
-    // --- Overlap helpers ---------------------------------------------------
+    // ---------- Overlap helpers (unchanged) -------------------------------
     const getRect = (node, pad = 0) => {
       const r = node.getBoundingClientRect();
       return {
@@ -113,9 +244,8 @@ export default {
       return x * y;
     };
 
-    // Which DOM nodes are valid targets (overlapWith)
     const resolveTargets = () => {
-      const spec = opts.overlapWith;
+      const spec = O().overlapWith;
       if (!spec) return [];
       const arr = Array.isArray(spec) ? spec : [spec];
       const nodes = [];
@@ -126,13 +256,11 @@ export default {
           nodes.push(s);
         }
       }
-      // exclude self if matched by selector
       return nodes.filter(n => n !== el);
     };
 
-    // NEW: allow a child element to act as the overlap "subject" (e.g., '.water')
     const resolveSubjectEl = () => {
-      const sel = opts.overlapSubject;
+      const sel = O().overlapSubject;
       if (!sel) return el;
       if (typeof sel === 'string') return el.querySelector(sel) || el;
       if (sel && sel.nodeType === 1) return sel;
@@ -140,8 +268,8 @@ export default {
     };
 
     const checkOverlapAndNotify = () => {
-      const pad = Number(opts.overlapPadding ?? 4);
-      const minRatio = Number(opts.minOverlapRatio ?? 0.15); // 15% of smaller area
+      const pad = Number(O().overlapPadding ?? 4);
+      const minRatio = Number(O().minOverlapRatio ?? 0.15); // 15% of smaller area
       const targets = resolveTargets();
       if (!targets.length) return;
 
@@ -160,33 +288,22 @@ export default {
       }
 
       if (hits.length) {
-        // Sort biggest overlap first
         hits.sort((a, b) => b.area - a.area);
-
-        const detail = {
-          element: el,        // draggable root
-          subject: subjectEl, // NEW: the hitbox element used
-          elementRect: er,
-          hits,               // array of { target, area, ratio, rect }
-        };
-
-        // 1) Fire DOM events so you can do @overlap / @draggable:overlap in template
+        const detail = { element: el, subject: subjectEl, elementRect: er, hits };
         el.dispatchEvent(new CustomEvent('overlap', { detail, bubbles: true }));
         el.dispatchEvent(new CustomEvent('draggable:overlap', { detail, bubbles: true }));
-
-        // 2) If a callback is supplied, call it
-        if (typeof opts.onOverlap === 'function') {
-          try { opts.onOverlap(detail); } catch (err) { console.error('onOverlap error', err); }
+        if (typeof O().onOverlap === 'function') {
+          try { O().onOverlap(detail); } catch (err) { console.error('onOverlap error', err); }
         }
       }
     };
 
-    // --- Pointer events ----------------------------------------------------
+    // ---------- Pointer events --------------------------------------------
     let moveListener, upListener;
-    let overlapRAF = null; // throttle overlap-on-move
+    let overlapRAF = null;
 
     const onPointerDown = (e) => {
-      if (opts.enabled === false) return;
+      if (O().enabled === false) return;
       // Only left-click or touch/pen
       if (e.button != null && e.button !== 0) return;
 
@@ -205,7 +322,7 @@ export default {
         // When we first exceed the tiny threshold, mark as actively dragging
         if (!moved && (Math.abs(dx) > 3 || Math.abs(dy) > 3)) {
           moved = true;
-          el.dataset.dragging = 'true'; // <-- attribute for CSS (rotation/swing)
+          el.dataset.dragging = 'true'; // attribute for CSS (rotation/swing)
           el.dispatchEvent(new CustomEvent('draggable:dragstart', { bubbles: true })); // optional
         }
 
@@ -213,8 +330,8 @@ export default {
         el.style.left = baseLeft + dx + 'px';
         el.style.top  = baseTop  + dy + 'px';
 
-        // NEW: while dragging, optionally check overlap continuously (hover)
-        if (moved && opts.overlapOnMove) {
+        // while dragging, optionally check overlap continuously (hover)
+        if (moved && O().overlapOnMove) {
           if (!overlapRAF) {
             overlapRAF = requestAnimationFrame(() => {
               overlapRAF = null;
@@ -233,42 +350,41 @@ export default {
 
         // Always clear the dragging attribute on release
         if (el.dataset.dragging) {
-          delete el.dataset.dragging;                 // <-- remove attribute (stops rotation)
+          delete el.dataset.dragging;
           el.dispatchEvent(new CustomEvent('draggable:dragend', { bubbles: true })); // optional
         }
 
-        if (moved) {
-          const target = pickNearestSnapTarget(getRelPos());
-          let snapMs = opts.snapDurationMs ?? 120;
-          if (target) {
-            if (snapMs) {
-              el.style.transition = `left ${snapMs}ms linear, top ${snapMs}ms linear`;
-              requestAnimationFrame(() => {
-                el.style.left = target.x + 'px';
-                el.style.top  = target.y + 'px';
-              });
-              setTimeout(() => { el.style.transition = ''; }, snapMs);
-            } else {
+        const target = pickNearestSnapTarget(getRelPos());
+        let snapMs = O().snapDurationMs ?? 120;
+        if (target) {
+          if (snapMs) {
+            el.style.transition = `left ${snapMs}ms linear, top ${snapMs}ms linear`;
+            requestAnimationFrame(() => {
               el.style.left = target.x + 'px';
               el.style.top  = target.y + 'px';
-            }
+            });
+            setTimeout(() => { el.style.transition = ''; }, snapMs);
           } else {
-            snapMs = 0; // no snap happened
+            el.style.left = target.x + 'px';
+            el.style.top  = target.y + 'px';
           }
-
-          // mark drag to suppress the post-drag click (if you use that check)
-          el.dataset.dragged = 'true';
-          setTimeout(() => { delete el.dataset.dragged; }, 0);
-
-          // Emit a dragstop event with final pos (after snap)
-          const afterMs = Math.max(0, Number(snapMs));
-          setTimeout(() => {
-            const finalPos = getRelPos();
-            el.dispatchEvent(new CustomEvent('draggable:dragstop', { detail: { pos: finalPos }, bubbles: true }));
-            // Final overlap check on drop
-            checkOverlapAndNotify();
-          }, afterMs + 5);
+        } else {
+          snapMs = 0;
         }
+
+        // mark drag to suppress the post-drag click (if you use that check)
+        el.dataset.dragged = 'true';
+        setTimeout(() => { delete el.dataset.dragged; }, 0);
+
+        // Finalize
+        const afterMs = Math.max(0, Number(snapMs));
+        setTimeout(() => {
+          const finalPos = getRelPos();
+          el.dispatchEvent(new CustomEvent('draggable:dragstop', { detail: { pos: finalPos }, bubbles: true }));
+          // Final overlap check on drop
+          checkOverlapAndNotify();
+          renderDebugBoxes(); // refresh overlays for the active config
+        }, afterMs + 5);
       };
 
       window.addEventListener('pointermove', moveListener, { passive: false });
@@ -277,6 +393,20 @@ export default {
 
     el.addEventListener('pointerdown', onPointerDown, { passive: false });
     el.__drag_pdown__ = onPointerDown; // save for cleanup
+
+    // Initial debug render + on resize
+    if (dbg.enabled) {
+      ensureDebugContainer();
+      renderDebugBoxes();
+      const onResize = () => renderDebugBoxes();
+      window.addEventListener('resize', onResize);
+      el.__drag_dbg_resize__ = onResize;
+    }
+  },
+
+  // Make changes reactive (including responsive array)
+  updated(el, binding) {
+    el.__drag_opts__ = binding.value || {};
   },
 
   unmounted(el) {
@@ -284,16 +414,15 @@ export default {
       el.removeEventListener('pointerdown', el.__drag_pdown__);
       delete el.__drag_pdown__;
     }
-    const m = el.__drag_mql__;
-    if (m) {
-      const { mql, onChange } = m;
-      mql.removeEventListener ? mql.removeEventListener('change', onChange)
-                              : mql.removeListener(onChange);
-      delete el.__drag_mql__;
+    if (el.__drag_dbg_resize__) {
+      window.removeEventListener('resize', el.__drag_dbg_resize__);
+      delete el.__drag_dbg_resize__;
     }
-    if (el.__drag_resize__) {
-      window.removeEventListener('resize', el.__drag_resize__);
-      delete el.__drag_resize__;
+    // remove any debug container we added
+    const base = el.offsetParent || el.parentElement || document.body;
+    if (base) {
+      const cands = base.querySelectorAll('[data-draggable-dbg="1"]');
+      cands.forEach((n) => n.remove());
     }
   }
 };
