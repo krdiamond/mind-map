@@ -43,10 +43,10 @@
         coordsBase: '.cabinet-container',
         snapInto: [
           { left: 13, top: 210, width: 73, height: 26 }, // shelf 1 (mobile)
-          { left: 13, top: 160, width: 73, height: 26 }, // shelf 2
-          { left: 13, top: 115, width: 73, height: 26 }, // shelf 3
+          { left: 13, top: 163, width: 73, height: 26 }, // shelf 2
+          { left: 13, top: 117, width: 73, height: 26 }, // shelf 3
           { left: 13, top: 70, width: 73, height: 26 }, // shelf 4
-          { left: 13, top: 24,  width: 73, height: 26 }, // shelf 5
+          { left: 13, top: 25,  width: 73, height: 26 }, // shelf 5
         ]
       }
     ],
@@ -54,7 +54,7 @@
     snapDurationMs: 150,
     resetOnResize: true,
     overlapWith: ['#AirpodPro', '#Remote'],
-    debugBoxes: true
+    // debugBoxes: true
   }"
 >
   <img :src="Candle" class="candle w-20 sm-w-40"/>
