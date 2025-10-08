@@ -16,16 +16,6 @@
     }
 }
 
-.gold {
-    left: 61px;
-    top: 217px;
-    @include up(lg) { left: 206px;top: 720px;}
-    img {
-        width: 25px;
-        @include up(lg) {  width: 50px;}
-    }
-}
-
 .airpod-pro {
     left: 12px;
     top: 170px;

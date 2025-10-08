@@ -5,6 +5,7 @@
     top: 120px;
     left: 35px;
     width: 40px;
+    z-index: 2;
     @include up(lg) { 
         width: 90px;    
         left: 100px;
