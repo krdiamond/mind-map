@@ -1,0 +1,14 @@
+@use '../../styles/mixins' as *;
+
+.buddha {
+    top: 152px;
+    left: 56px;
+    @include up(lg) {  
+        left: 115px;
+        top: 529px;
+    }
+    img {
+        width: 20px;
+        @include up(lg) {  width: 40px;}
+    }
+}

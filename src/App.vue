@@ -29,27 +29,14 @@
 
           <Remote ref="remote" @overlap="onCandleOverlap($event)" @click="onRemoteClick($event)" /> 
 
+          <Buddha ref="buddha" @click="toggleValidation"  /> 
+
           
 
         
-          <!--  -->
+          
 
-          <!-- <div id="Buddha" class="buddha" 
-                  @click="toggleValidation" 
-                  v-draggable="{
-                  snapInto: [
-                      { left: 40, top: 685, right: 278, bottom: 750}, // row 1
-                      { left: 40, top: 528, right: 278, bottom: 610 }, // row 2
-                      { left: 40, top: 387, right: 278, bottom: 420 }, // row 3
-                      { left: 40, top: 237, right: 278, bottom: 320 }, // row 4
-                      { left: 40, top: 93, right: 278, bottom: 120 }, // row 5
-                    ],
-                  snapDurationMs: 150,    
-                  resetOnResize: true   
-                }"
-                alt="Buddha">
-              <img :src="Buddha" alt="Buddha" />
-          </div> -->
+          <!--  -->
 
 
           <!-- <div id="AirpodPro" class="airpod-pro flammable" 
@@ -101,6 +88,7 @@ import TVStack from './components/TVStack.vue'
 import Candle from './components/Candle/candle.vue'
 import WateringCan from './components/WateringCan/watering-can.vue'
 import Remote from './components/Remote/remote.vue'
+import Buddha from './components/Buddha/buddha.vue'
 
 
 import Validation from './components/Validation.vue'
@@ -122,7 +110,6 @@ import TV from './assets/tv.png'
 import Static from './assets/static.gif'
 import Boulder from './assets/boulder.png'
 
-import Buddha from './assets/buddha.png'
 import Heart from './assets/heart.png'
 import Gold from './assets/gold.png'
 import AirpodPro from './assets/airpod-pro.png'
@@ -134,11 +121,11 @@ import EgoTrap from './components/EgoTrap.vue'
 
 export default {
   name: 'HelloWorld',
-  components: { EgoTrap, Validation, MusicPlayer, Alchemy, TVStack, Gratitude, Zine_CeilingFan, Candle, WateringCan, Remote },
+  components: { EgoTrap, Validation, MusicPlayer, Alchemy, TVStack, Gratitude, Zine_CeilingFan, Candle, WateringCan, Remote, Buddha },
   data() {
     return {
       TV, Boulder, Static,
-      Cabinet, Buddha, Gold, Remote, AirpodPro, Paper, Ash,
+      Cabinet, Gold, AirpodPro, Paper, Ash,
       Fire, fireAlarm, 
       CeilingFan,
       littleFires: [],
@@ -217,11 +204,11 @@ export default {
       this.showCeilingFan = false
     },
     onRemoteClick(e) {
-      console.log('hi')
       if (this.checkToggle(e) === false ) {
-        if(e?.target.children[0].id !== "Ash") {
-          this.$refs.tvstack.onRemoteClicked()  
-        }
+        this.$refs.tvstack.showStatic = !this.$refs.tvstack.showStatic
+        // if(e?.target.children[0].id !== "Ash") {
+        //   !this.$refs.tvstack.this.showStatic 
+        // }
          
       }
     },
