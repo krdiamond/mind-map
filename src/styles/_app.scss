@@ -173,13 +173,12 @@
 .popup-box {
     position: fixed !important;
     background-color: white;
-    z-index: 3;
+    z-index: 4;
     left: 0;
     top: 0;
     height: 100%;
     padding: 20px;
     width: 100%;
-    z-index: 4;
     @include up(lg) {  
         position: absolute !important;
         left: 922px; top: 507px;
@@ -193,6 +192,7 @@
         scrollbar-color: black #fff;
         scrollbar-width: thin;
         overflow-x: hidden;
+        touch-action: none
     }
 
     .close {
