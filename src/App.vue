@@ -1,8 +1,8 @@
 <template>  
     <div class="h-250 sm-h-700 sm-p-20  relative flex justify-between align-bottom ">
-        <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable class="popup-box sm-w-400"/>
-        <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable class="popup-box sm-w-400"/>
-        <MusicPlayer v-show="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable class="popup-box sm-w-400"/>
+        <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
+        <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
+        <MusicPlayer v-show="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
       
         <div class="fire-detector-wrapper">
           <img :src="fireAlarm" class="w-40 sm-w-70"/>
@@ -13,30 +13,29 @@
         
         <div class="cabinet-container w-100 sm-w-350 h-250 sm-h-600 relative">
           
-          <div id="CabinetStack">
-              <img :src="Cabinet" class="h-250 sm-h-600 absolute" alt="Glass Cabinet" />
-              <div id="CabinetFire" ref="cabinetFire" class="cabinet-fire ">
-                  <img :src="Fire" alt="Fire" class="fire1 fire hide"/>
-                  <img :src="Fire" alt="Fire" class="fire2 fire hide"/>
-                  <img :src="Fire" alt="Fire" class="fire3 fire hide"/>
-                  <img :src="Fire" alt="Fire" class="fire4 fire hide"/>
-              </div>
-          </div>
+            <div id="CabinetStack">
+                <img :src="Cabinet" class="h-250 sm-h-600 absolute" alt="Glass Cabinet" />
+                <div id="CabinetFire" ref="cabinetFire" class="cabinet-fire ">
+                    <img :src="Fire" alt="Fire" class="fire1 fire hide"/>
+                    <img :src="Fire" alt="Fire" class="fire2 fire hide"/>
+                    <img :src="Fire" alt="Fire" class="fire3 fire hide"/>
+                    <img :src="Fire" alt="Fire" class="fire4 fire hide"/>
+                </div>
+            </div>
 
-          <Candle ref="candle" @overlap="onCandleOverlap($event)"/> 
+            <Candle ref="candle" @overlap="onCandleOverlap($event)"/> 
 
-          <WateringCan ref="wateringCan" @overlap="putOutFire($event)"/> 
+            <WateringCan ref="wateringCan" @overlap="putOutFire($event)"/> 
 
-          <Remote ref="remote" @overlap="onCandleOverlap($event)" @click="onRemoteClick($event)" /> 
+            <Remote ref="remote" @overlap="onCandleOverlap($event)" @click="onRemoteClick($event)" /> 
 
-          <Buddha ref="buddha" @click="toggleValidation"  /> 
+            <Buddha ref="buddha" @click="toggleValidation"  />
+
+            <Gold ref="buddha" @click="toggleAlchemy"  /> 
 
           
-
         
-          
-
-          <!--  -->
+    
 
 
           <!-- <div id="AirpodPro" class="airpod-pro flammable" 
@@ -59,21 +58,7 @@
               <img :src="Fire" alt="Fire" class="fire hide"/>
           </div> -->
 
-          <!-- <div id="Gold" @click="toggleAlchemy" class="gold" 
-                  v-draggable="{
-                  snapInto: [
-                      { left: 40, top: 711, right: 278, bottom: 711}, // row 1
-                      { left: 40, top: 560, right: 278, bottom: 560 }, // row 2
-                      { left: 40, top: 414, right: 278, bottom: 414 }, // row 3
-                      { left: 40, top: 268, right: 278, bottom: 268 }, // row 4
-                      { left: 40, top: 123, right: 278, bottom: 123 }, // row 5
-                    ],
-                  snapDurationMs: 150,    
-                  resetOnResize: true   
-                }"
-                alt="Gold">
-              <img :src="Gold" alt="Gold" />
-          </div> -->
+         
 
         </div>
 
@@ -89,6 +74,7 @@ import Candle from './components/Candle/candle.vue'
 import WateringCan from './components/WateringCan/watering-can.vue'
 import Remote from './components/Remote/remote.vue'
 import Buddha from './components/Buddha/buddha.vue'
+import Gold from './components/Gold/gold.vue'
 
 
 import Validation from './components/Validation.vue'
@@ -109,9 +95,6 @@ import CeilingFan from './assets/ceiling-fan.gif'
 import TV from './assets/tv.png'
 import Static from './assets/static.gif'
 import Boulder from './assets/boulder.png'
-
-import Heart from './assets/heart.png'
-import Gold from './assets/gold.png'
 import AirpodPro from './assets/airpod-pro.png'
 import Paper from './assets/paper.png'
 import Ash from './assets/ash.png'
@@ -121,11 +104,11 @@ import EgoTrap from './components/EgoTrap.vue'
 
 export default {
   name: 'HelloWorld',
-  components: { EgoTrap, Validation, MusicPlayer, Alchemy, TVStack, Gratitude, Zine_CeilingFan, Candle, WateringCan, Remote, Buddha },
+  components: { EgoTrap, Validation, MusicPlayer, Alchemy, TVStack, Gratitude, Zine_CeilingFan, Candle, WateringCan, Remote, Buddha, Gold },
   data() {
     return {
       TV, Boulder, Static,
-      Cabinet, Gold, AirpodPro, Paper, Ash,
+      Cabinet, AirpodPro, Paper, Ash,
       Fire, fireAlarm, 
       CeilingFan,
       littleFires: [],

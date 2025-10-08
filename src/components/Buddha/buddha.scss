@@ -1,11 +1,12 @@
 @use '../../styles/mixins' as *;
 
 .buddha {
-    top: 152px;
-    left: 56px;
+    top: 200px;
+    left: 63px;
+    z-index: 2;
     @include up(lg) {  
-        left: 115px;
-        top: 529px;
+        left: 152px;
+        top: 500px;
     }
     img {
         width: 20px;
