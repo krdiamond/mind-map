@@ -16,28 +16,6 @@
     }
 }
 
-.cabinet-container {
-
-  .candle-wrapper {
-        left: 20px;
-        top: 70px;
-    @include up(lg) {  
-        left: 54px;
-        top: 180px;
-    }
-    .candle-fire {
-        top: -12px;
-        left: 4px;
-       @include up(lg) {  
-            top: -27px;
-            left: 9px;
-        }
-    }
-}
-
-
-}
-
 .gold {
     left: 61px;
     top: 217px;
@@ -54,20 +32,6 @@
     @include up(lg) { left: 40px;top: 560px;}
     img {
         width: 40px;
-        @include up(lg) {  width: 100px;}
-    }
-}
-
-.remote {
-    top: 120px;
-    left: 35px;
-    @include up(lg) {     
-    left: 159px;
-    top: 410px;
-    width:100px}
-    img {
-        width: 40px;
-        transform: rotateX(15deg) rotateY(196deg) skew(-19deg, 17deg);
         @include up(lg) {  width: 100px;}
     }
 }
@@ -95,42 +59,7 @@
     width: 100px;
 }
 
-.watering-can-container {
-    position: absolute;
-    z-index: 3;
-    width: 100px;
-    left: 0;
-    
-    @include up(lg) {  
-        width: 300px;
-        left: -300px;
-        bottom: 0;
-    }
-    .watering-can {
-        width: 100px;
-        @include up(lg) {  
-            width: 300px;
-        }
-    }
 
-    .water {
-        display: none;
-        top: 20px;
-        left: -146px;
-        position: absolute;
-        transform: rotate(75deg);
-        transform-origin: 67% 25%;
-    }
-}
-
-.watering-can-container[data-dragging="true"] {
-  transform: rotate(-50deg);
-  transition: transform 120ms ease;
-  transform-origin: 70% 30%; 
-}
-.watering-can-container[data-dragging="true"] .water {
-  display: block;
-}
 
 .fire-detector-wrapper {
     position: absolute;
