@@ -1,6 +1,7 @@
 <template>
-    <div id="Remote" class="remote flammable" alt="Remote"
-         v-draggable="{
+
+    <div id="Buddha" class="buddha" 
+            v-draggable="{
             // desktop defaults (>=1025px)
             coordsBase: '.cabinet-container',
             snapInto: [
@@ -26,29 +27,25 @@
             snapDurationMs: 150,
             resetOnResize: true,
             overlapWith: ['#AirpodPro', '#Remote'],
-            // debugBoxes: true
-        }"
-        >
-        <img :src="Remote" alt="Remote" />
-        <img :src="Fire" alt="Fire" class="fire hide"/>
-        <click-spark style="--click-spark-color: black;"></click-spark>
-    </div>
+            debugBoxes: true
+            }"
+            alt="Buddha">
+            <img :src="Buddha" alt="Buddha" />
+        </div>
 </template>
 
 <script>
 
-    import './remote.scss';
+    import './buddha.scss';
 
-    import './click-spark.js' 
-
-    import Remote from './assets/remote.png';
+    import Buddha from './buddha.png';
     import Fire from '../../assets/fire.gif';
 
     export default {
         name: 'Remote',
         data() {
             return {
-                Remote, Fire
+                Buddha, Fire
             }
         },
         methods: {

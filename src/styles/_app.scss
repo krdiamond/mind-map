@@ -36,27 +36,15 @@
     }
 }
 
-.buddha {
-    top: 152px;
-    left: 56px;
-    @include up(lg) {  
-        left: 115px;
-        top: 529px;
-    }
-    img {
-        width: 20px;
-        @include up(lg) {  width: 40px;}
-    }
-}
-
 
 
 .fire {
     position: absolute;
-    top: -100px;
-    left: -10px;
+    top: -44px;
+    left: 0px;
     z-index: 1;
-    width: 100px;
+    width: 50px;
+     @include up(lg) {  width: 100px;}
 }
 
 
@@ -146,30 +134,46 @@
     .fire1 {
         position: absolute;
         bottom: 0;
-        width: 200px;
-        left: -73px;
+        width: 100px;
+        left: -30px;
         top: unset;
+        @include up(lg) {  
+             width: 200px;
+             left: -73px;
+        }
+        
     }
     .fire2 {
         position: absolute;
-        width: 300px;
+        width: 150px;
         bottom: 0;
         left: -32px;
         top: unset;
+        @include up(lg) {  
+            width: 300px;
+        }
     }
     .fire3 {
         position: absolute;
-        width: 400px;
+        width: 100px;
         bottom: 0;
-        left: 8px; 
+        left: 20px; 
         top: unset; 
+        @include up(lg) {  
+            width: 400px;
+            left: 8px;
+        }
     }
     .fire4 {
         position: absolute;
-        width: 200px;
+        width: 50px;
         bottom: 0;
-        left: 189px;
+        left: 65px;
         top: unset;
+         @include up(lg) {  
+            width: 100px;
+            left: 189px;
+        }
     }
 }
 

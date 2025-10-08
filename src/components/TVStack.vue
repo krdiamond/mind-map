@@ -29,13 +29,7 @@ export default {
       showStatic: true
     }
   },
-  mounted() {
-
-  },
   methods: {
-    onRemoteClicked() {
-      this.showStatic = !this.showStatic;
-    },
     startBurnVideo() {
         this.$refs.burnVideo.play(); 
         this.showStatic = false;
