@@ -23,86 +23,18 @@
               </div>
           </div>
 
-<div
-  id="Candle"
-  class="candle-wrapper"
-  @overlap="onCandleOverlap($event)"
-  v-draggable="{
-    // desktop defaults (>=1025px)
-    coordsBase: '.cabinet-container',
-    snapInto: [
-      { left: 28, top: 515, width: 180, height: 30 }, // shelf 1
-      { left: 28, top: 400, width: 180, height: 30 }, // shelf 2
-      { left: 28, top: 290, width: 180, height: 30 }, // shelf 3
-      { left: 28, top: 180, width: 180, height: 30 }, // shelf 4
-      { left: 28, top: 70,  width: 180, height: 30 }, // shelf 5
-    ],
-    responsive: [
-      {
-        query: '(max-width: 1024px)',
-        coordsBase: '.cabinet-container',
-        snapInto: [
-          { left: 13, top: 210, width: 73, height: 26 }, // shelf 1 (mobile)
-          { left: 13, top: 163, width: 73, height: 26 }, // shelf 2
-          { left: 13, top: 117, width: 73, height: 26 }, // shelf 3
-          { left: 13, top: 70, width: 73, height: 26 }, // shelf 4
-          { left: 13, top: 25,  width: 73, height: 26 }, // shelf 5
-        ]
-      }
-    ],
+          <Candle ref="candle" @overlap="onCandleOverlap($event)"/> 
 
-    snapDurationMs: 150,
-    resetOnResize: true,
-    overlapWith: ['#AirpodPro', '#Remote'],
-    // debugBoxes: true
-  }"
->
-  <img :src="Candle" class="candle w-20 sm-w-40"/>
-  <img id="CandleFire" :src="Fire" ref="candleFire" class="candle-fire fire w-10 sm-w-20"/>
-</div>
-          
-          
-          <!-- <div id="WateringCan"
-              class="watering-can-container"
-              @overlap="putOutFire($event)"
-              v-draggable="{
-                snapInto: [{ left: 0, top: 620, right: 1500, bottom: 620 }],
-                snapDurationMs: 150,
-                resetOnResize: true,
-                overlapWith: ['.fire'],        // what you want to douse
-                overlapOnMove: true,          // hover detection
-                overlapSubject: '.water',     // only the water image counts
-                minOverlapRatio: .75,
-                overlapPadding: 0
-              }">
-            <img :src="WateringCan" class="watering-can"/>
-            <img :src="Water" class="water"/>
-        </div> -->
+          <WateringCan ref="wateringCan" @overlap="putOutFire($event)"/> 
+
+          <Remote ref="remote" @overlap="onCandleOverlap($event)" @click="onRemoteClick($event)" /> 
+
           
 
         
-          <!-- <div id="Remote" class="remote flammable" 
-                @click="onRemoteClick($event)" 
-                @overlap="onCandleOverlap($event)" 
-                v-draggable="{
-                snapInto: [
-                    { left: 20, top: 700, right: 290, bottom: 720 }, // row 1
-                    { left: 20, top: 538, right: 290, bottom: 620 }, // row 2
-                    { left: 20, top: 410, right: 290, bottom: 420 }, // row 3
-                    { left: 20, top: 260, right: 290, bottom: 320 }, // row 4
-                    { left: 20, top: 114, right: 290, bottom: 120 }, // row 5
-                  ],
-                snapDurationMs: 150,    
-                resetOnResize: true,
-                overlapWith: '#Candle' 
-              }"
-              alt="Remote">
-            <img :src="Remote" alt="Remote" />
-            <img :src="Fire" alt="Fire" class="fire hide"/>
-            <click-spark style="--click-spark-color: black;"></click-spark>
-          </div>
+          <!--  -->
 
-          <div id="Buddha" class="buddha" 
+          <!-- <div id="Buddha" class="buddha" 
                   @click="toggleValidation" 
                   v-draggable="{
                   snapInto: [
@@ -117,10 +49,10 @@
                 }"
                 alt="Buddha">
               <img :src="Buddha" alt="Buddha" />
-          </div>
+          </div> -->
 
 
-          <div id="AirpodPro" class="airpod-pro flammable" 
+          <!-- <div id="AirpodPro" class="airpod-pro flammable" 
                   @click="toggleMusicPlayer" 
                   @overlap="onCandleOverlap($event)" 
                   v-draggable="{
@@ -138,9 +70,9 @@
                 alt="Airpod Pro">
               <img :src="AirpodPro" alt="Airpod Pro" />
               <img :src="Fire" alt="Fire" class="fire hide"/>
-          </div>
+          </div> -->
 
-          <div id="Gold" @click="toggleAlchemy" class="gold" 
+          <!-- <div id="Gold" @click="toggleAlchemy" class="gold" 
                   v-draggable="{
                   snapInto: [
                       { left: 40, top: 711, right: 278, bottom: 711}, // row 1
@@ -165,8 +97,12 @@
 
 import './styles/_app.scss'
 
-import EgoTrap from './components/EgoTrap.vue'
 import TVStack from './components/TVStack.vue'
+import Candle from './components/Candle/candle.vue'
+import WateringCan from './components/WateringCan/watering-can.vue'
+import Remote from './components/Remote/remote.vue'
+
+
 import Validation from './components/Validation.vue'
 import Alchemy from './components/Alchemy.vue'
 import MusicPlayer from './components/MusicPlayer.vue'
@@ -179,8 +115,6 @@ import fireAlarm from './assets/fire-detector.png';
 import fireSound from './assets/fire.mp3';
 import Fire from './assets/fire.gif';
 
-import WateringCan from './assets/watering-can.png';
-import Water from './assets/water.gif';
 
 import Cabinet from './assets/curiocabinet.png'
 import CeilingFan from './assets/ceiling-fan.gif'
@@ -189,23 +123,22 @@ import Static from './assets/static.gif'
 import Boulder from './assets/boulder.png'
 
 import Buddha from './assets/buddha.png'
-import Candle from './assets/candle.png'
 import Heart from './assets/heart.png'
 import Gold from './assets/gold.png'
-import Remote from './assets/remote.png'
 import AirpodPro from './assets/airpod-pro.png'
 import Paper from './assets/paper.png'
 import Ash from './assets/ash.png'
 
+import EgoTrap from './components/EgoTrap.vue'
+
 
 export default {
   name: 'HelloWorld',
-  components: { EgoTrap, Validation, MusicPlayer, Alchemy, TVStack, Gratitude, Zine_CeilingFan },
+  components: { EgoTrap, Validation, MusicPlayer, Alchemy, TVStack, Gratitude, Zine_CeilingFan, Candle, WateringCan, Remote },
   data() {
     return {
       TV, Boulder, Static,
-      Cabinet, Buddha, Gold, Remote, AirpodPro, Paper, Ash, Candle,
-      WateringCan, Water,
+      Cabinet, Buddha, Gold, Remote, AirpodPro, Paper, Ash,
       Fire, fireAlarm, 
       CeilingFan,
       littleFires: [],
@@ -284,6 +217,7 @@ export default {
       this.showCeilingFan = false
     },
     onRemoteClick(e) {
+      console.log('hi')
       if (this.checkToggle(e) === false ) {
         if(e?.target.children[0].id !== "Ash") {
           this.$refs.tvstack.onRemoteClicked()  
@@ -292,7 +226,7 @@ export default {
       }
     },
     onCandleOverlap(event) {
-      if(this.$refs.candleFire.classList.contains('hide')) { return }
+      if(this.$refs.candle.candleIsBlownOut()) { return }
 
       const dragElement = event.target
       const hitElement = event.detail.hits[0].target
@@ -344,15 +278,10 @@ export default {
       event.detail.hits.forEach((sprayedElement) => {
         sprayedElement.target.classList.add('hide');
         if (sprayedElement.target.id === 'CandleFire') {
-          this.reIgnightCandleFlame()
+          this.$refs.candle.reIgnightCandleFlame()
         }
         this.checkForActiveFire()
       });
-    },
-    reIgnightCandleFlame() {
-      setTimeout(() => {
-        this.$refs.candleFire.classList.remove('hide')
-      }, 3000);
     },
     turnToAsh(el) {
       const ash = document.createElement('img');

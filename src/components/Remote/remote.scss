@@ -1,0 +1,17 @@
+@use '../../styles/mixins' as *;
+
+
+.remote {
+    top: 120px;
+    left: 35px;
+    @include up(lg) {     
+        left: 100px;
+        top: 300px;
+        width:100px
+    }
+    img {
+        width: 40px;
+        transform: scaleX(-1);
+        @include up(lg) {  width: 90px;}
+    }
+}
