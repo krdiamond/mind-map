@@ -20,7 +20,7 @@
             overlapSubject: '.water',      // only the water image counts
             minOverlapRatio: .75,
             overlapPadding: 0,
-            //   debugBoxes: true
+              debugBoxes: true
             }">
         <img :src="WateringCan" class="watering-can"/>
         <img :src="Water" class="water"/>
