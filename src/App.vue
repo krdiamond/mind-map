@@ -1,8 +1,8 @@
 <template>  
     <div class="h-250 sm-h-700 sm-p-20  relative flex justify-between align-bottom ">
         <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
-        <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
-        <MusicPlayer v-show="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
+        <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable class="popup-box sm-w-400"/>
+        <MusicPlayer v-show="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable class="popup-box sm-w-400"/>
       
         <div class="fire-detector-wrapper">
           <img :src="fireAlarm" class="w-40 sm-w-70"/>

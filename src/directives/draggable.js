@@ -2,11 +2,18 @@
 export default {
   mounted(el, binding) {
     const opts = binding.value || {};
+    const mods = binding.modifiers || {};
+    const desktopOnly = !!mods.desktop;
+    const mobileOnly = !!mods.mobile;
+    // Default queries for modifiers
+    const desktopMQ = '(min-width: 1025px)';
+    const mobileMQ  = '(max-width: 1024px)';
+    // Pick the controlling MQ (or null if always-on)
+    const controlQuery = desktopOnly ? desktopMQ : (mobileOnly ? mobileMQ : null);
 
-    // Always draggable, all viewports
+    // Ensure positioning; touchAction allows touch pointer events
     if (!el.style.position) el.style.position = 'absolute';
-    el.style.cursor = 'grab';
-    el.style.touchAction = 'none'; // allow touch pointer events
+    el.style.touchAction = 'none';
 
     // ---- Breakpoint + resize reset wiring (default: 1024) -----------------
     const breakQuery = opts.breakQuery || '(max-width: 1024px)';
@@ -23,7 +30,6 @@ export default {
     }
 
     // ---- Responsive helpers (used by debug + snap math) -------------------
-    // Pick the LAST matching responsive entry, else fall back to top-level.
     function getActiveConfig() {
       const base = { snapInto: opts.snapInto, coordsBase: opts.coordsBase };
       const resp = Array.isArray(opts.responsive) ? opts.responsive : null;
@@ -276,6 +282,7 @@ export default {
     let overlapRAF = null; // throttle overlap-on-move
 
     const onPointerDown = (e) => {
+      // Extra guard if someone also passes { enabled:false }
       if (opts.enabled === false) return;
       if (e.button != null && e.button !== 0) return; // left click only
 
@@ -360,10 +367,42 @@ export default {
       window.addEventListener('pointerup', upListener, { passive: true });
     };
 
-    el.addEventListener('pointerdown', onPointerDown, { passive: false });
-    el.__drag_pdown__ = onPointerDown;
+    // --- Enable/disable based on modifier-controlled media query -----------
+    function enable() {
+      if (el.__dragActive) return;
+      el.addEventListener('pointerdown', onPointerDown, { passive: false });
+      el.style.cursor = 'grab';
+      el.__dragActive = true;
+    }
 
-    // ---- Wire breakpoint + responsive listeners ---------------------------
+    function disable() {
+      if (!el.__dragActive) return;
+      el.removeEventListener('pointerdown', onPointerDown);
+      // safety: if disable happens mid-drag, clean listeners
+      if (moveListener) window.removeEventListener('pointermove', moveListener);
+      if (upListener) window.removeEventListener('pointerup', upListener);
+      moveListener = upListener = null;
+      el.style.cursor = '';
+      delete el.__dragActive;
+    }
+
+    el.__drag_enable__ = enable;
+    el.__drag_disable__ = disable;
+
+    // Wire initial state + listener for media query changes
+    if (typeof window !== 'undefined' && controlQuery) {
+      const mql = window.matchMedia(controlQuery);
+      const sync = () => (mql.matches ? enable() : disable());
+      mql.addEventListener ? mql.addEventListener('change', sync)
+                           : mql.addListener(sync);
+      el.__drag_enable_mql__ = { mql, sync };
+      sync(); // set initial state
+    } else {
+      // No modifier -> always on
+      enable();
+    }
+
+    // ---- Wire breakpoint + responsive listeners (for reset/debug) ---------
     if (typeof window !== 'undefined' && resetOnBreakpoint) {
       const mql = window.matchMedia(breakQuery);
       const onChange = () => {
@@ -375,7 +414,6 @@ export default {
       el.__drag_mql__ = { mql, onChange };
     }
 
-    // Also listen to all responsive queries so overlays update immediately
     if (Array.isArray(opts.responsive) && typeof window !== 'undefined') {
       const respMqls = [];
       for (const r of opts.responsive) {
@@ -406,21 +444,22 @@ export default {
       ensureDebugContainer();
       renderDebugBoxes();
     }
-
-    // --------- helper: used by getRelPos/specToBox/getSnapBoxes -----------
-    function getSnapBoxes() {
-      const { snapInto } = getActiveConfig();
-      if (!snapInto) return [];
-      const arr = Array.isArray(snapInto) ? snapInto : [snapInto];
-      return arr.map(specToBox).filter(Boolean);
-    }
   },
 
   unmounted(el) {
-    if (el.__drag_pdown__) {
-      el.removeEventListener('pointerdown', el.__drag_pdown__);
-      delete el.__drag_pdown__;
+    // Disable (removes pointerdown + cleans up in-flight listeners)
+    el.__drag_disable__?.();
+
+    // Media query toggler for .desktop/.mobile
+    const emq = el.__drag_enable_mql__;
+    if (emq) {
+      const { mql, sync } = emq;
+      mql.removeEventListener ? mql.removeEventListener('change', sync)
+                              : mql.removeListener(sync);
+      delete el.__drag_enable_mql__;
     }
+
+    // Breakpoint reset MQL
     const m = el.__drag_mql__;
     if (m) {
       const { mql, onChange } = m;
@@ -428,6 +467,8 @@ export default {
                               : mql.removeListener(onChange);
       delete el.__drag_mql__;
     }
+
+    // Responsive debug MQLs
     if (el.__drag_resp_mqls__) {
       for (const { m, on } of el.__drag_resp_mqls__) {
         m.removeEventListener ? m.removeEventListener('change', on)
@@ -435,10 +476,13 @@ export default {
       }
       delete el.__drag_resp_mqls__;
     }
+
+    // Resize listener
     if (el.__drag_resize__) {
       window.removeEventListener('resize', el.__drag_resize__);
       delete el.__drag_resize__;
     }
+
     // remove debug container if we created it
     const base = el.offsetParent || el.parentElement || document.body;
     if (base) {
