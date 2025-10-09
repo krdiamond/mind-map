@@ -1,0 +1,28 @@
+@use '../../styles/mixins' as *;
+
+.airpod-pro {
+    left: 14.8281px;
+    top: 221px;
+    @include up(lg) { 
+        left: 42px;
+        top: 510px;
+    }
+    img {
+        width: 40px;
+        @include up(lg) {  width: 100px;}
+    }
+
+    .fire {
+        position: absolute;
+        top: -44px;
+        left: -5px;
+        z-index: 1;
+        width: 40px;
+        @include up(lg) {  
+            top: -100px;
+            width: 100px;
+        }
+    }
+}
+
+

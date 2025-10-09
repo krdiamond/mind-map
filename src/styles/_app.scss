@@ -2,7 +2,6 @@
 
 .ceiling-fan {
     position: absolute;
-    // padding-bottom: 60%;
     top: 0px;
     left: 100px;
     @include up(lg) { 
@@ -15,125 +14,67 @@
         }
     }
 }
-.tv-container {
-    height: 147px;
-    width: 130px;
 
-    @include up(lg) { 
-        height: 480px; 
-        width: 430px;
+
+
+
+.cabinet-fire {
+    z-index: 3;
+    bottom: 0;
+    position: absolute;
+    .fire1 {
+        position: absolute;
+        bottom: 0;
+        width: 100px;
+        left: -30px;
+        top: unset;
+        @include up(lg) {  
+             width: 200px;
+             left: -73px;
+        }
+        
+    }
+    .fire2 {
+        position: absolute;
+        width: 150px;
+        bottom: 0;
+        left: -32px;
+        top: unset;
+        @include up(lg) {  
+            width: 300px;
+        }
+    }
+    .fire3 {
+        position: absolute;
+        width: 100px;
+        bottom: 0;
+        left: 20px; 
+        top: unset; 
+        @include up(lg) {  
+            width: 400px;
+            left: 8px;
+        }
+    }
+    .fire4 {
+        position: absolute;
+        width: 50px;
+        bottom: 0;
+        left: 65px;
+        top: unset;
+         @include up(lg) {  
+            width: 100px;
+            left: 189px;
+        }
     }
 }
 
-.boulder{
-  top: 65px;
-  width: 125px;
-    @include up(lg) {  
-        top: 200px;
-        width: 425px;
-    }
-}
-
-.tv {
-  left: 15px;
-  width: 100px;
-    @include up(lg) {  
-        left: 60px;
-        width: 325px;
-    }
-}
-
-.static {
-    top: 6px;
-    left: 0;
-    transform: perspective(800px) rotateY(49deg) rotateZ(0.7deg);
-    width: 137px;
-    height: 61px;
-    @include up(lg) {  
-        top: 22px;
-        left: 6px;
-        transform: perspective(2500px) rotateY(50deg) rotateZ(0.5deg);
-        width: 454px;
-        height: 194px;
-  }
-}
-
-
-.cabinet-container {
-  width: 110px;
-  @include up(lg) {  width: 340px;}
-}
-
-.gold {
-    left: 61px;
-    top: 217px;
-    @include up(lg) { left: 206px;top: 720px;}
-    img {
-        width: 25px;
-        @include up(lg) {  width: 50px;}
-    }
-}
-
-.heart {
-    top: 61px;
-    left: 164px;
-    @include up(lg) {  
-        left: 215px;
-        top: 261px;
-    }
-    img {
-        width: 40px;
-        @include up(lg) {  width: 50px;}
-    }
-}
-
-.airpod-pro {
-    left: 12px;
-    top: 170px;
-    @include up(lg) { left: 40px;top: 560px;}
-    img {
-        width: 40px;
-        @include up(lg) {  width: 100px;}
-    }
-}
-
-.remote {
-    top: 120px;
-    left: 35px;
-    @include up(lg) {     
-    left: 159px;
-    top: 410px;}
-    img {
-        width: 40px;
-        transform: rotateX(15deg) rotateY(196deg) skew(-19deg, 17deg);
-        @include up(lg) {  width: 100px;}
-    }
-}
-
-.buddha {
-    top: 152px;
-    left: 56px;
-    @include up(lg) {  
-        left: 199px;
-        top: 531px;
-    }
-    img {
-        width: 20px;
-        @include up(lg) {  width: 40px;}
-    }
-}
-
-.ego {
-  top: 268px;
-  left: 300px;
-}
 
 
 /* ---------------- POPUP BOX ---------------- */
 .popup-box {
     position: fixed !important;
     background-color: white;
-    z-index: 3;
+    z-index: 4;
     left: 0;
     top: 0;
     height: 100%;
@@ -152,6 +93,7 @@
         scrollbar-color: black #fff;
         scrollbar-width: thin;
         overflow-x: hidden;
+        touch-action: none
     }
 
     .close {
@@ -169,3 +111,4 @@
         }
     }
 }
+
