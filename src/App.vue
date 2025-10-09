@@ -1,8 +1,8 @@
 <template>  
     <div class="h-250 sm-h-700 sm-p-20  relative flex justify-between align-bottom ">
         <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
-        <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable class="popup-box sm-w-400"/>
-        <MusicPlayer v-show="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable class="popup-box sm-w-400"/>
+        <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
+        <MusicPlayer v-show="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
       
         <div class="fire-detector-wrapper">
           <img :src="fireAlarm" class="w-40 sm-w-70"/>
@@ -31,37 +31,11 @@
 
             <Buddha ref="buddha" @click="toggleValidation"  />
 
-            <Gold ref="buddha" @click="toggleAlchemy"  /> 
-
-          
-        
-    
-
-
-          <!-- <div id="AirpodPro" class="airpod-pro flammable" 
-                  @click="toggleMusicPlayer" 
-                  @overlap="onCandleOverlap($event)" 
-                  v-draggable="{
-                  snapInto: [
-                      { left: 40, top: 707, right: 278, bottom: 707},  // row 1
-                      { left: 40, top: 555, right: 278, bottom: 555 }, // row 2
-                      { left: 40, top: 406, right: 278, bottom: 406 }, // row 3
-                      { left: 40, top: 260, right: 278, bottom: 260 }, // row 4
-                      { left: 40, top: 120, right: 278, bottom: 120 }, // row 5
-                    ],
-                  snapDurationMs: 150,    
-                  resetOnResize: true,
-                  overlapWith: '#Candle' 
-                }"
-                alt="Airpod Pro">
-              <img :src="AirpodPro" alt="Airpod Pro" />
-              <img :src="Fire" alt="Fire" class="fire hide"/>
-          </div> -->
-
+            <Gold ref="buddha" @click="toggleAlchemy"  />
+            
+            <AirpodPro ref="airpodPro" @overlap="onCandleOverlap($event)"  @click="toggleMusicPlayer" />
          
-
         </div>
-
     </div>
 </template>
 
@@ -70,20 +44,19 @@
 import './styles/_app.scss'
 
 import TVStack from './components/TVStack.vue'
+
 import Candle from './components/Candle/candle.vue'
 import WateringCan from './components/WateringCan/watering-can.vue'
 import Remote from './components/Remote/remote.vue'
 import Buddha from './components/Buddha/buddha.vue'
 import Gold from './components/Gold/gold.vue'
-
+import AirpodPro from './components/AirpodPro/airpod-pro.vue'
 
 import Validation from './components/Validation.vue'
 import Alchemy from './components/Alchemy.vue'
 import MusicPlayer from './components/MusicPlayer.vue'
 import Gratitude from './components/Gratitude.vue'
 import Zine_CeilingFan from './components/zine_CeilingFan.vue'
-
-
 
 import fireAlarm from './assets/fire-detector.png';
 import fireSound from './assets/fire.mp3';
@@ -95,8 +68,6 @@ import CeilingFan from './assets/ceiling-fan.gif'
 import TV from './assets/tv.png'
 import Static from './assets/static.gif'
 import Boulder from './assets/boulder.png'
-import AirpodPro from './assets/airpod-pro.png'
-import Paper from './assets/paper.png'
 import Ash from './assets/ash.png'
 
 import EgoTrap from './components/EgoTrap.vue'
@@ -104,11 +75,11 @@ import EgoTrap from './components/EgoTrap.vue'
 
 export default {
   name: 'HelloWorld',
-  components: { EgoTrap, Validation, MusicPlayer, Alchemy, TVStack, Gratitude, Zine_CeilingFan, Candle, WateringCan, Remote, Buddha, Gold },
+  components: { EgoTrap, Validation, MusicPlayer, Alchemy, TVStack, Gratitude, Zine_CeilingFan, Candle, WateringCan, Remote, Buddha, Gold, AirpodPro },
   data() {
     return {
       TV, Boulder, Static,
-      Cabinet, AirpodPro, Paper, Ash,
+      Cabinet, Ash,
       Fire, fireAlarm, 
       CeilingFan,
       littleFires: [],
@@ -171,12 +142,12 @@ export default {
     },
      toggleMusicPlayer(e) {
       if (this.checkToggle(e) === false ) {
-        if(e?.target.children[0].id !== "Ash") {
+        // if(e?.target.children[0].id !== "Ash") {
           this.showMusicPlayer = !this.showMusicPlayer
           this.showEgoTrap = false
           this.showValidation = false
           this.showAlchemy = false
-        }
+        // }
       }
     },
     toggleEgoTrap() {
@@ -187,10 +158,9 @@ export default {
       this.showCeilingFan = false
     },
     onRemoteClick(e) {
-      if (this.checkToggle(e) === false ) {
-        this.$refs.tvstack.showStatic = !this.$refs.tvstack.showStatic
+      if (this.checkToggle(e) === false ) {   
         // if(e?.target.children[0].id !== "Ash") {
-        //   !this.$refs.tvstack.this.showStatic 
+          this.$refs.tvstack.showStatic = !this.$refs.tvstack.showStatic
         // }
          
       }
