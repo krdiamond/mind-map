@@ -7,7 +7,7 @@
         coordsBase: '.cabinet-container',
         snapInto: [
             { left: 28, top: 510, width: 180, height: 62 }, // shelf 1
-            { left: 28, top: 400, width: 180, height: 62 }, // shelf 2
+            { left: 28, top: 410, width: 180, height: 62 }, // shelf 2
             { left: 28, top: 300, width: 180, height: 62 }, // shelf 3
             { left: 28, top: 190, width: 180, height: 62 }, // shelf 4
             { left: 28, top: 80,  width: 180, height: 62 }, // shelf 5
@@ -27,6 +27,7 @@
         ],
         snapDurationMs: 150,
         resetOnResize: true,
+        overlapWith: ['#Candle'],
         // debugBoxes: true
         }"
     alt="Airpod Pro">
