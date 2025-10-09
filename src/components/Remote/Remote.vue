@@ -25,7 +25,7 @@
             ],
             snapDurationMs: 150,
             resetOnResize: true,
-            overlapWith: ['#AirpodPro', '#Remote'],
+            overlapWith: ['#Candle'],
             // debugBoxes: true
         }"
         >

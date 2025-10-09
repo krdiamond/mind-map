@@ -16,17 +16,6 @@
     }
 }
 
-.airpod-pro {
-    left: 12px;
-    top: 170px;
-    @include up(lg) { left: 40px;top: 560px;}
-    img {
-        width: 40px;
-        @include up(lg) {  width: 100px;}
-    }
-}
-
-
 
 .fire {
     position: absolute;
