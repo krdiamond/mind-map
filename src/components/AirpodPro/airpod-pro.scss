@@ -11,4 +11,18 @@
         width: 40px;
         @include up(lg) {  width: 100px;}
     }
+
+    .fire {
+        position: absolute;
+        top: -44px;
+        left: -5px;
+        z-index: 1;
+        width: 40px;
+        @include up(lg) {  
+            top: -100px;
+            width: 100px;
+        }
+    }
 }
+
+

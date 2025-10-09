@@ -1,5 +1,4 @@
 @use './mixins' as *;
-@use "sass:color";
 
 .ceiling-fan {
     position: absolute;
@@ -17,97 +16,10 @@
 }
 
 
-.fire {
-    position: absolute;
-    top: -44px;
-    left: 0px;
-    z-index: 1;
-    width: 50px;
-     @include up(lg) {  width: 100px;}
-}
-
-
-
-.fire-detector-wrapper {
-    position: absolute;
-    top: -40px;
-    right: 0;
-           @include up(lg) { 
-            top: 0px; 
-            right: 100px;
-        }
-    .beacon {
-        position: absolute;
-        left: 30px;
-        top: 14px;
-        @include up(lg) { 
-            left: 54px;
-            top: 26px;
-        }
-        background-color: #111;
-        background: -webkit-radial-gradient(right center, ellipse cover, rgba(255, 255, 255, 0.2) 0%, rgba(0, 0, 0, 0.3) 100%);
-        border: solid 2px #777;
-        border-radius: 100%;
-        box-shadow: 0 -2px 0 3px #111 inset, 0 5px 5px rgba(0, 0, 0, 0.17), 0 10px rgba(255, 255, 255, 0.25) inset;
-        animation: blink 0.8s infinite normal;
-        transform: translate3d(0, 0, 0);
-    }
-
-    @keyframes blink {
-        0% {
-            background-color: #111;
-            background-image: radial-gradient(
-            ellipse at right center,
-            rgba(255, 255, 255, 0.2) 0%,
-            rgba(0, 0, 0, 0.3) 100%
-            );
-            box-shadow:
-            0 -2px 0 3px #111 inset,
-            0 5px 5px rgba(0, 0, 0, 0.17),
-            0 10px rgba(255, 255, 255, 0.25) inset;
-            border: 2px solid #777;
-        }
-
-        1% {
-            background: none;
-            background-color: #fff;
-            box-shadow:
-            0 -2px 0 3px #111 inset,
-            0 0 20px 1px rgba(255, 255, 255, 1),
-            0 10px rgba(255, 255, 255, 0.25) inset;
-            border: 2px solid #fff;
-        }
-
-        5% {
-            background: none;
-            background-color: red;
-            box-shadow:
-            0 -2px 0 3px #111 inset,
-            0 0 20px 1px #{color.scale(red, $lightness: 20%)},
-            0 10px rgba(255, 255, 255, 0.25) inset;
-            border: 2px solid #{color.scale(red, $lightness: 20%)};
-        }
-
-        10%,
-        100% {
-            background-color: #111;
-            background-image: radial-gradient(
-            ellipse at right center,
-            rgba(255, 255, 255, 0.2) 0%,
-            rgba(0, 0, 0, 0.3) 100%
-            );
-            box-shadow:
-            0 -2px 0 3px #111 inset,
-            0 5px 5px rgba(0, 0, 0, 0.17),
-            0 10px rgba(255, 255, 255, 0.25) inset;
-            border: 2px solid #777;
-        }
-    }
-}
 
 
 .cabinet-fire {
-    z-index: 1;
+    z-index: 3;
     bottom: 0;
     position: absolute;
     .fire1 {
