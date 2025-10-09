@@ -14,7 +14,6 @@ class ClickSpark extends HTMLElement {
     if (getComputedStyle(this._parent).position === "static") {
       this._parent.style.position = "relative";
     }
-
     this._parent.addEventListener("click", this);
   }
 
@@ -27,8 +26,11 @@ class ClickSpark extends HTMLElement {
     // 🚫 skip spark if this click came right after a drag
     if (e?.currentTarget?.dataset?.dragged) return;
 
-    this.setSparkPosition(e);
-    this.animateSpark();
+    if (this._parent.children[0].id !== "Ash"){
+      this.setSparkPosition(e);
+      this.animateSpark();
+    }
+   
   }
 
   setSparkPosition(e) {

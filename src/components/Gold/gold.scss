@@ -1,0 +1,14 @@
+@use '../../styles/mixins' as *;
+
+.gold {
+    left: 20px;
+    top: 167px;
+    @include up(lg) { 
+        left: 61px;
+        top: 410px;
+    }
+    img {
+        width: 25px;
+        @include up(lg) {  width: 50px;}
+    }
+}
