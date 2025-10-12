@@ -4,7 +4,10 @@
         <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
         <MusicPlayer v-show="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
         <FireDetector ref="fireDetector"/> 
-        <TVStack ref="tvstack"/> 
+        <TVStack ref="tvstack"/>
+        <CeilingFan/> 
+
+
         <div class="cabinet-container w-100 sm-w-350 h-250 sm-h-600 relative">
             <div id="CabinetStack">
                 <img :src="Cabinet" class="h-250 sm-h-600 absolute" alt="Glass Cabinet" />
@@ -30,6 +33,8 @@
 import './styles/_app.scss'
 
 import TVStack from './components/TVStack.vue'
+import FireDetector from './components/FireDetector/fire-detector.vue'
+import CeilingFan from './components/CeilingFan/ceiling-fan.vue'
 
 //ICONS
 import Candle from './components/Candle/candle.vue'
@@ -39,22 +44,20 @@ import Gold from './components/Gold/gold.vue'
 import AirpodPro from './components/AirpodPro/airpod-pro.vue'
 
 
-import FireDetector from './components/FireDetector/fire-detector.vue'
 
 
 import WateringCan from './components/WateringCan/watering-can.vue'
 import Validation from './components/Validation.vue'
 import Alchemy from './components/Alchemy.vue'
 import MusicPlayer from './components/MusicPlayer.vue'
-import Gratitude from './components/Gratitude.vue'
-import Zine_CeilingFan from './components/zine_CeilingFan.vue'
+// import Gratitude from './components/Gratitude.vue'
+// import Zine_CeilingFan from './components/zine_CeilingFan.vue'
 
 import fireSound from './assets/fire.mp3';
 import Fire from './assets/fire.gif';
 
 
 import Cabinet from './assets/curiocabinet.png'
-import CeilingFan from './assets/ceiling-fan.gif'
 import TV from './assets/tv.png'
 import Static from './assets/static.gif'
 import Boulder from './assets/boulder.png'
@@ -65,21 +68,19 @@ import EgoTrap from './components/EgoTrap.vue'
 
 export default {
   name: 'HelloWorld',
-  components: { EgoTrap, Validation, MusicPlayer, Alchemy, TVStack, Gratitude, Zine_CeilingFan, Candle, WateringCan, Remote, Buddha, Gold, AirpodPro, FireDetector },
+  components: { EgoTrap, Validation, MusicPlayer, Alchemy, TVStack, Candle, WateringCan, Remote, Buddha, Gold, AirpodPro, FireDetector, CeilingFan },
   data() {
     return {
       TV, Boulder, Static,
       Cabinet, 
       Ash,
       Fire,
-      CeilingFan,
       littleFires: [],
       showEgoTrap: false,
       showValidation: false,
       showAlchemy: false,
       showMusicPlayer: false,
-      showGratitude: false,
-      showCeilingFan: false,
+      // showCeilingFan: false,
       activeFire: false,
     }
   },
@@ -117,15 +118,15 @@ export default {
           console.warn('unlock failed', e)
     }
   },
-    toggleCeiingFan(e) {
-      if (this.checkToggle(e) === false ) {
-        this.showCeilingFan = !this.showCeilingFan
-        this.showValidation = false;
-        this.showEgoTrap = false
-        this.showAlchemy = false
-        this.showMusicPlayer = false
-      }
-    },
+    // toggleCeiingFan(e) {
+    //   if (this.checkToggle(e) === false ) {
+    //     this.showCeilingFan = !this.showCeilingFan
+    //     this.showValidation = false;
+    //     this.showEgoTrap = false
+    //     this.showAlchemy = false
+    //     this.showMusicPlayer = false
+    //   }
+    // },
     toggleValidation(e) {
       this.onAnyIconTap()
       if (this.checkToggle(e) === false ) {
@@ -133,7 +134,7 @@ export default {
         this.showEgoTrap = false
         this.showAlchemy = false
         this.showMusicPlayer = false
-        this.showCeilingFan = false
+        // this.showCeilingFan = false
       }
     },
      toggleAlchemy(e) {
@@ -142,7 +143,7 @@ export default {
         this.showEgoTrap = false
         this.showValidation = false
         this.showMusicPlayer = false
-        this.showCeilingFan = false
+        // this.showCeilingFan = false
       }
       
     },
@@ -161,7 +162,7 @@ export default {
       this.showAlchemy = false
       this.showValidation = false
       this.showMusicPlayer = false
-      this.showCeilingFan = false
+      // this.showCeilingFan = false
     },
     onRemoteClick(e) {
       if (this.checkToggle(e) === false ) {   
