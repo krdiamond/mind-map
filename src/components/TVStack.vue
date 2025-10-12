@@ -1,9 +1,19 @@
 <template>
       <div class="tv-container relative">
         <img :src="TV" class="tv z-1 absolute" alt="TV" />
-        <video id="Burn" ref="burnVideo" loop class="static z-2 absolute">
-          <source :src="Burn" type="video/mp4">
+        
+        <video
+          id="Burn"
+          ref="burnVideo"
+          loop
+          playsinline
+          webkit-playsinline
+          preload="auto"
+          class="static z-2 absolute"
+        >
+          <source :src="Burn" type="video/mp4" />
         </video>
+
         <img :src="Static" v-if="showStatic" class="static z-2 absolute" alt="static" />
         <img :src="Boulder" class="boulder absolute" alt="Boulder" />
       </div>
@@ -26,7 +36,8 @@ export default {
   data() {
     return {
       TV, Boulder, Static, Burn,
-      showStatic: true
+      showStatic: true,
+      iosUnlocked: false
     }
   },
   methods: {
