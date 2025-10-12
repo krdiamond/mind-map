@@ -1,23 +1,5 @@
 @use './mixins' as *;
 
-.ceiling-fan {
-    position: absolute;
-    top: 0px;
-    left: 100px;
-    @include up(lg) { 
-        left: 400px;
-    }
-    img {
-        width: 150px;
-        @include up(lg) { 
-            width: 500px;
-        }
-    }
-}
-
-
-
-
 .cabinet-fire {
     z-index: 3;
     bottom: 0;

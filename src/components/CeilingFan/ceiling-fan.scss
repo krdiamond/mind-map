@@ -1,15 +1,18 @@
 @use '../../styles/mixins' as *;
 
-.buddha {
-    top: 200px;
-    left: 63px;
-    z-index: 2;
-    @include up(lg) {  
-        left: 152px;
-        top: 500px;
-    }
-    img {
-        width: 20px;
-        @include up(lg) {  width: 40px;}
-    }
+.ceiling-fan {
+    position: relative;
+    padding-bottom: 60%;
+    top: 0px;
+    position: relative;
+        @include up(sm) { 
+            left: 400px;
+            position: absolute;
+        }
+        img {
+            width: 100px;
+            @include up(sm) { 
+                width: 400px;
+            }
+        }
 }
