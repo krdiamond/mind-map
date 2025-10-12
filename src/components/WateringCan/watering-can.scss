@@ -34,9 +34,7 @@
 }
 
 .watering-can-container[data-dragging="true"] {
-  transform: rotate(-50deg);
-  transition: transform 120ms ease;
-  transform-origin: 70% 30%; 
+  transform: rotate(50deg) scaleX(-1);
 }
 .watering-can-container[data-dragging="true"] .water {
   display: block;

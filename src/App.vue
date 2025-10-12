@@ -98,11 +98,25 @@ export default {
         this.$refs.tvstack.pauseBurnVideo()
       }
     }
-  },
+  }, 
   methods: {
     checkToggle(e) { //this determines if it is a drag click or a toggle click
       return !!e?.currentTarget?.dataset?.dragged
     },
+    async onAnyIconTap (evt) {
+        if (this.iosUnlocked) return
+
+        const v = this.$refs.burnVideo
+        try {
+          v.muted = false
+          await v.play()      // satisfy iOS media policy using this first gesture
+          v.pause()           // we’re just “unlocking”
+          v.currentTime = 0
+          this.iosUnlocked = true
+        } catch (e) {
+          console.warn('unlock failed', e)
+    }
+  },
     toggleCeiingFan(e) {
       if (this.checkToggle(e) === false ) {
         this.showCeilingFan = !this.showCeilingFan
@@ -113,6 +127,7 @@ export default {
       }
     },
     toggleValidation(e) {
+      this.onAnyIconTap()
       if (this.checkToggle(e) === false ) {
         this.showValidation = !this.showValidation
         this.showEgoTrap = false
