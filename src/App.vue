@@ -1,5 +1,5 @@
 <template>  
-    <div  @mousedown="unlockMedia()" class="h-250 sm-h-700 sm-p-20 relative flex justify-between align-bottom ">
+    <div  @mousedown="unlockMedia()" @touchstart="unlockMedia()" class="h-250 sm-h-700 sm-p-20 relative flex justify-between align-bottom ">
       
         <TVStack ref="tvstack"/>
 
