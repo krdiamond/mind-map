@@ -1,5 +1,5 @@
 <template>  
-    <div  @mousedown="unlockMedia()" @touchstart="unlockMedia()" class="h-250 sm-h-700 sm-p-20 relative flex justify-between align-bottom ">
+    <div  @pointerdown="unlockMedia()" class="h-250 sm-h-700 sm-p-20 relative flex justify-between align-bottom ">
       
         <TVStack ref="tvstack"/>
 
@@ -77,7 +77,6 @@ export default {
     }
   },
   mounted() {
-        
     this.fireAudio = new Audio(fireSound);
     this.littleFires = document.querySelectorAll('.fire');
   },
@@ -99,6 +98,7 @@ export default {
     },
     unlockMedia() {
       this.$refs.tvstack.startBurnVideo()
+      this.fireAudio.play().catch(() => {});
     },
     toggleValidation(e) {
       if (this.checkToggle(e) === false ) {
