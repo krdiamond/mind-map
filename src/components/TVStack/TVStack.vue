@@ -29,7 +29,6 @@ import Burn from './burn.mp4'
 import Boulder from './boulder.png'
 
 
-
 export default {
   name: 'TVStack',
   emits: ['remote-click'],
@@ -37,8 +36,11 @@ export default {
     return {
       TV, Boulder, Static, Burn,
       showStatic: true,
-      iosUnlocked: false
+      unlockMedia: false
     }
+  },
+  mounted() {
+
   },
   methods: {
     startBurnVideo() {

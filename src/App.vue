@@ -1,5 +1,5 @@
 <template>  
-    <div class="h-250 sm-h-700 sm-p-20  relative flex justify-between align-bottom ">
+    <div  @mousedown="unlockMedia()" class="h-250 sm-h-700 sm-p-20 relative flex justify-between align-bottom ">
       
         <TVStack ref="tvstack"/>
 
@@ -77,6 +77,7 @@ export default {
     }
   },
   mounted() {
+        
     this.fireAudio = new Audio(fireSound);
     this.littleFires = document.querySelectorAll('.fire');
   },
@@ -96,22 +97,10 @@ export default {
     checkToggle(e) { //this determines if it is a drag click or a toggle click
       return !!e?.currentTarget?.dataset?.dragged
     },
-    async onAnyIconTap (evt) {
-        if (this.iosUnlocked) return
-
-        const v = this.$refs.burnVideo
-        try {
-          v.muted = false
-          await v.play()      // satisfy iOS media policy using this first gesture
-          v.pause()           // we’re just “unlocking”
-          v.currentTime = 0
-          this.iosUnlocked = true
-        } catch (e) {
-          console.warn('unlock failed', e)
-    }
-  },
+    unlockMedia() {
+      this.$refs.tvstack.startBurnVideo()
+    },
     toggleValidation(e) {
-
       if (this.checkToggle(e) === false ) {
         this.showValidation = !this.showValidation
         this.showAlchemy = false
@@ -124,10 +113,8 @@ export default {
         this.showValidation = false
         this.showMusicPlayer = false
       }
-      
     },
      toggleMusicPlayer(e) {
-      this.onAnyIconTap()
       if (this.checkToggle(e) === false ) {
        if(e?.target.id !== "Ash") {
           this.showMusicPlayer = !this.showMusicPlayer
@@ -138,7 +125,6 @@ export default {
     },
     onRemoteClick(e) {
       if (this.checkToggle(e) === false ) {   
-        console.log(e.target)
         if(e?.target.id !== "Ash") {
           this.$refs.tvstack.showStatic = !this.$refs.tvstack.showStatic
         } 
