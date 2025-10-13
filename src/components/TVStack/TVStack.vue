@@ -21,12 +21,12 @@
 
 <script>
 
-import '../styles/tv-stack.scss'
+import './tv-stack.scss'
 
-import TV from '../assets/tv.png'
-import Static from '../assets/static.gif'
-import Burn from '../assets/burn.mp4'
-import Boulder from '../assets/boulder.png'
+import TV from './tv.png'
+import Static from './static.gif'
+import Burn from './burn.mp4'
+import Boulder from './boulder.png'
 
 
 
