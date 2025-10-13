@@ -1,14 +1,16 @@
 <template>  
     <div class="h-250 sm-h-700 sm-p-20  relative flex justify-between align-bottom ">
-        <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
-        <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
-        <MusicPlayer v-show="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
-        <FireDetector ref="fireDetector"/> 
+      
         <TVStack ref="tvstack"/>
+
         <CeilingFan/> 
 
-
         <div class="cabinet-container w-100 sm-w-350 h-250 sm-h-600 relative">
+            <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
+            <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
+            <MusicPlayer v-show="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
+            <FireDetector ref="fireDetector"/> 
+
             <div id="CabinetStack">
                 <img :src="Cabinet" class="h-250 sm-h-600 absolute" alt="Glass Cabinet" />
                 <div id="CabinetFire" ref="cabinetFire" class="cabinet-fire ">
