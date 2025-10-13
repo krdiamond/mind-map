@@ -2,17 +2,12 @@
 
 .ceiling-fan {
     position: relative;
-    padding-bottom: 60%;
-    top: 0px;
-    position: relative;
-        @include up(sm) { 
-            left: 400px;
-            position: absolute;
+    align-self: flex-start;
+    top: -50px;
+    img {
+        width: 100px;
+        @include up(lg) { 
+            width: 300px;
         }
-        img {
-            width: 100px;
-            @include up(sm) { 
-                width: 400px;
-            }
-        }
+    }
 }

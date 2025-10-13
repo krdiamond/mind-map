@@ -6,7 +6,7 @@
     top: -40px;
     right: 0;
            @include up(lg) { 
-            top: 0px; 
+            top: -70px;
             right: 100px;
         }
     .beacon {
