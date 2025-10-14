@@ -97,8 +97,8 @@ export default {
       return !!e?.currentTarget?.dataset?.dragged
     },
     unlockMedia() {
+      this.fireAudio?.pause()
       this.$refs.tvstack.startBurnVideo()
-      this.fireAudio.play().catch(() => {});
     },
     toggleValidation(e) {
       if (this.checkToggle(e) === false ) {
@@ -154,6 +154,7 @@ export default {
                 const cabinetFires = this.$refs.cabinetFire.querySelectorAll('.fire');
                 cabinetFires.forEach((fire) => {
                   fire.classList.remove('hide');
+                  this.fireAudio?.pause();
                   this.$refs.tvstack.startBurnVideo()
                 });
               }
