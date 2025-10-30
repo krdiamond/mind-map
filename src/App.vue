@@ -6,7 +6,7 @@
         <CeilingFan/> 
 
         <div class="cabinet-container w-100 sm-w-350 h-250 sm-h-600 relative">
-            <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
+            
             <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
             <MusicPlayer v-show="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
             <FireDetector ref="fireDetector"/> 
@@ -23,7 +23,10 @@
 
             <Candle ref="candle" @overlap="onCandleOverlap($event)"/> 
             <WateringCan ref="wateringCan" @overlap="putOutFire($event)"/> 
+
             <Remote ref="remote" @overlap="onCandleOverlap($event)" @click="onRemoteClick($event)"/> 
+            <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
+            
             <Buddha ref="buddha" @click="toggleValidation"/>
             <Gold ref="buddha" @click="toggleAlchemy"/>
             <AirpodPro ref="airpodPro" @overlap="onCandleOverlap($event)"  @click="toggleMusicPlayer"/>
@@ -99,6 +102,7 @@ export default {
     unlockMedia() {
       this.fireAudio?.pause()
       this.$refs.tvstack.startBurnVideo()
+      this.$refs.tvstack.pauseBurnVideo()
     },
     toggleValidation(e) {
       if (this.checkToggle(e) === false ) {

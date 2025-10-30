@@ -15,6 +15,7 @@ html {
     max-width: 500px;
     padding-top: 100px;
     margin: auto;
+    overflow: hidden;
     @include up(lg) {
         max-width: 1500px; 
         padding-top: unset;
