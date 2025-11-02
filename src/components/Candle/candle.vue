@@ -58,7 +58,7 @@
                 const flame = this.$refs.candleFire
                 flame.classList.remove('hide')
                     setTimeout(() => {
-                        const flameLocation = flame.getBoundingClientRect()
+                        const flameLocation = flame.parentElement.getBoundingClientRect()
                         const flammableIcons = document.querySelectorAll('.flammable');
                         flammableIcons.forEach(flammableIcon => {
                             const flammableIconLocation = flammableIcon.getBoundingClientRect()
@@ -68,7 +68,6 @@
                                 flameLocation.bottom <= flammableIconLocation.top ||
                                 flameLocation.top >= flammableIconLocation.bottom
                             );
-
                             if (isOverlapping) {
                                 const evt = {
                                     target: flame.parentElement,      // your "dragElement"
