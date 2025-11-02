@@ -55,7 +55,29 @@
         },
         reIgnightCandleFlame() {
             setTimeout(() => {
-                    this.$refs.candleFire.classList.remove('hide')
+                const flame = this.$refs.candleFire
+                flame.classList.remove('hide')
+                    setTimeout(() => {
+                        const flameLocation = flame.getBoundingClientRect()
+                        const flammableIcons = document.querySelectorAll('.flammable');
+                        flammableIcons.forEach(flammableIcon => {
+                            const flammableIconLocation = flammableIcon.getBoundingClientRect()
+                            const isOverlapping = !(
+                                flameLocation.right <= flammableIconLocation.left ||
+                                flameLocation.left >= flammableIconLocation.right ||
+                                flameLocation.bottom <= flammableIconLocation.top ||
+                                flameLocation.top >= flammableIconLocation.bottom
+                            );
+
+                            if (isOverlapping) {
+                                const evt = {
+                                    target: flame.parentElement,      // your "dragElement"
+                                    detail: { hits: [{ target: flammableIcon }] } // your "hitElement"
+                                };
+                                this.$emit('overlap', evt);
+                            }
+                        })
+                    }, 500);
                 }, 3000);
             },
         }

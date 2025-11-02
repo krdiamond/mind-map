@@ -93,7 +93,7 @@ export default {
         this.fireAudio?.pause()
         this.$refs.tvstack.pauseBurnVideo()
       }
-    }
+    },
   }, 
   methods: {
     checkToggle(e) { //this determines if it is a drag click or a toggle click
@@ -120,7 +120,7 @@ export default {
     },
      toggleMusicPlayer(e) {
       if (this.checkToggle(e) === false ) {
-       if(e?.target.id !== "Ash") {
+       if(e?.target.children[0].id !== "Ash") {
           this.showMusicPlayer = !this.showMusicPlayer
           this.showValidation = false
           this.showAlchemy = false
@@ -128,8 +128,8 @@ export default {
       }
     },
     onRemoteClick(e) {
-      if (this.checkToggle(e) === false ) {   
-        if(e?.target.id !== "Ash") {
+      if (this.checkToggle(e) === false ) {
+        if(e?.target.children[0].id !== "Ash") {
           this.$refs.tvstack.showStatic = !this.$refs.tvstack.showStatic
         } 
       }
@@ -139,23 +139,22 @@ export default {
 
       const dragElement = event.target
       const hitElement = event.detail.hits[0].target
-      const candle = dragElement.id === 'Candle' ? dragElement : hitElement;
-      const target = dragElement.id === 'Candle' ? hitElement : dragElement;
-
       if (dragElement.children[0].id === 'Ash' || hitElement.children[0].id === 'Ash') { return }
 
+      const target = dragElement.id === 'Candle' ? hitElement : dragElement;
+      const flammableIcons = document.querySelectorAll('.flammable');
+      const cabinetFires = this.$refs.cabinetFire.querySelectorAll('.fire');
+
       setTimeout(() => {
-          this.setFireToElement(dragElement, hitElement, target)
+         if (!this.confirmOverlapToIgnite(dragElement, hitElement)) return;
+         this.startFire(target)
           setTimeout(() => {
-            if (this.activeFire) {
-              const flammableIcons = document.querySelectorAll('.flammable');
-              flammableIcons.forEach((icon) => {
-                this.setFireToElement(dragElement, hitElement, icon)
-              });
-            }
+            if (target.children[1].classList.contains('hide')){ this.activeFire = false; return }
+            flammableIcons.forEach((icon) => {
+                this.startFire(icon)
+            });
             setTimeout(() => {
               if (this.activeFire) {
-                const cabinetFires = this.$refs.cabinetFire.querySelectorAll('.fire');
                 cabinetFires.forEach((fire) => {
                   fire.classList.remove('hide');
                   this.fireAudio?.pause();
@@ -166,23 +165,30 @@ export default {
           }, 2000);
       }, 1000);
     },
-    checkForActiveFire() {
-        this.activeFire = false;
-        this.littleFires.forEach((fire) => {
-          if (!fire.classList.contains('hide') && !fire.classList.contains('candle-fire')) {
-              this.activeFire = true;
-          }
-      });
-    },
-    setFireToElement(dragElement, hitElement, target) {
-        if (!this.confirmOverlapToIgnite(dragElement, hitElement)) return;
-        target.querySelector('.fire').classList.remove('hide');
-        this.checkForActiveFire()
-        setTimeout(() => {
-          if (this.activeFire) {
-            this.turnToAsh(target)
-          }
+    startFire(target) {
+      this.activeFire = true
+      const fire = target.children[1]
+      fire.classList.remove('hide')
+      setTimeout(() => {
+        if (!fire.classList.contains('hide')) {
+          this.turnToAsh(target)
+        }
         }, 3000);
+    },
+    turnToAsh(target) {
+      const ash = document.createElement('img');
+      ash.id = 'Ash';   
+      ash.src = this.Ash; 
+      ash.alt = 'Ash';
+      target.children[0].replaceWith(ash);
+    },
+    checkForActiveFire() {
+      this.activeFire = false;
+      this.littleFires.forEach((fire) => {
+        if (!fire.classList.contains('hide') && !fire.classList.contains('candle-fire')) {
+            this.activeFire = true;
+        }
+      });
     },
     putOutFire(event) {
       event.detail.hits.forEach((sprayedElement) => {
@@ -192,13 +198,6 @@ export default {
         }
         this.checkForActiveFire()
       });
-    },
-    turnToAsh(el) {
-      const ash = document.createElement('img');
-      ash.id = 'Ash';   
-      ash.src = this.Ash; 
-      ash.alt = 'Ash';
-      el.children[0].replaceWith(ash);
     },
     confirmOverlapToIgnite(dragElement, hitElement) {
       const ar = dragElement.getBoundingClientRect();
