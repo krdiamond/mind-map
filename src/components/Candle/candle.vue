@@ -1,5 +1,7 @@
 <template>
-    <div id="Candle" class="candle-wrapper"
+    <div id="Candle" class="candle-wrapper icon"
+        ref="candle"
+        @pointerdown="$emit('bringToFront', $refs.candle.$el)"
         @overlap="$emit('overlap', $event)"
         v-draggable="{
             // desktop defaults (>=1025px)

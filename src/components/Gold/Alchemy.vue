@@ -1,5 +1,5 @@
 <template>
-  <div class="popup-box sm-w-400">
+  <div class="popup-box alchemy">
     <div class="wrapper">
     <div class="close" @pointerdown.stop @click.stop="$emit('close')">
       <svg fill="#000000" width="800px" height="800px" viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg">
@@ -20,6 +20,6 @@
 
 <script setup>
 
-import PassiveBaby from '../assets/passive-baby.gif'
+import PassiveBaby from './passive-baby.gif'
 
 </script>

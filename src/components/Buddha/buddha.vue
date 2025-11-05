@@ -1,6 +1,18 @@
 <template>
+    
+    <Validation 
+        v-if="showValidation" 
+        ref="validation"
+        @close="toggleValidation"
+        @pointerdown="$emit('bringToFront', $refs.validation.$el)"
+        @click.stop 
+        v-draggable.desktop
+    />
 
-    <div id="Buddha" class="buddha" 
+    <div id="Buddha" class="buddha icon" 
+            ref="buddha"
+            @pointerdown="$emit('bringToFront', $refs.buddha)"
+            @click="toggleValidation"
             v-draggable="{
             // desktop defaults (>=1025px)
             coordsBase: '.cabinet-container',
@@ -37,18 +49,26 @@
 
     import './buddha.scss';
 
+    import Validation from './Validation.vue';
+
     import Buddha from './buddha.png';
     import Fire from '../../assets/fire.gif';
 
     export default {
         name: 'Remote',
+        components: { Validation },
         data() {
             return {
-                Buddha, Fire
+                Buddha, Fire,
+                showValidation: false,
             }
         },
         methods: {
-
+            toggleValidation(e) {
+                if (!!e?.currentTarget?.dataset?.dragged === false ) { // check if click is a drag click or a toggle click
+                    this.showValidation = !this.showValidation
+                }
+            },
         }
     }
 </script>

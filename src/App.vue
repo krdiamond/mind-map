@@ -7,8 +7,7 @@
 
         <div class="cabinet-container w-100 sm-w-350 h-250 sm-h-600 relative">
             
-            <Alchemy v-if="showAlchemy" @close="toggleAlchemy" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
-            <MusicPlayer v-show="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
+            
             <FireDetector ref="fireDetector"/> 
 
             <div id="CabinetStack">
@@ -21,15 +20,25 @@
                 </div>
             </div>
 
-            <Candle ref="candle" @overlap="onCandleOverlap($event)"/> 
+            <Candle ref="candle" @overlap="onCandleOverlap($event)" @bringToFront="bringToFront($event)"/> 
+
+            <Remote @overlap="onCandleOverlap($event)" @click="onRemoteClick($event)" @bringToFront="bringToFront($event)"/> 
+            
+            <Buddha @bringToFront="bringToFront($event)"/>
+
+            <Gold @bringToFront="bringToFront($event)"/>
+
+
+            <AirpodPro @overlap="onCandleOverlap($event)"  @click="toggleMusicPlayer"/>
+            <MusicPlayer v-show="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable.desktop class="popup-box"/>
+
             <WateringCan ref="wateringCan" @overlap="putOutFire($event)"/> 
 
-            <Remote ref="remote" @overlap="onCandleOverlap($event)" @click="onRemoteClick($event)"/> 
-            <Validation v-if="showValidation" @close="toggleValidation" @click.stop v-draggable.desktop class="popup-box sm-w-400"/>
             
-            <Buddha ref="buddha" @click="toggleValidation"/>
-            <Gold ref="buddha" @click="toggleAlchemy"/>
-            <AirpodPro ref="airpodPro" @overlap="onCandleOverlap($event)"  @click="toggleMusicPlayer"/>
+            
+            
+            
+            
         </div>
     </div>
 </template>
@@ -45,8 +54,6 @@ import CeilingFan from './components/CeilingFan/ceiling-fan.vue'
 import WateringCan from './components/WateringCan/watering-can.vue'
 
 //POPUPS
-import Validation from './components/Validation.vue'
-import Alchemy from './components/Alchemy.vue'
 import MusicPlayer from './components/MusicPlayer.vue'
 
 //ICONS
@@ -64,7 +71,7 @@ import Fire from './assets/fire.gif';
 export default {
   name: 'MindMap',
   components: { 
-    Validation, MusicPlayer, Alchemy,
+    MusicPlayer, 
     TVStack, WateringCan, FireDetector, CeilingFan,
     Candle, Remote, Buddha, Gold, AirpodPro },
   data() {
@@ -73,8 +80,6 @@ export default {
       Ash,
       Fire,
       littleFires: [],
-      showValidation: false,
-      showAlchemy: false,
       showMusicPlayer: false,
       activeFire: false,
     }
@@ -104,28 +109,24 @@ export default {
       this.$refs.tvstack.startBurnVideo()
       this.$refs.tvstack.pauseBurnVideo()
     },
-    toggleValidation(e) {
-      if (this.checkToggle(e) === false ) {
-        this.showValidation = !this.showValidation
-        this.showAlchemy = false
-        this.showMusicPlayer = false
-      }
-    },
-     toggleAlchemy(e) {
-      if (this.checkToggle(e) === false ) {
-        this.showAlchemy = !this.showAlchemy
-        this.showValidation = false
-        this.showMusicPlayer = false
-      }
-    },
      toggleMusicPlayer(e) {
       if (this.checkToggle(e) === false ) {
        if(e?.target.children[0].id !== "Ash") {
           this.showMusicPlayer = !this.showMusicPlayer
-          this.showValidation = false
           this.showAlchemy = false
         }
       }
+    },
+    bringToFront(el){
+      if (el.classList.contains('popup-box')) {
+        document.querySelectorAll('.popup-box').forEach(b => b.classList.remove('top-popup'));
+        el.classList.add('top-popup');
+      }
+      else if (el.classList.contains('icon')) {
+        document.querySelectorAll('.icon').forEach(i => i.classList.remove('top-icon'));
+        el.classList.add('top-icon');
+      }
+ 
     },
     onRemoteClick(e) {
       if (this.checkToggle(e) === false ) {

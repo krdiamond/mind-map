@@ -1,5 +1,19 @@
 <template>
-    <div id="Gold" class="gold" 
+
+    <Alchemy
+        v-if="showAlchemy"
+        ref="alchemy"
+        @close="toggleAlchemy"
+        @pointerdown="$emit('bringToFront', $refs.alchemy.$el)"
+        @click.stop
+        v-draggable.desktop
+    />
+
+
+    <div id="Gold" class="gold icon"
+        ref="gold"
+        @pointerdown="$emit('bringToFront', $refs.gold)" 
+        @click="toggleAlchemy"
         v-draggable="{
         // desktop defaults (>=1025px)
         coordsBase: '.cabinet-container',
@@ -37,18 +51,26 @@
 
     import './gold.scss';
 
+    import Alchemy from './Alchemy.vue'
+
     import Gold from './gold.png';
     import Fire from '../../assets/fire.gif';
 
     export default {
         name: 'Remote',
+        components: { Alchemy},
         data() {
             return {
-                Gold, Fire
+                Gold, Fire,
+                showAlchemy: false,
             }
         },
         methods: {
-
+            toggleAlchemy(e) {
+                if (!!e?.currentTarget?.dataset?.dragged === false ) {
+                    this.showAlchemy = !this.showAlchemy
+                }
+            },
         }
     }
 </script>

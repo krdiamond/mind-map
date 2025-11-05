@@ -3,7 +3,6 @@
 .buddha {
     top: 200px;
     left: 63px;
-    z-index: 2;
     @include up(lg) {  
         left: 152px;
         top: 500px;
@@ -11,5 +10,12 @@
     img {
         width: 20px;
         @include up(lg) {  width: 40px;}
+    }
+}
+
+.validation {
+    @include up(lg) {  
+        left: -240px;
+        top: 190px;
     }
 }

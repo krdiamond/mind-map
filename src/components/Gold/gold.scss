@@ -12,3 +12,11 @@
         @include up(lg) {  width: 50px;}
     }
 }
+
+
+.alchemy {
+    @include up(lg) {  
+        left: -373px;
+        top: 100px;
+    }
+}

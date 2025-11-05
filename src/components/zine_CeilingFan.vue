@@ -1,5 +1,5 @@
 <template>
-    <div class="popup-box zine-ceiling-fan">
+    <div class="popup-box zine-ceiling-fan" tabindex="0">
         <div class="wrapper">
                 <div class="close" @click="$emit('close')">
                     <svg fill="#000000" width="800px" height="800px" viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg">

@@ -1,5 +1,7 @@
 <template>
-    <div id="Remote" class="remote flammable" alt="Remote"
+    <div id="Remote" class="remote flammable icon" alt="Remote"
+        ref="remote"
+        @pointerdown="$emit('bringToFront', $refs.remote)"
          v-draggable="{
             // desktop defaults (>=1025px)
             coordsBase: '.cabinet-container',

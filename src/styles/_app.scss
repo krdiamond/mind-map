@@ -52,11 +52,23 @@
 
 
 
+
 /* ---------------- POPUP BOX ---------------- */
+
+.popup-box[data-dragging="true"] {z-index: 4}            
+.popup-box.top-popup { z-index: 4; }     
+.popup-box:focus { outline: none }
+
+
+.icon[data-dragging="true"] {z-index: 3}            
+.icon.top-icon { z-index: 3; }     
+.icon:focus { outline: none }
+
+
 .popup-box {
     position: fixed !important;
     background-color: white;
-    z-index: 4;
+    z-index: 3;
     left: 0;
     top: 0;
     height: 100%;
@@ -64,7 +76,8 @@
     width: 100%;
     @include up(lg) {  
         position: absolute !important;
-        height: 300px;
+        width: 400px;
+        height: 400px;
         padding: unset;
     }
 
