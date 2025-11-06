@@ -6,10 +6,7 @@
         <CeilingFan/> 
 
         <div class="cabinet-container w-100 sm-w-350 h-250 sm-h-600 relative">
-            
-            
-            <FireDetector ref="fireDetector"/> 
-
+          <FireDetector ref="fireDetector"/> 
             <div id="CabinetStack">
                 <img :src="Cabinet" class="h-250 sm-h-600 absolute" alt="Glass Cabinet" />
                 <div id="CabinetFire" ref="cabinetFire" class="cabinet-fire ">
@@ -19,26 +16,12 @@
                     <img :src="Fire" alt="Fire" class="fire4 fire hide"/>
                 </div>
             </div>
-
-            <Candle ref="candle" @overlap="onCandleOverlap($event)" @bringToFront="bringToFront($event)"/> 
-
+            <Candle @overlap="onCandleOverlap($event)" @bringToFront="bringToFront($event)" ref="candle"/> 
             <Remote @overlap="onCandleOverlap($event)" @click="onRemoteClick($event)" @bringToFront="bringToFront($event)"/> 
-            
             <Buddha @bringToFront="bringToFront($event)"/>
-
             <Gold @bringToFront="bringToFront($event)"/>
-
-
-            <AirpodPro @overlap="onCandleOverlap($event)"  @click="toggleMusicPlayer"/>
-            <MusicPlayer v-show="showMusicPlayer" @close="toggleMusicPlayer" @click.stop v-draggable.desktop class="popup-box"/>
-
-            <WateringCan ref="wateringCan" @overlap="putOutFire($event)"/> 
-
-            
-            
-            
-            
-            
+            <AirpodPro @overlap="onCandleOverlap($event)" @bringToFront="bringToFront($event)"/>
+            <WateringCan @overlap="putOutFire($event)" ref="wateringCan"/>  
         </div>
     </div>
 </template>
@@ -52,9 +35,6 @@ import TVStack from './components/TVStack/TVStack.vue'
 import FireDetector from './components/FireDetector/fire-detector.vue'
 import CeilingFan from './components/CeilingFan/ceiling-fan.vue'
 import WateringCan from './components/WateringCan/watering-can.vue'
-
-//POPUPS
-import MusicPlayer from './components/MusicPlayer.vue'
 
 //ICONS
 import Cabinet from './assets/curiocabinet.png'
@@ -70,8 +50,7 @@ import Fire from './assets/fire.gif';
 
 export default {
   name: 'MindMap',
-  components: { 
-    MusicPlayer, 
+  components: {  
     TVStack, WateringCan, FireDetector, CeilingFan,
     Candle, Remote, Buddha, Gold, AirpodPro },
   data() {
@@ -80,7 +59,6 @@ export default {
       Ash,
       Fire,
       littleFires: [],
-      showMusicPlayer: false,
       activeFire: false,
     }
   },
@@ -109,14 +87,6 @@ export default {
       this.$refs.tvstack.startBurnVideo()
       this.$refs.tvstack.pauseBurnVideo()
     },
-     toggleMusicPlayer(e) {
-      if (this.checkToggle(e) === false ) {
-       if(e?.target.children[0].id !== "Ash") {
-          this.showMusicPlayer = !this.showMusicPlayer
-          this.showAlchemy = false
-        }
-      }
-    },
     bringToFront(el){
       if (el.classList.contains('popup-box')) {
         document.querySelectorAll('.popup-box').forEach(b => b.classList.remove('top-popup'));
@@ -136,6 +106,7 @@ export default {
       }
     },
     onCandleOverlap(event) {
+      console.log(this.$refs.candle)
       if(this.$refs.candle.candleIsBlownOut()) { return }
 
       const dragElement = event.target

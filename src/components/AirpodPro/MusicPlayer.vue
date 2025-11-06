@@ -1,5 +1,5 @@
 <template>
-	<div class="popup-box" tabindex="0">
+	<div class="popup-box albums">
     <div class="wrapper">
 			<div class="close" @pointerdown.stop @click.stop="$emit('close')">
 				<svg fill="#000000" width="800px" height="800px" viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg">
@@ -23,16 +23,18 @@
 </template>
 
 <script>
-import { fetchGoogleSheet } from '../lib/fetchGoogleSheet'
+import { fetchGoogleSheet } from '../../lib/fetchGoogleSheet'
 
 export default {
+  name: 'Albums',
   data() {
-    return { albums: [] };
+    return { 
+      albums: [],
+    };
   },
   async mounted() {
     const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR0ZgC1XczWdt5oqg-FIlc3Wck9jZbdIt7VmXONLfaZed0rPBJY_v4kbr5a27XA33Ht1hTP2gfq0VzE/pub?output=tsv&single=true&gid=0';
     const data = await fetchGoogleSheet(url);
-    
     this.albums = data.map((cols, i) => ({
       id: `${i}-${cols[0] || ''}-${cols[1] || ''}`,
       date: cols[0] || '',

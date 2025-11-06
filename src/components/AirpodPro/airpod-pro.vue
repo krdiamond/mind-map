@@ -1,7 +1,17 @@
 <template>
+      <MusicPlayer 
+        v-show="showMusicPlayer" 
+        ref="albums" 
+        @close="toggleMusicPlayer" 
+        @pointerdown="$emit('bringToFront', $refs.albums.$el)"
+        @click.stop v-draggable.desktop
+    />
 
 
-<div id="AirpodPro" class="airpod-pro flammable" 
+<div id="AirpodPro" class="airpod-pro icon flammable" 
+        ref="airpod"
+        @click="toggleMusicPlayer"
+        @pointerdown="$emit('bringToFront', $refs.airpod)"
         v-draggable="{
         // desktop defaults (>=1025px)
         coordsBase: '.cabinet-container',
@@ -39,21 +49,31 @@
 </template>
 
 <script>
-
     import './airpod-pro.scss';
 
     import AirpodPro from './airpod-pro.png';
     import Fire from '../../assets/fire.gif';
 
+    import MusicPlayer from './MusicPlayer.vue';
+
     export default {
         name: 'AirpodPro',
+        components: { MusicPlayer },
         data() {
             return {
-                AirpodPro, Fire
+                AirpodPro, Fire,
+                showMusicPlayer: false,
             }
         },
         methods: {
-
+            toggleMusicPlayer(e) {
+                if (!!e?.currentTarget?.dataset?.dragged === false ) {
+                    if(e?.target.children[0].id !== "Ash") {
+                        this.showMusicPlayer = !this.showMusicPlayer
+                        this.showAlchemy = false
+                    }
+                }
+            }
         }
     }
 </script>
