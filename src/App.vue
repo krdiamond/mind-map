@@ -6,7 +6,7 @@
         <CeilingFan/> 
 
         <div class="cabinet-container w-100 sm-w-350 h-250 sm-h-600 relative">
-          <FireDetector ref="fireDetector"/> 
+            <FireDetector ref="fireDetector"/> 
             <div id="CabinetStack">
                 <img :src="Cabinet" class="h-250 sm-h-600 absolute" alt="Glass Cabinet" />
                 <div id="CabinetFire" ref="cabinetFire" class="cabinet-fire ">
@@ -16,12 +16,13 @@
                     <img :src="Fire" alt="Fire" class="fire4 fire hide"/>
                 </div>
             </div>
-            <Candle @overlap="onCandleOverlap($event)" @bringToFront="bringToFront($event)" ref="candle"/> 
-            <Remote @overlap="onCandleOverlap($event)" @click="onRemoteClick($event)" @bringToFront="bringToFront($event)"/> 
+            <!-- <Candle @overlap="onCandleOverlap($event)" @bringToFront="bringToFront($event)" ref="candle"/>  -->
+            <!-- <Remote @overlap="onCandleOverlap($event)" @click="onRemoteClick($event)" @bringToFront="bringToFront($event)"/>  -->
             <Buddha @bringToFront="bringToFront($event)"/>
-            <Gold @bringToFront="bringToFront($event)"/>
-            <AirpodPro @overlap="onCandleOverlap($event)" @bringToFront="bringToFront($event)"/>
-            <WateringCan @overlap="putOutFire($event)" ref="wateringCan"/>  
+            <DVD @click="onDVDClick($event)" @overlap="onCandleOverlap($event)" @bringToFront="bringToFront($event)" />
+            <!-- <Gold @bringToFront="bringToFront($event)"/> -->
+            <!-- <AirpodPro @overlap="onCandleOverlap($event)" @bringToFront="bringToFront($event)"/> -->
+            <!-- <WateringCan @overlap="putOutFire($event)" ref="wateringCan"/>   -->
         </div>
     </div>
 </template>
@@ -43,6 +44,7 @@ import Remote from './components/Remote/remote.vue'
 import Buddha from './components/Buddha/buddha.vue'
 import Gold from './components/Gold/gold.vue'
 import AirpodPro from './components/AirpodPro/airpod-pro.vue'
+import DVD from './components/DVD/dvd.vue'
 import Ash from './assets/ash.png'
 
 import fireSound from './assets/fire.mp3';
@@ -52,7 +54,7 @@ export default {
   name: 'MindMap',
   components: {  
     TVStack, WateringCan, FireDetector, CeilingFan,
-    Candle, Remote, Buddha, Gold, AirpodPro },
+    Candle, Remote, Buddha, Gold, AirpodPro, DVD },
   data() {
     return {
       Cabinet, 
@@ -97,6 +99,14 @@ export default {
         el.classList.add('top-icon');
       }
  
+    },
+    onDVDClick(e) {
+      if (this.checkToggle(e) === false ) {
+        if(e?.target.children[0].id !== "Ash") {
+          // this.$refs.tvstack.showStatic = !this.$refs.tvstack.showStatic
+          this.$refs.tvstack.showMovie = !this.$refs.tvstack.showMovie
+        } 
+      }
     },
     onRemoteClick(e) {
       if (this.checkToggle(e) === false ) {
