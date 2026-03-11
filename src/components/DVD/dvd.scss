@@ -1,11 +1,11 @@
 @use '../../styles/mixins' as *;
 
 .dvd {
-    left: 14.8281px;
-    top: 221px;
+    left: 37px;
+    top: 103px;
     @include up(lg) { 
-        left: 42px;
-        top: 510px;
+        left: 100px;
+        top: 265px;
     }
     img {
         width: 40px;
@@ -25,4 +25,72 @@
     }
 }
 
+.product-box {
+  --box-scale: 0.5; /* mobile */
+  width: calc(51px * var(--box-scale));
+  height: calc(80px * var(--box-scale));
+  perspective: 1000px;
+  @include up(lg) {
+    --box-scale: 1;
+    }
+}
 
+
+.product-box__inner {
+  transform-style: preserve-3d;
+  width: 51px;
+  height: 80px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: center;
+  transform: translate(-50%, -50%) scale(var(--box-scale)) rotateY(30deg);
+}
+
+.product-box .box {
+  position: absolute;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+/* front / back */
+.product-box .box--front {
+  transform: rotateY(0deg) translateZ(5.2px);
+}
+
+.product-box .box--back {
+  transform: rotateY(180deg) translateZ(5.2px);
+}
+
+/* side spines */
+.product-box .box--left {
+  width: 20%;
+  left: 41.2px;
+  transform: rotateY(-90deg) translateZ(46.3px);
+}
+
+.product-box .box--right {
+  width: 20%;
+  left: -0.7px;
+  transform: rotateY(90deg) translateZ(46.3px);
+}
+
+/* hover spin */
+@media (hover: hover) and (pointer: fine) {
+  .product-box:hover .product-box__inner {
+    animation: puzzle-box-spin 6s linear infinite;
+  }
+}
+
+@keyframes puzzle-box-spin {
+  from {
+    transform: translate(-50%, -50%) scale(var(--box-scale)) rotateY(30deg);
+  }
+  to {
+    transform: translate(-50%, -50%) scale(var(--box-scale)) rotateY(390deg);
+  }
+}

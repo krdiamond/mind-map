@@ -3,7 +3,7 @@
       
         <TVStack ref="tvstack"/>
 
-        <CeilingFan/> 
+        <!-- <CeilingFan/>  -->
 
         <div class="cabinet-container w-100 sm-w-350 h-250 sm-h-600 relative">
             <FireDetector ref="fireDetector"/> 
@@ -21,8 +21,8 @@
             <Buddha @bringToFront="bringToFront($event)"/>
             <DVD @click="onDVDClick($event)" @overlap="onCandleOverlap($event)" @bringToFront="bringToFront($event)" />
             <!-- <Gold @bringToFront="bringToFront($event)"/> -->
-            <!-- <AirpodPro @overlap="onCandleOverlap($event)" @bringToFront="bringToFront($event)"/> -->
-            <!-- <WateringCan @overlap="putOutFire($event)" ref="wateringCan"/>   -->
+            <AirpodPro @overlap="onCandleOverlap($event)" @bringToFront="bringToFront($event)"/>
+            <WateringCan @overlap="putOutFire($event)" ref="wateringCan"/>  
         </div>
     </div>
 </template>
@@ -103,7 +103,6 @@ export default {
     onDVDClick(e) {
       if (this.checkToggle(e) === false ) {
         if(e?.target.children[0].id !== "Ash") {
-          // this.$refs.tvstack.showStatic = !this.$refs.tvstack.showStatic
           this.$refs.tvstack.showMovie = !this.$refs.tvstack.showMovie
         } 
       }
