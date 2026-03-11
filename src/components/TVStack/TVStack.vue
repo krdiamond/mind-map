@@ -8,7 +8,7 @@
           <div v-if="showMovie">
             <iframe
               class="static z-3 absolute"
-              src="https://drive.google.com/file/d/1V4kQFjRPnbErQk1jPFNMzY9XjpAUw1k3/view?usp=sharing"
+              src="https://drive.google.com/file/d/1V4kQFjRPnbErQk1jPFNMzY9XjpAUw1k3/preview"
               allow="autoplay; fullscreen"
               allowfullscreen
               ></iframe>
