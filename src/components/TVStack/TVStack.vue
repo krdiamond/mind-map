@@ -6,20 +6,15 @@
           <img :src="TV" class="tv z-1 absolute" alt="TV" />
             
           <div v-if="showMovie">
-              <video
-              id="Movie"
-              ref="movie"
-              loop
-              playsinline
-              webkit-playsinline
-              controls
-              preload="auto"
+            <iframe
               class="static z-3 absolute"
-            >
-            <source :src="Movie" type="video/mp4" />
-          </video>
-          <div id="MovieBackground" class="bg-black static z-2 absolute"></div>
+              src="https://drive.google.com/file/d/1V4kQFjRPnbErQk1jPFNMzY9XjpAUw1k3/view?usp=sharing"
+              allow="autoplay; fullscreen"
+              allowfullscreen
+              ></iframe>
           </div>
+
+          
           
           <video v-if="showBurnVideo"
             id="Burn"
@@ -47,15 +42,13 @@ import Static from './static.gif'
 import Burn from './burn.mp4'
 import Boulder from './boulder.png'
 
-import Movie from './liquid-sky.mp4'
-
 
 export default {
   name: 'TVStack',
   emits: ['remote-click'],
   data() {
     return {
-      TV, Boulder, Static, Burn, Movie,
+      TV, Boulder, Static, Burn,
       showMovie: false,
       showBurnVideo: false,
       unlockMedia: false
