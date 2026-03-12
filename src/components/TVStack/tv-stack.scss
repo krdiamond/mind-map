@@ -29,6 +29,38 @@
     }
 }
 
+.tv-video-frame {
+    
+    position: relative;
+    left: 19px;
+    top: 5px;
+    z-index: 3;
+    width: 98px;
+    height: 63px;
+    background: black;
+    transform: perspective(229px) rotateY(18deg) rotateZ(0.7deg);
+    @include up(lg) { 
+        left: 80px;
+        top: 20px;
+        width: 310px;
+        height: 200px;
+        transform: perspective(600px) rotateY(18deg) rotateZ(0.7deg);
+    }
+}
+
+.tv-video-iframe {
+    position: relative;
+    transform: scale(0.32);
+    border: 0;
+    left: -101px;
+    top: -42px;
+  @include up(lg) { 
+    transform: scale(1.02);
+    top: 25px;
+    left: 3px;
+  } 
+}
+
 .static {
     top: 6px;
     left: 0;

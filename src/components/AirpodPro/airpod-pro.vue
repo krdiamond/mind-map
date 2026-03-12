@@ -68,10 +68,10 @@
         methods: {
             toggleMusicPlayer(e) {
                 if (!!e?.currentTarget?.dataset?.dragged === false ) {
-                    if(e?.target.children[0].id !== "Ash") {
-                        this.showMusicPlayer = !this.showMusicPlayer
-                        this.showAlchemy = false
-                    }
+                    this.showMusicPlayer = !this.showMusicPlayer
+                    // if(e?.target.children[0].id !== "Ash") {
+                    //     this.showMusicPlayer = !this.showMusicPlayer
+                    // }
                 }
             }
         }

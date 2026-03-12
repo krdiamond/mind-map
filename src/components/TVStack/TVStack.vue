@@ -5,13 +5,18 @@
       <div class="tv-container relative">
           <img :src="TV" class="tv z-1 absolute" alt="TV" />
             
-          <div v-if="showMovie">
+
+          <div class="tv-video-frame" v-if="showMovie">
             <iframe
-              class="static z-3 absolute"
+              id="DVD"
+              ref="dvdMovie"
+              class="tv-video-iframe"
               src="https://drive.google.com/file/d/1V4kQFjRPnbErQk1jPFNMzY9XjpAUw1k3/preview"
               allow="autoplay; fullscreen"
               allowfullscreen
-              ></iframe>
+              webkitallowfullscreen
+              mozallowfullscreen
+            ></iframe>
           </div>
 
           
@@ -58,13 +63,14 @@ export default {
 
   },
   methods: {
+    startDVDVideo() {
+      this.showMovie = !this.showMovie
+    },
     startBurnVideo() {
         this.$refs.burnVideo.play(); 
-        this.showStatic = false;
     },
     pauseBurnVideo(){
         this.$refs.burnVideo.pause(); 
-        this.showStatic = true;
     }
   }
 }

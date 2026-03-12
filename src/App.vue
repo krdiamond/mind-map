@@ -98,13 +98,14 @@ export default {
         document.querySelectorAll('.icon').forEach(i => i.classList.remove('top-icon'));
         el.classList.add('top-icon');
       }
- 
+
     },
     onDVDClick(e) {
       if (this.checkToggle(e) === false ) {
-        if(e?.target.children[0].id !== "Ash") {
-          this.$refs.tvstack.showMovie = !this.$refs.tvstack.showMovie
-        } 
+        this.$refs.tvstack.startDVDVideo()
+        // if(e?.target.children[0].id !== "Ash") {
+        //   this.$refs.tvstack.showMovie = !this.$refs.tvstack.showMovie
+        // } 
       }
     },
     onRemoteClick(e) {
