@@ -15,7 +15,7 @@
             ],
             snapDurationMs: 150,
             resetOnResize: true,
-            overlapWith: ['.fire'],        // what you want to douse
+            overlapWith: ['.fire', '.candle-fire'],        // what you want to douse
             overlapOnMove: true,           // hover detection
             overlapSubject: '.water',      // only the water image counts
             minOverlapRatio: .75,

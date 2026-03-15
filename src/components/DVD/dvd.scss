@@ -7,90 +7,101 @@
         left: 100px;
         top: 265px;
     }
-    img {
+    .ash {
         width: 40px;
-        @include up(lg) {  width: 100px;}
+        position: relative;
+        left: -6px;
+        bottom: -20px;
+        @include up(lg) {  
+          width: 100px;
+          bottom: -30px;
+          left: -21px;
+        }
     }
 
     .fire {
         position: absolute;
-        top: -44px;
-        left: -5px;
+        top: -20px;
+        left: -8px;
         z-index: 1;
         width: 40px;
         @include up(lg) {  
-            top: -100px;
+            top: -74px;
+            left: -26px;
             width: 100px;
         }
     }
-}
 
-.product-box {
-  --box-scale: 0.5; /* mobile */
-  width: calc(51px * var(--box-scale));
-  height: calc(80px * var(--box-scale));
-  perspective: 1000px;
-  @include up(lg) {
-    --box-scale: 1;
-    }
-}
-
-
-.product-box__inner {
-  transform-style: preserve-3d;
-  width: 51px;
-  height: 80px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform-origin: center;
-  transform: translate(-50%, -50%) scale(var(--box-scale)) rotateY(30deg);
-}
-
-.product-box .box {
-  position: absolute;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center center;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-}
-
-/* front / back */
-.product-box .box--front {
-  transform: rotateY(0deg) translateZ(5.2px);
-}
-
-.product-box .box--back {
-  transform: rotateY(180deg) translateZ(5.2px);
-}
-
-/* side spines */
-.product-box .box--left {
-  width: 20%;
-  left: 41.2px;
-  transform: rotateY(-90deg) translateZ(46.3px);
-}
-
-.product-box .box--right {
-  width: 20%;
-  left: -0.7px;
-  transform: rotateY(90deg) translateZ(46.3px);
-}
-
-/* hover spin */
-@media (hover: hover) and (pointer: fine) {
-  .product-box:hover .product-box__inner {
-    animation: puzzle-box-spin 6s linear infinite;
+    .product-box {
+    --box-scale: 0.5; /* mobile */
+    width: calc(51px * var(--box-scale));
+    height: calc(80px * var(--box-scale));
+    perspective: 1000px;
+    @include up(lg) {
+      --box-scale: 1;
+      }
   }
-}
 
-@keyframes puzzle-box-spin {
-  from {
+
+  .product-box__inner {
+    transform-style: preserve-3d;
+    width: 51px;
+    height: 80px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: center;
     transform: translate(-50%, -50%) scale(var(--box-scale)) rotateY(30deg);
   }
-  to {
-    transform: translate(-50%, -50%) scale(var(--box-scale)) rotateY(390deg);
+
+  .product-box .box {
+    position: absolute;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
   }
+
+  /* front / back */
+  .product-box .box--front {
+    transform: rotateY(0deg) translateZ(5.2px);
+  }
+
+  .product-box .box--back {
+    transform: rotateY(180deg) translateZ(5.2px);
+  }
+
+  /* side spines */
+  .product-box .box--left {
+    width: 20%;
+    left: 41.2px;
+    transform: rotateY(-90deg) translateZ(46.3px);
+  }
+
+  .product-box .box--right {
+    width: 20%;
+    left: -0.7px;
+    transform: rotateY(90deg) translateZ(46.3px);
+  }
+
+  /* hover spin */
+  @media (hover: hover) and (pointer: fine) {
+    .product-box:hover .product-box__inner {
+      animation: puzzle-box-spin 6s linear infinite;
+    }
+  }
+
+  @keyframes puzzle-box-spin {
+    from {
+      transform: translate(-50%, -50%) scale(var(--box-scale)) rotateY(30deg);
+    }
+    to {
+      transform: translate(-50%, -50%) scale(var(--box-scale)) rotateY(390deg);
+    }
+  }
+
+
 }
+

@@ -1,21 +1,9 @@
 <template>
-      <MusicPlayer 
-        v-show="showMusicPlayer" 
-        ref="albums" 
-        @close="toggleMusicPlayer" 
-        @pointerdown="$emit('bringToFront', $refs.albums.$el)"
-        @click.stop v-draggable.desktop
-    />
-
-
-<div id="AirpodPro" class="airpod-pro icon flammable" 
-        ref="airpod"
-        @click="toggleMusicPlayer"
-        @pointerdown="$emit('bringToFront', $refs.airpod)"
+    <div id="AirpodPro" alt="Airpod Pro" class="airpod-pro icon flammable" 
+        @pointerdown="$emit('bringToFront', this.$el)"
         v-draggable="{
-        // desktop defaults (>=1025px)
         coordsBase: '.cabinet-container',
-        snapInto: [
+        snapInto: [ // desktop defaults (>=1025px)
             { left: 28, top: 510, width: 180, height: 62 }, // shelf 1
             { left: 28, top: 410, width: 180, height: 62 }, // shelf 2
             { left: 28, top: 300, width: 180, height: 62 }, // shelf 3
@@ -40,9 +28,19 @@
         overlapWith: ['#Candle'],
         // debugBoxes: true
         }"
-    alt="Airpod Pro">
+        >
+
     <img :src="AirpodPro" alt="Airpod Pro" />
     <img :src="Fire" alt="Fire" class="fire hide"/>
+    <img :src="Ash" alt="Ash" class="ash hide" />
+
+      <MusicPlayer 
+        v-show="showMusicPlayer" 
+        ref="albums" 
+        @close="toggleMusicPlayer" 
+        @pointerdown="$emit('bringToFront', $refs.albums.$el)"
+        @click.stop v-draggable.desktop
+    />
 </div> 
 
         
@@ -53,6 +51,7 @@
 
     import AirpodPro from './airpod-pro.png';
     import Fire from '../../assets/fire.gif';
+    import Ash from '../../assets/ash.png'
 
     import MusicPlayer from './MusicPlayer.vue';
 
@@ -61,7 +60,8 @@
         components: { MusicPlayer },
         data() {
             return {
-                AirpodPro, Fire,
+                AirpodPro, 
+                Fire, Ash,
                 showMusicPlayer: false,
             }
         },

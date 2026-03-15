@@ -1,5 +1,6 @@
 <template>  
-    <div  @pointerdown="unlockMedia()" class="h-250 sm-h-700 sm-p-20 relative flex justify-between align-bottom ">
+    <!-- <div  @pointerdown="unlockMedia()" class="h-250 sm-h-700 sm-p-20 relative flex justify-between align-bottom "> -->
+      <div  class="h-250 sm-h-700 sm-p-20 relative flex justify-between align-bottom ">
       
         <TVStack ref="tvstack"/>
 
@@ -16,13 +17,13 @@
                     <img :src="Fire" alt="Fire" class="fire4 fire hide"/>
                 </div>
             </div>
-            <!-- <Candle @overlap="onCandleOverlap($event)" @bringToFront="bringToFront($event)" ref="candle"/>  -->
+            <Candle ref="candle" @bringToFront="bringToFront($event)" @overlap="onCandleOverlap($event)"  /> 
             <!-- <Remote @overlap="onCandleOverlap($event)" @click="onRemoteClick($event)" @bringToFront="bringToFront($event)"/>  -->
-            <Buddha @bringToFront="bringToFront($event)"/>
-            <DVD @click="onDVDClick($event)" @overlap="onCandleOverlap($event)" @bringToFront="bringToFront($event)" />
+            <Buddha ref="buddha" @bringToFront="bringToFront($event)" @click="onBuddhaClick($event)" />
+            <DVD ref="dvd" @bringToFront="bringToFront($event)" @click="onDVDClick($event)" @overlap="onCandleOverlap($event)" />
+            <AirpodPro ref="airpodPro" @bringToFront="bringToFront($event)" @click="onAirPodProClick($event)" @overlap="onCandleOverlap($event)" />
             <!-- <Gold @bringToFront="bringToFront($event)"/> -->
-            <AirpodPro @overlap="onCandleOverlap($event)" @bringToFront="bringToFront($event)"/>
-            <WateringCan @overlap="putOutFire($event)" ref="wateringCan"/>  
+            <WateringCan @overlap="putOutFire($event)" ref="wateringCan"/>   
         </div>
     </div>
 </template>
@@ -60,117 +61,122 @@ export default {
       Cabinet, 
       Ash,
       Fire,
-      littleFires: [],
       activeFire: false,
     }
   },
   mounted() {
     this.fireAudio = new Audio(fireSound);
-    this.littleFires = document.querySelectorAll('.fire');
+    this.watchForFire()
   },
-  watch: {
-    activeFire(value) {
-      if (value == true) {
-        this.fireAudio.currentTime = 0;
-        this.fireAudio.volume = 0.10   
-        this.fireAudio.play().catch(() => {});
-      } else {
-        this.fireAudio?.pause()
-        this.$refs.tvstack.pauseBurnVideo()
+  methods: {
+    onDVDClick(e) {
+      if(e.currentTarget.id === "Ash") { return }
+      if (this.checkToggle(e) === false ) {
+        this.$refs.tvstack.startDVDVideo();
+        this.$refs.buddha.showValidation = false;
       }
     },
-  }, 
-  methods: {
+    onBuddhaClick(e) {
+      if (this.checkToggle(e) === false ) {
+        this.$refs.buddha.toggleValidation();
+      }
+    },
+    onAirPodProClick(e) {
+      if(e.currentTarget.id === "Ash") { return }
+      if (this.checkToggle(e) === false ) {
+        console.log('air pod pro clicked')
+        // this.$refs.airpodPro.toggleMusicPlayer();
+      }
+    },
     checkToggle(e) { //this determines if it is a drag click or a toggle click
       return !!e?.currentTarget?.dataset?.dragged
+    },
+    bringToFront(e){
+      if (e.classList.contains('popup-box')) {
+        document.querySelectorAll('.popup-box').forEach(b => b.classList.remove('top-popup'));
+        e.classList.add('top-popup');
+      }
+      else if (e.classList.contains('icon')) {
+        document.querySelectorAll('.icon').forEach(i => i.classList.remove('top-icon'));
+        e.classList.add('top-icon');
+      }
+    },
+    waitTwoSeconds() {
+      return new Promise(resolve => {
+        setTimeout(resolve, 2000)
+      })
     },
     unlockMedia() {
       this.fireAudio?.pause()
       this.$refs.tvstack.startBurnVideo()
       this.$refs.tvstack.pauseBurnVideo()
     },
-    bringToFront(el){
-      if (el.classList.contains('popup-box')) {
-        document.querySelectorAll('.popup-box').forEach(b => b.classList.remove('top-popup'));
-        el.classList.add('top-popup');
-      }
-      else if (el.classList.contains('icon')) {
-        document.querySelectorAll('.icon').forEach(i => i.classList.remove('top-icon'));
-        el.classList.add('top-icon');
-      }
-
-    },
-    onDVDClick(e) {
-      if (this.checkToggle(e) === false ) {
-        this.$refs.tvstack.startDVDVideo()
-        // if(e?.target.children[0].id !== "Ash") {
-        //   this.$refs.tvstack.showMovie = !this.$refs.tvstack.showMovie
-        // } 
-      }
-    },
-    onRemoteClick(e) {
-      if (this.checkToggle(e) === false ) {
-        if(e?.target.children[0].id !== "Ash") {
-          this.$refs.tvstack.showStatic = !this.$refs.tvstack.showStatic
-        } 
-      }
-    },
-    onCandleOverlap(event) {
-      console.log(this.$refs.candle)
+    async onCandleOverlap(event) {
       if(this.$refs.candle.candleIsBlownOut()) { return }
 
       const dragElement = event.target
       const hitElement = event.detail.hits[0].target
-      if (dragElement.children[0].id === 'Ash' || hitElement.children[0].id === 'Ash') { return }
-
       const target = dragElement.id === 'Candle' ? hitElement : dragElement;
-      const flammableIcons = document.querySelectorAll('.flammable');
-      const cabinetFires = this.$refs.cabinetFire.querySelectorAll('.fire');
 
-      setTimeout(() => {
-         if (!this.confirmOverlapToIgnite(dragElement, hitElement)) return;
-         this.startFire(target)
-          setTimeout(() => {
-            if (target.children[1].classList.contains('hide')){ this.activeFire = false; return }
-            flammableIcons.forEach((icon) => {
-                this.startFire(icon)
-            });
-            setTimeout(() => {
-              if (this.activeFire) {
-                cabinetFires.forEach((fire) => {
-                  fire.classList.remove('hide');
-                  this.fireAudio?.pause();
-                  this.$refs.tvstack.startBurnVideo()
-                });
-              }
-            }, 5000);
-          }, 2000);
-      }, 1000);
+      if(target.id === "Ash") { return }
+
+      await this.waitTwoSeconds()
+      if (!this.confirmOverlapToIgnite(dragElement, hitElement)) return;
+      this.setFire(target)
+
+      await this.waitTwoSeconds()
+      if (target.children[1].classList.contains('hide')) return;
+      const flammableIcons = document.querySelectorAll('.flammable');
+      flammableIcons.forEach((icon) => {
+          this.setFire(icon)
+      });
     },
-    startFire(target) {
-      this.activeFire = true
+    async setFire(target) {
       const fire = target.children[1]
       fire.classList.remove('hide')
-      setTimeout(() => {
-        if (!fire.classList.contains('hide')) {
-          this.turnToAsh(target)
-        }
-        }, 3000);
+
+      await this.waitTwoSeconds()
+      if (target.children[1].classList.contains('hide')) return;
+      this.turnToAsh(target)
     },
-    turnToAsh(target) {
-      const ash = document.createElement('img');
-      ash.id = 'Ash';   
-      ash.src = this.Ash; 
-      ash.alt = 'Ash';
-      target.children[0].replaceWith(ash);
+    turnToAsh(target){
+      target.id = 'Ash'
+      const ash = target.children[2]
+      ash.classList.remove('hide')
+      const icon = target.children[0]
+      icon.classList.add('hide');
     },
-    checkForActiveFire() {
-      this.activeFire = false;
-      this.littleFires.forEach((fire) => {
-        if (!fire.classList.contains('hide') && !fire.classList.contains('candle-fire')) {
-            this.activeFire = true;
-        }
+    async escalateFire(){
+      await this.waitTwoSeconds()
+      await this.waitTwoSeconds()
+      await this.waitTwoSeconds()
+      if (!document.querySelector('.fire:not(.hide)')) return
+      const cabinetFires = this.$refs.cabinetFire.querySelectorAll('.fire');
+      cabinetFires.forEach((fire) => {
+        fire.classList.remove('hide');
+        this.fireAudio?.pause();
+        this.$refs.tvstack.startBurnVideo()
       });
+    },
+    watchForFire() {
+      const checkFire = () => {
+        if (document.querySelector('.fire:not(.hide)')) {
+          this.fireAudio.currentTime = 0;
+          this.fireAudio.volume = 0.10   
+          this.fireAudio.play().catch(() => {});
+          this.escalateFire()
+        } else {
+          this.fireAudio?.pause()
+        this.$refs.tvstack.pauseBurnVideo()
+        }
+      }
+      this.fireObserver = new MutationObserver(checkFire)
+      this.fireObserver.observe(document.body, {
+        attributes: true,
+        subtree: true,
+        attributeFilter: ['class']
+      })
+      checkFire()
     },
     putOutFire(event) {
       event.detail.hits.forEach((sprayedElement) => {
@@ -178,7 +184,6 @@ export default {
         if (sprayedElement.target.id === 'CandleFire') {
           this.$refs.candle.reIgnightCandleFlame()
         }
-        this.checkForActiveFire()
       });
     },
     confirmOverlapToIgnite(dragElement, hitElement) {
@@ -187,6 +192,13 @@ export default {
       const stillOverlapping = !!(br && !(ar.right <= br.left || ar.left >= br.right || ar.bottom <= br.top || ar.top >= br.bottom));
       return stillOverlapping
     },
+    // onRemoteClick(e) {
+    //   if (this.checkToggle(e) === false ) {
+    //     if(e?.target.children[0].id !== "Ash") {
+    //       this.$refs.tvstack.showStatic = !this.$refs.tvstack.showStatic
+    //     } 
+    //   }
+    // },
   }
 }
 </script>

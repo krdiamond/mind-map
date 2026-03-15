@@ -1,6 +1,6 @@
 @use '../../styles/mixins' as *;
 
-.candle-wrapper {
+.candle {
         left: 20px;
         top: 70px;
     @include up(lg) {  

@@ -5,7 +5,6 @@
       <div class="tv-container relative">
           <img :src="TV" class="tv z-1 absolute" alt="TV" />
             
-
           <div class="tv-video-frame" v-if="showMovie">
             <iframe
               id="DVD"
@@ -13,15 +12,13 @@
               class="tv-video-iframe"
               src="https://drive.google.com/file/d/1V4kQFjRPnbErQk1jPFNMzY9XjpAUw1k3/preview"
               allow="autoplay; fullscreen"
-              allowfullscreen
               webkitallowfullscreen
               mozallowfullscreen
             ></iframe>
           </div>
+          
 
-          
-          
-          <video v-if="showBurnVideo"
+          <video v-show="showBurnVideo"
             id="Burn"
             ref="burnVideo"
             loop
@@ -64,13 +61,24 @@ export default {
   },
   methods: {
     startDVDVideo() {
+      const isIPhone = /iPhone/i.test(navigator.userAgent)
+      if (isIPhone) {
+        console.log('iphone?')
+        window.open(
+          "https://drive.google.com/file/d/1V4kQFjRPnbErQk1jPFNMzY9XjpAUw1k3/preview",
+          "_blank"
+        )
+        return
+      }
       this.showMovie = !this.showMovie
     },
     startBurnVideo() {
+        this.showBurnVideo = true;
         this.$refs.burnVideo.play(); 
     },
     pauseBurnVideo(){
-        this.$refs.burnVideo.pause(); 
+      this.showBurnVideo = false;
+      this.$refs.burnVideo.pause(); 
     }
   }
 }

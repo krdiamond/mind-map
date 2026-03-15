@@ -1,9 +1,6 @@
 <template>
-  <div
-    id="DVD"
-    class="dvd icon flammable"
-    ref="dvd"
-    @pointerdown="$emit('bringToFront', $refs.dvd)"
+  <div id="DVD" class="dvd icon flammable"
+    @pointerdown="$emit('bringToFront', this.$el)"
     v-draggable="{
       coordsBase: '.cabinet-container',
       snapInto: [
@@ -43,6 +40,7 @@
     </div>
 
     <img :src="Fire" alt="Fire" class="fire hide" />
+    <img :src="Ash" alt="Ash" class="ash hide" />
   </div>
 </template>
 
@@ -54,6 +52,7 @@ import DVDBack from './assets/dvd-back.jpg'
 import DVDLeft from './assets/dvd-left.jpg'
 import DVDRight from './assets/dvd-right.jpg'
 import Fire from '../../assets/fire.gif'
+import Ash from '../../assets/ash.png'
 
 export default {
   name: 'DVD',
@@ -63,7 +62,7 @@ export default {
       DVDBack,
       DVDLeft,
       DVDRight,
-      Fire,
+      Fire, Ash
     }
   },
   methods: {

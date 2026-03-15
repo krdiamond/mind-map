@@ -1,4 +1,169 @@
 <template>
+  <div class="player">
+    <h1>My Playlist</h1>
+
+    <div class="now-playing">
+      Now playing: {# currentSong.title #}
+    </div>
+
+    <audio
+      ref="audio"
+      :src="currentSong.src"
+      @ended="nextSong"
+    ></audio>
+
+    <div class="controls">
+      <button @click="prevSong">Prev</button>
+      <button @click="togglePlay">
+        {# isPlaying ? 'Pause' : 'Play' #}
+      </button>
+      <button @click="nextSong">Next</button>
+    </div>
+
+    <ul class="playlist">
+      <li
+        v-for="(song, index) in songs"
+        :key="index"
+        :class="{ active: index === currentSongIndex }"
+        @click="selectSong(index)"
+      >
+        {# song.title #}
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'SimpleAudioPlayer',
+  data() {
+    return {
+      currentSongIndex: 0,
+      isPlaying: false,
+      songs: [
+        {
+          title: 'Song One',
+          src: '/audio/song-one.mp3'
+        },
+        {
+          title: 'Song Two',
+          src: '/audio/song-two.mp3'
+        },
+        {
+          title: 'Song Three',
+          src: '/audio/song-three.mp3'
+        }
+      ]
+    }
+  },
+  computed: {
+    currentSong() {
+      return this.songs[this.currentSongIndex]
+    }
+  },
+  methods: {
+    togglePlay() {
+      const audio = this.$refs.audio
+
+      if (!audio) return
+
+      if (audio.paused) {
+        audio.play()
+        this.isPlaying = true
+      } else {
+        audio.pause()
+        this.isPlaying = false
+      }
+    },
+    selectSong(index) {
+      this.currentSongIndex = index
+      this.playCurrentSong()
+    },
+    nextSong() {
+      this.currentSongIndex = (this.currentSongIndex + 1) % this.songs.length
+      this.playCurrentSong()
+    },
+    prevSong() {
+      this.currentSongIndex =
+        (this.currentSongIndex - 1 + this.songs.length) % this.songs.length
+      this.playCurrentSong()
+    },
+    playCurrentSong() {
+      this.$nextTick(() => {
+        const audio = this.$refs.audio
+        if (!audio) return
+
+        audio.load()
+        audio.play()
+        this.isPlaying = true
+      })
+    }
+  }
+}
+</script>
+
+<style scoped>
+.player {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  font-size: 24px;
+  margin-top: 0;
+}
+
+.now-playing {
+  margin-bottom: 16px;
+  font-weight: bold;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+button {
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #f0f0f0;
+}
+
+.playlist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.playlist li {
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.playlist li:hover {
+  background: #f5f5f5;
+}
+
+.playlist li.active {
+  background: #e8f0ff;
+  font-weight: bold;
+}
+</style>
+
+<!-- <template>
 	<div class="popup-box albums">
     <div class="wrapper">
 			<div class="close" @pointerdown.stop @click.stop="$emit('close')">
@@ -64,4 +229,4 @@ table {
   padding: 0 3px;
 }
 
-</style>
+</style> -->

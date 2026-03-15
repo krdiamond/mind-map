@@ -1,7 +1,6 @@
 <template>
-    <div id="Candle" class="candle-wrapper icon"
-        @pointerdown="$emit('bringToFront', $refs.candle)"
-        @overlap="$emit('overlap', $event)"
+    <div id="Candle" alt="Candle" class="candle icon"
+        @pointerdown="$emit('bringToFront', this.$el)"
         v-draggable="{
             // desktop defaults (>=1025px)
             coordsBase: '.cabinet-container',
@@ -27,12 +26,12 @@
             ],
             snapDurationMs: 150,
             resetOnResize: true,
-            overlapWith: ['#AirpodPro', '#Remote'],
+            overlapWith: ['#AirpodPro', '#Remote', '#DVD'],
             // debugBoxes: true
         }"
         >
         <img :src="Candle" class="candle w-20 sm-w-40"/>
-        <img id="CandleFire" :src="Fire" ref="candleFire" class="candle-fire fire w-10 sm-w-20"/>
+        <img id="CandleFire" :src="Fire" ref="candleFire" class="candle-fire w-10 sm-w-20"/>
     </div>
 </template>
 

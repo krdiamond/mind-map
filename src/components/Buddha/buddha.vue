@@ -1,22 +1,9 @@
 <template>
-    
-    <Validation 
-        v-if="showValidation" 
-        ref="validation"
-        @close="toggleValidation"
-        @pointerdown="$emit('bringToFront', $refs.validation.$el)"
-        @click.stop 
-        v-draggable.desktop
-    />
-
-    <div id="Buddha" class="buddha icon" 
-            ref="buddha"
-            @pointerdown="$emit('bringToFront', $refs.buddha)"
-            @click="toggleValidation"
+    <div id="Buddha" alt="Buddha" class="buddha icon" 
+            @pointerdown="$emit('bringToFront', this.$el)"
             v-draggable="{
-            // desktop defaults (>=1025px)
             coordsBase: '.cabinet-container',
-            snapInto: [
+            snapInto: [ // desktop defaults (>=1025px)
                 { left: 28, top: 495, width: 180, height: 80 }, // shelf 1
                 { left: 28, top: 377, width: 180, height: 80 }, // shelf 2
                 { left: 28, top: 269, width: 180, height: 80 }, // shelf 3
@@ -38,10 +25,21 @@
             ],
             snapDurationMs: 150,
             resetOnResize: true,
+            overlapWith: ['#Candle'],
             // debugBoxes: true
             }"
-            alt="Buddha">
+            >
+
             <img :src="Buddha" alt="Buddha" />
+
+            <Validation 
+                v-if="showValidation"
+                @close="toggleValidation"
+                @pointerdown="$emit('bringToFront', this.$el)"
+                @click.stop 
+                v-draggable.desktop
+            />
+
         </div>
 </template>
 
