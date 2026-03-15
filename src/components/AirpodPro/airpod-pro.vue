@@ -30,9 +30,9 @@
         }"
         >
 
-    <img :src="AirpodPro" alt="Airpod Pro" />
+    <img :src="AirpodPro" alt="Airpod Pro" class="w-full" />
     <img :src="Fire" alt="Fire" class="fire hide"/>
-    <img :src="Ash" alt="Ash" class="ash hide" />
+    <img :src="Ash" alt="Ash" class="ash w-full hide" />
 
       <MusicPlayer 
         v-show="showMusicPlayer" 

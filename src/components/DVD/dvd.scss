@@ -1,47 +1,51 @@
 @use '../../styles/mixins' as *;
 
 .dvd {
-    left: 37px;
-    top: 103px;
-    @include up(lg) { 
-        left: 100px;
-        top: 265px;
-    }
-    .ash {
-        width: 40px;
-        position: relative;
-        left: -6px;
-        bottom: -20px;
-        @include up(lg) {  
-          width: 100px;
-          bottom: -30px;
-          left: -21px;
-        }
-    }
+  left: 37px;
+  top: 103px;
 
-    .fire {
-        position: absolute;
-        top: -20px;
-        left: -8px;
-        z-index: 1;
-        width: 40px;
-        @include up(lg) {  
-            top: -74px;
-            left: -26px;
-            width: 100px;
-        }
-    }
+  @include up(lg) { 
+    left: 100px;
+    top: 265px;
+  }
 
-    .product-box {
+  .ash {
+    width: 40px;
+    position: absolute;
+    left: -8px;
+    bottom: -4px;
+
+    @include up(lg) {  
+      width: 100px;
+      bottom: -8px;
+      left: -22px;
+    }
+  }
+
+  .fire {
+    position: absolute;
+    top: -20px;
+    left: -8px;
+    z-index: 1;
+    width: 40px;
+
+    @include up(lg) {  
+      top: -74px;
+      left: -26px;
+      width: 100px;
+    }
+  }
+
+  .product-box {
     --box-scale: 0.5; /* mobile */
     width: calc(51px * var(--box-scale));
     height: calc(80px * var(--box-scale));
     perspective: 1000px;
+
     @include up(lg) {
       --box-scale: 1;
-      }
+    }
   }
-
 
   .product-box__inner {
     transform-style: preserve-3d;
@@ -86,7 +90,7 @@
     transform: rotateY(90deg) translateZ(46.3px);
   }
 
-  /* hover spin */
+  /* hover spin (desktop) */
   @media (hover: hover) and (pointer: fine) {
     .product-box:hover .product-box__inner {
       animation: puzzle-box-spin 6s linear infinite;
@@ -102,6 +106,19 @@
     }
   }
 
+  /* mobile spin twice */
+  @media (hover: none) and (pointer: coarse) {
+    .product-box__inner {
+      animation: dvd-spin-mobile 6s cubic-bezier(.4,0,.2,1) 1;
+    }
+  }
 
+  @keyframes dvd-spin-mobile {
+    from {
+      transform: translate(-50%, -50%) scale(var(--box-scale)) rotateY(30deg);
+    }
+    to {
+      transform: translate(-50%, -50%) scale(var(--box-scale)) rotateY(750deg);
+    }
+  }
 }
-

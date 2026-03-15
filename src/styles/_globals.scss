@@ -118,6 +118,7 @@ p {
 /* ---------------- SHOW/HIDE ---------------- */
 
 .hide {display: none;}
+.invisible {visibility: hiden;}
 .sm-show {@include up(lg) {  display: block }}
 .sm-hide {@include up(lg) {  display: none }}
 

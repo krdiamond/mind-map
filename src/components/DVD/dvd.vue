@@ -26,7 +26,7 @@
       snapDurationMs: 150,
       resetOnResize: true,
       overlapWith: ['#Candle'],
-    //   debugBoxes: true
+      // debugBoxes: true
     }"
     alt="dvd Pro"
   >

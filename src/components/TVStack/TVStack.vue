@@ -74,6 +74,7 @@ export default {
     },
     startBurnVideo() {
         this.showBurnVideo = true;
+        this.showMovie = false;
         this.$refs.burnVideo.play(); 
     },
     pauseBurnVideo(){

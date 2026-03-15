@@ -12,7 +12,7 @@
         top: unset;
         @include up(lg) {  
              width: 200px;
-             left: -73px;
+             left: -48px;
         }
         
     }
@@ -30,11 +30,11 @@
         position: absolute;
         width: 100px;
         bottom: 0;
-        left: 20px; 
+        left: 36px; 
         top: unset; 
         @include up(lg) {  
             width: 400px;
-            left: 8px;
+            left: -46px;
         }
     }
     .fire4 {

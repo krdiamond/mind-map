@@ -3,13 +3,19 @@
 .airpod-pro {
     left: 14.8281px;
     top: 221px;
+    width: 40px;
     @include up(lg) { 
         left: 42px;
         top: 510px;
+        width: 100px;
     }
-    img {
-        width: 40px;
-        @include up(lg) {  width: 100px;}
+    .ash {
+        position: absolute;
+        left: 0;
+        bottom: 5px;
+        @include up(lg) {  
+            bottom: 9px;
+        }
     }
 
     .fire {

@@ -144,7 +144,7 @@ export default {
       const ash = target.children[2]
       ash.classList.remove('hide')
       const icon = target.children[0]
-      icon.classList.add('hide');
+      icon.classList.add('invisible');
     },
     async escalateFire(){
       await this.waitTwoSeconds()
