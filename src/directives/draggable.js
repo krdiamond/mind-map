@@ -5,9 +5,11 @@ export default {
     const mods = binding.modifiers || {};
     const desktopOnly = !!mods.desktop;
     const mobileOnly = !!mods.mobile;
+
     // Default queries for modifiers
     const desktopMQ = '(min-width: 1025px)';
-    const mobileMQ  = '(max-width: 1024px)';
+    const mobileMQ = '(max-width: 1024px)';
+
     // Pick the controlling MQ (or null if always-on)
     const controlQuery = desktopOnly ? desktopMQ : (mobileOnly ? mobileMQ : null);
 
@@ -18,7 +20,7 @@ export default {
     // ---- Breakpoint + resize reset wiring (default: 1024) -----------------
     const breakQuery = opts.breakQuery || '(max-width: 1024px)';
     const resetOnBreakpoint = opts.resetOnBreakpoint !== false; // default true
-    const resetOnResize = !!opts.resetOnResize;                  // default false
+    const resetOnResize = !!opts.resetOnResize;                 // default false
     const resizeDebounceMs = Number(opts.resizeDebounceMs ?? 80);
 
     function resetToCssOrigin() {
@@ -42,6 +44,7 @@ export default {
         if (m.matches) active = r; // last match wins
       }
       if (!active) return base;
+
       return {
         snapInto: active.snapInto != null ? active.snapInto : base.snapInto,
         coordsBase: active.coordsBase != null ? active.coordsBase : base.coordsBase,
@@ -84,6 +87,7 @@ export default {
         dbg.container.remove();
         dbg.container = null;
       }
+
       if (!dbg.container) {
         const c = document.createElement('div');
         c.style.position = 'absolute';
@@ -105,6 +109,7 @@ export default {
 
     function drawBox(b, indexOneBased) {
       if (!dbg.container) return;
+
       const w = Math.max(0, (b.right ?? 0) - (b.left ?? 0));
       const h = Math.max(0, (b.bottom ?? 0) - (b.top ?? 0));
       const d = document.createElement('div');
@@ -141,7 +146,7 @@ export default {
 
       clearDebugBoxes();
       const boxes = getSnapBoxes();
-      boxes.forEach((b, i) => drawBox(b, i + 1)); // start at 1
+      boxes.forEach((b, i) => drawBox(b, i + 1));
     }
 
     // --- Drag + snapInto ---------------------------------------------------
@@ -153,7 +158,7 @@ export default {
       const br = base.getBoundingClientRect();
       const cs = getComputedStyle(el);
       const ml = parseFloat(cs.marginLeft) || 0;
-      const mt = parseFloat(cs.marginTop)  || 0;
+      const mt = parseFloat(cs.marginTop) || 0;
       return { x: er.left - br.left - ml, y: er.top - br.top - mt };
     };
 
@@ -168,14 +173,21 @@ export default {
         const node = typeof spec === 'string' ? document.querySelector(spec) : spec;
         if (!node) return null;
         const r = node.getBoundingClientRect();
-        return { left: r.left - br.left, top: r.top - br.top, right: r.right - br.left, bottom: r.bottom - br.top };
+        return {
+          left: r.left - br.left,
+          top: r.top - br.top,
+          right: r.right - br.left,
+          bottom: r.bottom - br.top
+        };
       }
+
       if (spec && typeof spec === 'object') {
         let { left = 0, top = 0, right, bottom, width, height } = spec;
-        if (right == null && width  != null) right  = left + width;
-        if (bottom== null && height != null) bottom = top + height;
+        if (right == null && width != null) right = left + width;
+        if (bottom == null && height != null) bottom = top + height;
         return { left, top, right, bottom };
       }
+
       return null;
     }
 
@@ -189,16 +201,29 @@ export default {
     function pickNearestSnapTarget(pos) {
       const boxes = getSnapBoxes();
       if (!boxes.length) return null;
-      const ew = el.offsetWidth, eh = el.offsetHeight;
-      let best = null, bestD2 = Infinity;
+
+      const ew = el.offsetWidth;
+      const eh = el.offsetHeight;
+      let best = null;
+      let bestD2 = Infinity;
+
       for (const b of boxes) {
-        const minX = b.left, minY = b.top;
-        const maxX = b.right  - ew, maxY = b.bottom - eh;
+        const minX = b.left;
+        const minY = b.top;
+        const maxX = b.right - ew;
+        const maxY = b.bottom - eh;
         const tx = clamp(pos.x, minX, Math.max(minX, maxX));
         const ty = clamp(pos.y, minY, Math.max(minY, maxY));
-        const dx = pos.x - tx, dy = pos.y - ty, d2 = dx*dx + dy*dy;
-        if (d2 < bestD2) { bestD2 = d2; best = { x: tx, y: ty }; }
+        const dx = pos.x - tx;
+        const dy = pos.y - ty;
+        const d2 = dx * dx + dy * dy;
+
+        if (d2 < bestD2) {
+          bestD2 = d2;
+          best = { x: tx, y: ty };
+        }
       }
+
       return best;
     }
 
@@ -215,7 +240,8 @@ export default {
       };
     };
 
-    const rectsOverlap = (a, b) => !(a.right <= b.left || a.left >= b.right || a.bottom <= b.top || a.top >= b.bottom);
+    const rectsOverlap = (a, b) =>
+      !(a.right <= b.left || a.left >= b.right || a.bottom <= b.top || a.top >= b.bottom);
 
     const overlapArea = (a, b) => {
       const x = Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left));
@@ -228,6 +254,7 @@ export default {
       if (!spec) return [];
       const arr = Array.isArray(spec) ? spec : [spec];
       const nodes = [];
+
       for (const s of arr) {
         if (typeof s === 'string') {
           nodes.push(...document.querySelectorAll(s));
@@ -235,6 +262,7 @@ export default {
           nodes.push(s);
         }
       }
+
       return nodes.filter(n => n !== el);
     };
 
@@ -248,21 +276,28 @@ export default {
 
     const checkOverlapAndNotify = () => {
       const pad = Number(opts.overlapPadding ?? 4);
-      const minRatio = Number(opts.minOverlapRatio ?? 0.15); // 15% of smaller area
+      const minRatio = Number(opts.minOverlapRatio ?? 0.15);
       const targets = resolveTargets();
       if (!targets.length) return;
 
       const subjectEl = resolveSubjectEl();
       const er = getRect(subjectEl, pad);
-      let hits = [];
+      const hits = [];
 
       for (const t of targets) {
         const tr = getRect(t, pad);
         if (!rectsOverlap(er, tr)) continue;
+
         const area = overlapArea(er, tr);
         const minArea = Math.min(er.width * er.height, tr.width * tr.height) * minRatio;
+
         if (area >= minArea) {
-          hits.push({ target: t, area, ratio: area / Math.min(er.width * er.height, tr.width * tr.height), rect: tr });
+          hits.push({
+            target: t,
+            area,
+            ratio: area / Math.min(er.width * er.height, tr.width * tr.height),
+            rect: tr
+          });
         }
       }
 
@@ -271,32 +306,132 @@ export default {
         const detail = { element: el, subject: subjectEl, elementRect: er, hits };
         el.dispatchEvent(new CustomEvent('overlap', { detail, bubbles: true }));
         el.dispatchEvent(new CustomEvent('draggable:overlap', { detail, bubbles: true }));
+
         if (typeof opts.onOverlap === 'function') {
-          try { opts.onOverlap(detail); } catch (err) { console.error('onOverlap error', err); }
+          try {
+            opts.onOverlap(detail);
+          } catch (err) {
+            console.error('onOverlap error', err);
+          }
         }
       }
     };
 
     // --- Pointer events ----------------------------------------------------
-    let moveListener, upListener;
-    let overlapRAF = null; // throttle overlap-on-move
+    let moveListener = null;
+    let upListener = null;
+    let cancelListener = null;
+    let lostCaptureListener = null;
+    let overlapRAF = null;
+    let activePointerId = null;
+
+    const cleanupDrag = (ev, { cancelled = false } = {}) => {
+      if (
+        activePointerId != null &&
+        ev?.pointerId != null &&
+        ev.pointerId !== activePointerId
+      ) {
+        return;
+      }
+
+      try {
+        if (activePointerId != null) {
+          el.releasePointerCapture?.(activePointerId);
+        }
+      } catch {}
+
+      el.style.cursor = 'grab';
+
+      if (moveListener) window.removeEventListener('pointermove', moveListener);
+      if (upListener) window.removeEventListener('pointerup', upListener);
+      if (cancelListener) window.removeEventListener('pointercancel', cancelListener);
+      if (lostCaptureListener) el.removeEventListener('lostpointercapture', lostCaptureListener);
+
+      moveListener = null;
+      upListener = null;
+      cancelListener = null;
+      lostCaptureListener = null;
+
+      if (overlapRAF) {
+        cancelAnimationFrame(overlapRAF);
+        overlapRAF = null;
+      }
+
+      if (el.dataset.dragging) {
+        delete el.dataset.dragging;
+        el.dispatchEvent(new CustomEvent('draggable:dragend', { bubbles: true }));
+      }
+
+      activePointerId = null;
+
+      if (!moved || cancelled) {
+        renderDebugBoxes();
+        return;
+      }
+
+      const target = pickNearestSnapTarget(getRelPos());
+      let snapMs = opts.snapDurationMs ?? 120;
+
+      if (target) {
+        if (snapMs) {
+          el.style.transition = `left ${snapMs}ms linear, top ${snapMs}ms linear`;
+          requestAnimationFrame(() => {
+            el.style.left = target.x + 'px';
+            el.style.top = target.y + 'px';
+          });
+          setTimeout(() => {
+            el.style.transition = '';
+          }, snapMs);
+        } else {
+          el.style.left = target.x + 'px';
+          el.style.top = target.y + 'px';
+        }
+      } else {
+        snapMs = 0;
+      }
+
+      el.dataset.dragged = 'true';
+      setTimeout(() => {
+        delete el.dataset.dragged;
+      }, 0);
+
+      const afterMs = Math.max(0, Number(snapMs));
+      setTimeout(() => {
+        const finalPos = getRelPos();
+        el.dispatchEvent(new CustomEvent('draggable:dragstop', {
+          detail: { pos: finalPos },
+          bubbles: true
+        }));
+        checkOverlapAndNotify();
+        renderDebugBoxes();
+      }, afterMs + 5);
+    };
 
     const onPointerDown = (e) => {
-      // Extra guard if someone also passes { enabled:false }
       if (opts.enabled === false) return;
-      if (e.button != null && e.button !== 0) return; // left click only
+      if (e.button != null && e.button !== 0) return;
+      if (activePointerId != null) return; // already dragging
 
-      el.setPointerCapture?.(e.pointerId);
-      e.preventDefault(); e.stopPropagation();
+      activePointerId = e.pointerId;
+
+      el.setPointerCapture?.(activePointerId);
+      e.preventDefault();
+      e.stopPropagation();
+
       el.style.cursor = 'grabbing';
 
       const p = getRelPos();
-      startX = e.clientX; startY = e.clientY;
-      baseLeft = p.x; baseTop = p.y;
+      startX = e.clientX;
+      startY = e.clientY;
+      baseLeft = p.x;
+      baseTop = p.y;
       moved = false;
 
       moveListener = (ev) => {
-        const dx = ev.clientX - startX, dy = ev.clientY - startY;
+        if (ev.pointerId !== activePointerId) return;
+
+        const dx = ev.clientX - startX;
+        const dy = ev.clientY - startY;
 
         if (!moved && (Math.abs(dx) > 3 || Math.abs(dy) > 3)) {
           moved = true;
@@ -305,7 +440,7 @@ export default {
         }
 
         el.style.left = baseLeft + dx + 'px';
-        el.style.top  = baseTop  + dy + 'px';
+        el.style.top = baseTop + dy + 'px';
 
         if (moved && opts.overlapOnMove) {
           if (!overlapRAF) {
@@ -318,53 +453,24 @@ export default {
       };
 
       upListener = (ev) => {
-        el.releasePointerCapture?.(ev.pointerId);
-        el.style.cursor = 'grab';
-        window.removeEventListener('pointermove', moveListener);
-        window.removeEventListener('pointerup', upListener);
-        if (overlapRAF) { cancelAnimationFrame(overlapRAF); overlapRAF = null; }
+        if (ev.pointerId !== activePointerId) return;
+        cleanupDrag(ev);
+      };
 
-        if (el.dataset.dragging) {
-          delete el.dataset.dragging;
-          el.dispatchEvent(new CustomEvent('draggable:dragend', { bubbles: true }));
-        }
+      cancelListener = (ev) => {
+        if (ev.pointerId !== activePointerId) return;
+        cleanupDrag(ev, { cancelled: true });
+      };
 
-        if (moved) {
-          const target = pickNearestSnapTarget(getRelPos());
-          let snapMs = opts.snapDurationMs ?? 120;
-          if (target) {
-            if (snapMs) {
-              el.style.transition = `left ${snapMs}ms linear, top ${snapMs}ms linear`;
-              requestAnimationFrame(() => {
-                el.style.left = target.x + 'px';
-                el.style.top  = target.y + 'px';
-              });
-              setTimeout(() => { el.style.transition = ''; }, snapMs);
-            } else {
-              el.style.left = target.x + 'px';
-              el.style.top  = target.y + 'px';
-            }
-          } else {
-            snapMs = 0;
-          }
-
-          el.dataset.dragged = 'true';
-          setTimeout(() => { delete el.dataset.dragged; }, 0);
-
-          const afterMs = Math.max(0, Number(snapMs));
-          setTimeout(() => {
-            const finalPos = getRelPos();
-            el.dispatchEvent(new CustomEvent('draggable:dragstop', { detail: { pos: finalPos }, bubbles: true }));
-            checkOverlapAndNotify();
-            renderDebugBoxes(); // refresh overlays after movement/snap
-          }, afterMs + 5);
-        } else {
-          renderDebugBoxes(); // still refresh
-        }
+      lostCaptureListener = (ev) => {
+        if (ev.pointerId !== activePointerId) return;
+        cleanupDrag(ev, { cancelled: true });
       };
 
       window.addEventListener('pointermove', moveListener, { passive: false });
       window.addEventListener('pointerup', upListener, { passive: true });
+      window.addEventListener('pointercancel', cancelListener, { passive: true });
+      el.addEventListener('lostpointercapture', lostCaptureListener);
     };
 
     // --- Enable/disable based on modifier-controlled media query -----------
@@ -377,11 +483,28 @@ export default {
 
     function disable() {
       if (!el.__dragActive) return;
+
       el.removeEventListener('pointerdown', onPointerDown);
-      // safety: if disable happens mid-drag, clean listeners
-      if (moveListener) window.removeEventListener('pointermove', moveListener);
-      if (upListener) window.removeEventListener('pointerup', upListener);
-      moveListener = upListener = null;
+
+      if (activePointerId != null) {
+        cleanupDrag({ pointerId: activePointerId }, { cancelled: true });
+      } else {
+        if (moveListener) window.removeEventListener('pointermove', moveListener);
+        if (upListener) window.removeEventListener('pointerup', upListener);
+        if (cancelListener) window.removeEventListener('pointercancel', cancelListener);
+        if (lostCaptureListener) el.removeEventListener('lostpointercapture', lostCaptureListener);
+
+        moveListener = null;
+        upListener = null;
+        cancelListener = null;
+        lostCaptureListener = null;
+
+        if (overlapRAF) {
+          cancelAnimationFrame(overlapRAF);
+          overlapRAF = null;
+        }
+      }
+
       el.style.cursor = '';
       delete el.__dragActive;
     }
@@ -393,12 +516,16 @@ export default {
     if (typeof window !== 'undefined' && controlQuery) {
       const mql = window.matchMedia(controlQuery);
       const sync = () => (mql.matches ? enable() : disable());
-      mql.addEventListener ? mql.addEventListener('change', sync)
-                           : mql.addListener(sync);
+
+      if (mql.addEventListener) {
+        mql.addEventListener('change', sync);
+      } else {
+        mql.addListener(sync);
+      }
+
       el.__drag_enable_mql__ = { mql, sync };
-      sync(); // set initial state
+      sync();
     } else {
-      // No modifier -> always on
       enable();
     }
 
@@ -406,23 +533,37 @@ export default {
     if (typeof window !== 'undefined' && resetOnBreakpoint) {
       const mql = window.matchMedia(breakQuery);
       const onChange = () => {
-        resetToCssOrigin();   // let CSS for each side of 1024 take over
-        renderDebugBoxes();   // and show the correct responsive boxes
+        resetToCssOrigin();
+        renderDebugBoxes();
       };
-      mql.addEventListener ? mql.addEventListener('change', onChange)
-                           : mql.addListener(onChange);
+
+      if (mql.addEventListener) {
+        mql.addEventListener('change', onChange);
+      } else {
+        mql.addListener(onChange);
+      }
+
       el.__drag_mql__ = { mql, onChange };
     }
 
     if (Array.isArray(opts.responsive) && typeof window !== 'undefined') {
       const respMqls = [];
+
       for (const r of opts.responsive) {
         if (!r || !r.query) continue;
+
         const m = window.matchMedia(r.query);
         const on = () => renderDebugBoxes();
-        m.addEventListener ? m.addEventListener('change', on) : m.addListener(on);
+
+        if (m.addEventListener) {
+          m.addEventListener('change', on);
+        } else {
+          m.addListener(on);
+        }
+
         respMqls.push({ m, on });
       }
+
       el.__drag_resp_mqls__ = respMqls;
     }
 
@@ -432,9 +573,11 @@ export default {
       const onResize = () => {
         renderDebugBoxes();
         if (!resetOnResize) return;
+
         clearTimeout(tid);
         tid = setTimeout(() => resetToCssOrigin(), resizeDebounceMs);
       };
+
       window.addEventListener('resize', onResize);
       el.__drag_resize__ = onResize;
     }
@@ -454,8 +597,11 @@ export default {
     const emq = el.__drag_enable_mql__;
     if (emq) {
       const { mql, sync } = emq;
-      mql.removeEventListener ? mql.removeEventListener('change', sync)
-                              : mql.removeListener(sync);
+      if (mql.removeEventListener) {
+        mql.removeEventListener('change', sync);
+      } else {
+        mql.removeListener(sync);
+      }
       delete el.__drag_enable_mql__;
     }
 
@@ -463,16 +609,22 @@ export default {
     const m = el.__drag_mql__;
     if (m) {
       const { mql, onChange } = m;
-      mql.removeEventListener ? mql.removeEventListener('change', onChange)
-                              : mql.removeListener(onChange);
+      if (mql.removeEventListener) {
+        mql.removeEventListener('change', onChange);
+      } else {
+        mql.removeListener(onChange);
+      }
       delete el.__drag_mql__;
     }
 
     // Responsive debug MQLs
     if (el.__drag_resp_mqls__) {
       for (const { m, on } of el.__drag_resp_mqls__) {
-        m.removeEventListener ? m.removeEventListener('change', on)
-                              : m.removeListener(on);
+        if (m.removeEventListener) {
+          m.removeEventListener('change', on);
+        } else {
+          m.removeListener(on);
+        }
       }
       delete el.__drag_resp_mqls__;
     }

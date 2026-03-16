@@ -1,14 +1,14 @@
 @use './mixins' as *;
 
 .cabinet-fire {
-    z-index: 3;
+    z-index: 4;
     bottom: 0;
     position: absolute;
     .fire1 {
         position: absolute;
         bottom: 0;
         width: 100px;
-        left: -30px;
+        left: -26px;
         top: unset;
         @include up(lg) {  
              width: 200px;
@@ -91,13 +91,12 @@
 
     .close {
         position: sticky;
-        top: 0;
+        top: 12;
+        right: 12px;
         float: right;
         cursor: pointer;
         background: white;
-        padding: 12px;
         border-radius: 100%;
-
         svg {
             height: 20px;
             width: 20px;
