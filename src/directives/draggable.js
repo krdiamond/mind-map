@@ -1,4 +1,13 @@
 // src/directives/draggable.js
+const MOVE_THRESHOLD = 3;
+let activeDragEl = null;
+
+function endActiveDrag(exceptEl = null) {
+  if (activeDragEl && activeDragEl !== exceptEl) {
+    activeDragEl.__drag_force_cleanup__?.();
+  }
+}
+
 export default {
   mounted(el, binding) {
     const opts = binding.value || {};
@@ -322,8 +331,47 @@ export default {
     let upListener = null;
     let cancelListener = null;
     let lostCaptureListener = null;
+    let safetyBlurListener = null;
+    let safetyVisibilityListener = null;
     let overlapRAF = null;
     let activePointerId = null;
+    let pointerCaptured = false;
+    let suppressClick = false;
+
+    const detachPointerListeners = () => {
+      if (moveListener) window.removeEventListener('pointermove', moveListener);
+      if (upListener) window.removeEventListener('pointerup', upListener);
+      if (cancelListener) window.removeEventListener('pointercancel', cancelListener);
+      if (lostCaptureListener) el.removeEventListener('lostpointercapture', lostCaptureListener);
+
+      moveListener = null;
+      upListener = null;
+      cancelListener = null;
+      lostCaptureListener = null;
+    };
+
+    const detachSafetyListeners = () => {
+      if (safetyBlurListener) {
+        window.removeEventListener('blur', safetyBlurListener);
+        safetyBlurListener = null;
+      }
+      if (safetyVisibilityListener) {
+        document.removeEventListener('visibilitychange', safetyVisibilityListener);
+        safetyVisibilityListener = null;
+      }
+    };
+
+    const releasePointer = () => {
+      detachPointerListeners();
+
+      if (pointerCaptured && activePointerId != null) {
+        try {
+          el.releasePointerCapture?.(activePointerId);
+        } catch {}
+      }
+
+      pointerCaptured = false;
+    };
 
     const cleanupDrag = (ev, { cancelled = false } = {}) => {
       if (
@@ -334,23 +382,12 @@ export default {
         return;
       }
 
-      try {
-        if (activePointerId != null) {
-          el.releasePointerCapture?.(activePointerId);
-        }
-      } catch {}
+      const wasMoved = moved;
+
+      releasePointer();
+      detachSafetyListeners();
 
       el.style.cursor = 'grab';
-
-      if (moveListener) window.removeEventListener('pointermove', moveListener);
-      if (upListener) window.removeEventListener('pointerup', upListener);
-      if (cancelListener) window.removeEventListener('pointercancel', cancelListener);
-      if (lostCaptureListener) el.removeEventListener('lostpointercapture', lostCaptureListener);
-
-      moveListener = null;
-      upListener = null;
-      cancelListener = null;
-      lostCaptureListener = null;
 
       if (overlapRAF) {
         cancelAnimationFrame(overlapRAF);
@@ -363,8 +400,9 @@ export default {
       }
 
       activePointerId = null;
+      if (activeDragEl === el) activeDragEl = null;
 
-      if (!moved || cancelled) {
+      if (!wasMoved || cancelled) {
         renderDebugBoxes();
         return;
       }
@@ -390,10 +428,8 @@ export default {
         snapMs = 0;
       }
 
+      suppressClick = true;
       el.dataset.dragged = 'true';
-      setTimeout(() => {
-        delete el.dataset.dragged;
-      }, 0);
 
       const afterMs = Math.max(0, Number(snapMs));
       setTimeout(() => {
@@ -407,14 +443,33 @@ export default {
       }, afterMs + 5);
     };
 
+    el.__drag_force_cleanup__ = () => {
+      if (activePointerId == null) return;
+      cleanupDrag({ pointerId: activePointerId }, { cancelled: true });
+    };
+
+    const onClickCapture = (e) => {
+      if (!suppressClick && el.dataset.dragged !== 'true') return;
+      suppressClick = false;
+      delete el.dataset.dragged;
+      e.stopPropagation();
+      e.preventDefault();
+    };
+
     const onPointerDown = (e) => {
       if (opts.enabled === false) return;
       if (e.button != null && e.button !== 0) return;
-      if (activePointerId != null) return; // already dragging
+      if (activePointerId != null) return;
+
+      endActiveDrag(el);
 
       activePointerId = e.pointerId;
+      activeDragEl = el;
+      pointerCaptured = false;
+      suppressClick = false;
+      delete el.dataset.dragged;
 
-      el.setPointerCapture?.(activePointerId);
+      el.style.transition = '';
       e.preventDefault();
       e.stopPropagation();
 
@@ -427,22 +482,32 @@ export default {
       baseTop = p.y;
       moved = false;
 
+      const beginDrag = () => {
+        if (moved) return;
+        moved = true;
+        pointerCaptured = true;
+        el.setPointerCapture?.(activePointerId);
+        el.dataset.dragging = 'true';
+        el.dispatchEvent(new CustomEvent('draggable:dragstart', { bubbles: true }));
+      };
+
       moveListener = (ev) => {
         if (ev.pointerId !== activePointerId) return;
 
         const dx = ev.clientX - startX;
         const dy = ev.clientY - startY;
 
-        if (!moved && (Math.abs(dx) > 3 || Math.abs(dy) > 3)) {
-          moved = true;
-          el.dataset.dragging = 'true';
-          el.dispatchEvent(new CustomEvent('draggable:dragstart', { bubbles: true }));
+        if (!moved && (Math.abs(dx) > MOVE_THRESHOLD || Math.abs(dy) > MOVE_THRESHOLD)) {
+          beginDrag();
         }
 
+        if (!moved) return;
+
+        ev.preventDefault();
         el.style.left = baseLeft + dx + 'px';
         el.style.top = baseTop + dy + 'px';
 
-        if (moved && opts.overlapOnMove) {
+        if (opts.overlapOnMove) {
           if (!overlapRAF) {
             overlapRAF = requestAnimationFrame(() => {
               overlapRAF = null;
@@ -467,16 +532,29 @@ export default {
         cleanupDrag(ev, { cancelled: true });
       };
 
+      safetyBlurListener = () => {
+        if (activePointerId == null) return;
+        cleanupDrag({ pointerId: activePointerId }, { cancelled: true });
+      };
+
+      safetyVisibilityListener = () => {
+        if (document.hidden && activePointerId != null) {
+          cleanupDrag({ pointerId: activePointerId }, { cancelled: true });
+        }
+      };
+
       window.addEventListener('pointermove', moveListener, { passive: false });
       window.addEventListener('pointerup', upListener, { passive: true });
       window.addEventListener('pointercancel', cancelListener, { passive: true });
       el.addEventListener('lostpointercapture', lostCaptureListener);
+      window.addEventListener('blur', safetyBlurListener);
+      document.addEventListener('visibilitychange', safetyVisibilityListener);
     };
 
-    // --- Enable/disable based on modifier-controlled media query -----------
     function enable() {
       if (el.__dragActive) return;
       el.addEventListener('pointerdown', onPointerDown, { passive: false });
+      el.addEventListener('click', onClickCapture, true);
       el.style.cursor = 'grab';
       el.__dragActive = true;
     }
@@ -485,28 +563,19 @@ export default {
       if (!el.__dragActive) return;
 
       el.removeEventListener('pointerdown', onPointerDown);
+      el.removeEventListener('click', onClickCapture, true);
 
       if (activePointerId != null) {
         cleanupDrag({ pointerId: activePointerId }, { cancelled: true });
       } else {
-        if (moveListener) window.removeEventListener('pointermove', moveListener);
-        if (upListener) window.removeEventListener('pointerup', upListener);
-        if (cancelListener) window.removeEventListener('pointercancel', cancelListener);
-        if (lostCaptureListener) el.removeEventListener('lostpointercapture', lostCaptureListener);
-
-        moveListener = null;
-        upListener = null;
-        cancelListener = null;
-        lostCaptureListener = null;
-
-        if (overlapRAF) {
-          cancelAnimationFrame(overlapRAF);
-          overlapRAF = null;
-        }
+        releasePointer();
+        detachSafetyListeners();
       }
 
       el.style.cursor = '';
       delete el.__dragActive;
+      delete el.__drag_force_cleanup__;
+      if (activeDragEl === el) activeDragEl = null;
     }
 
     el.__drag_enable__ = enable;
@@ -533,6 +602,9 @@ export default {
     if (typeof window !== 'undefined' && resetOnBreakpoint) {
       const mql = window.matchMedia(breakQuery);
       const onChange = () => {
+        if (activePointerId != null) {
+          cleanupDrag({ pointerId: activePointerId }, { cancelled: true });
+        }
         resetToCssOrigin();
         renderDebugBoxes();
       };
@@ -572,6 +644,9 @@ export default {
       let tid;
       const onResize = () => {
         renderDebugBoxes();
+        if (activePointerId != null) {
+          cleanupDrag({ pointerId: activePointerId }, { cancelled: true });
+        }
         if (!resetOnResize) return;
 
         clearTimeout(tid);
@@ -592,6 +667,8 @@ export default {
   unmounted(el) {
     // Disable (removes pointerdown + cleans up in-flight listeners)
     el.__drag_disable__?.();
+    delete el.__drag_force_cleanup__;
+    if (activeDragEl === el) activeDragEl = null;
 
     // Media query toggler for .desktop/.mobile
     const emq = el.__drag_enable_mql__;

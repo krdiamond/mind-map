@@ -69,9 +69,6 @@
             toggleMusicPlayer(e) {
                 if (!!e?.currentTarget?.dataset?.dragged === false ) {
                     this.showMusicPlayer = !this.showMusicPlayer
-                    // if(e?.target.children[0].id !== "Ash") {
-                    //     this.showMusicPlayer = !this.showMusicPlayer
-                    // }
                 }
             }
         }

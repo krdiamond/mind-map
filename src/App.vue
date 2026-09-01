@@ -21,7 +21,7 @@
             <!-- <Remote @overlap="onCandleOverlap($event)" @click="onRemoteClick($event)" @bringToFront="bringToFront($event)"/>  -->
             <Buddha ref="buddha" @bringToFront="bringToFront($event)" @click="onBuddhaClick($event)" />
             <DVD ref="dvd" @bringToFront="bringToFront($event)" @click="onDVDClick($event)" @overlap="onCandleOverlap($event)" />
-            <AirpodPro ref="airpodPro" @bringToFront="bringToFront($event)" @click="onAirPodProClick($event)" @overlap="onCandleOverlap($event)" />
+            <!-- <AirpodPro ref="airpodPro" @bringToFront="bringToFront($event)" @click="onAirPodProClick($event)" @overlap="onCandleOverlap($event)" /> -->
             <!-- <Gold @bringToFront="bringToFront($event)"/> -->
             <WateringCan @overlap="putOutFire($event)" ref="wateringCan"/>   
         </div>
@@ -84,8 +84,7 @@ export default {
     onAirPodProClick(e) {
       if(e.currentTarget.id === "Ash") { return }
       if (this.checkToggle(e) === false ) {
-        console.log('air pod pro clicked')
-        // this.$refs.airpodPro.toggleMusicPlayer();
+        this.$refs.airpodPro.toggleMusicPlayer();
       }
     },
     checkToggle(e) { //this determines if it is a drag click or a toggle click
