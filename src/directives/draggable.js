@@ -15,9 +15,9 @@ export default {
     const desktopOnly = !!mods.desktop;
     const mobileOnly = !!mods.mobile;
 
-    // Default queries for modifiers
-    const desktopMQ = '(min-width: 1025px)';
-    const mobileMQ = '(max-width: 1024px)';
+    // Default queries for modifiers — align with styles/_mixins.scss lg (1024px)
+    const desktopMQ = '(min-width: 1024px)';
+    const mobileMQ = '(max-width: 1023px)';
 
     // Pick the controlling MQ (or null if always-on)
     const controlQuery = desktopOnly ? desktopMQ : (mobileOnly ? mobileMQ : null);
@@ -27,7 +27,7 @@ export default {
     el.style.touchAction = 'none';
 
     // ---- Breakpoint + resize reset wiring (default: 1024) -----------------
-    const breakQuery = opts.breakQuery || '(max-width: 1024px)';
+    const breakQuery = opts.breakQuery || '(max-width: 1023px)';
     const resetOnBreakpoint = opts.resetOnBreakpoint !== false; // default true
     const resetOnResize = !!opts.resetOnResize;                 // default false
     const resizeDebounceMs = Number(opts.resizeDebounceMs ?? 80);
@@ -160,6 +160,7 @@ export default {
 
     // --- Drag + snapInto ---------------------------------------------------
     let startX, startY, baseLeft, baseTop, moved = false;
+    let dragStartPos = null;
 
     const getRelPos = () => {
       const base = getBaseEl();
@@ -213,28 +214,57 @@ export default {
 
       const ew = el.offsetWidth;
       const eh = el.offsetHeight;
-      let best = null;
-      let bestD2 = Infinity;
+      const iconCenterY = pos.y + eh / 2;
+
+      let bestBox = null;
+      let bestDistY = Infinity;
 
       for (const b of boxes) {
-        const minX = b.left;
-        const minY = b.top;
-        const maxX = b.right - ew;
-        const maxY = b.bottom - eh;
-        const tx = clamp(pos.x, minX, Math.max(minX, maxX));
-        const ty = clamp(pos.y, minY, Math.max(minY, maxY));
-        const dx = pos.x - tx;
-        const dy = pos.y - ty;
-        const d2 = dx * dx + dy * dy;
-
-        if (d2 < bestD2) {
-          bestD2 = d2;
-          best = { x: tx, y: ty };
+        const centerY = (b.top + b.bottom) / 2;
+        const distY = Math.abs(iconCenterY - centerY);
+        if (distY < bestDistY) {
+          bestDistY = distY;
+          bestBox = b;
         }
       }
 
-      return best;
+      if (!bestBox) return null;
+
+      const minX = bestBox.left;
+      const minY = bestBox.top;
+      const maxX = bestBox.right - ew;
+      const maxY = bestBox.bottom - eh;
+      const tx = clamp(pos.x, minX, Math.max(minX, maxX));
+      const ty = clamp(pos.y, minY, Math.max(minY, maxY));
+
+      return { x: tx, y: ty };
     }
+
+    const applySnap = () => {
+      const target = pickNearestSnapTarget(getRelPos());
+      let snapMs = opts.snapDurationMs ?? 120;
+
+      if (!target) {
+        resetToCssOrigin();
+        return 0;
+      }
+
+      if (snapMs) {
+        el.style.transition = `left ${snapMs}ms linear, top ${snapMs}ms linear`;
+        requestAnimationFrame(() => {
+          el.style.left = target.x + 'px';
+          el.style.top = target.y + 'px';
+        });
+        setTimeout(() => {
+          el.style.transition = '';
+        }, snapMs);
+      } else {
+        el.style.left = target.x + 'px';
+        el.style.top = target.y + 'px';
+      }
+
+      return snapMs;
+    };
 
     // --- Overlap helpers ---------------------------------------------------
     const getRect = (node, pad = 0) => {
@@ -373,7 +403,7 @@ export default {
       pointerCaptured = false;
     };
 
-    const cleanupDrag = (ev, { cancelled = false } = {}) => {
+    const cleanupDrag = (ev) => {
       if (
         activePointerId != null &&
         ev?.pointerId != null &&
@@ -383,6 +413,12 @@ export default {
       }
 
       const wasMoved = moved;
+      const wasDragging = el.dataset.dragging === 'true';
+      const endPos = getRelPos();
+      const posChanged = dragStartPos && (
+        Math.abs(endPos.x - dragStartPos.x) > 1 ||
+        Math.abs(endPos.y - dragStartPos.y) > 1
+      );
 
       releasePointer();
       detachSafetyListeners();
@@ -394,7 +430,7 @@ export default {
         overlapRAF = null;
       }
 
-      if (el.dataset.dragging) {
+      if (wasDragging) {
         delete el.dataset.dragging;
         el.dispatchEvent(new CustomEvent('draggable:dragend', { bubbles: true }));
       }
@@ -402,31 +438,12 @@ export default {
       activePointerId = null;
       if (activeDragEl === el) activeDragEl = null;
 
-      if (!wasMoved || cancelled) {
+      if (!wasMoved && !wasDragging && !posChanged) {
         renderDebugBoxes();
         return;
       }
 
-      const target = pickNearestSnapTarget(getRelPos());
-      let snapMs = opts.snapDurationMs ?? 120;
-
-      if (target) {
-        if (snapMs) {
-          el.style.transition = `left ${snapMs}ms linear, top ${snapMs}ms linear`;
-          requestAnimationFrame(() => {
-            el.style.left = target.x + 'px';
-            el.style.top = target.y + 'px';
-          });
-          setTimeout(() => {
-            el.style.transition = '';
-          }, snapMs);
-        } else {
-          el.style.left = target.x + 'px';
-          el.style.top = target.y + 'px';
-        }
-      } else {
-        snapMs = 0;
-      }
+      const snapMs = applySnap();
 
       suppressClick = true;
       el.dataset.dragged = 'true';
@@ -445,7 +462,7 @@ export default {
 
     el.__drag_force_cleanup__ = () => {
       if (activePointerId == null) return;
-      cleanupDrag({ pointerId: activePointerId }, { cancelled: true });
+      cleanupDrag({ pointerId: activePointerId });
     };
 
     const onClickCapture = (e) => {
@@ -476,6 +493,7 @@ export default {
       el.style.cursor = 'grabbing';
 
       const p = getRelPos();
+      dragStartPos = { x: p.x, y: p.y };
       startX = e.clientX;
       startY = e.clientY;
       baseLeft = p.x;
@@ -524,22 +542,22 @@ export default {
 
       cancelListener = (ev) => {
         if (ev.pointerId !== activePointerId) return;
-        cleanupDrag(ev, { cancelled: true });
+        cleanupDrag(ev);
       };
 
       lostCaptureListener = (ev) => {
         if (ev.pointerId !== activePointerId) return;
-        cleanupDrag(ev, { cancelled: true });
+        cleanupDrag(ev);
       };
 
       safetyBlurListener = () => {
         if (activePointerId == null) return;
-        cleanupDrag({ pointerId: activePointerId }, { cancelled: true });
+        cleanupDrag({ pointerId: activePointerId });
       };
 
       safetyVisibilityListener = () => {
         if (document.hidden && activePointerId != null) {
-          cleanupDrag({ pointerId: activePointerId }, { cancelled: true });
+          cleanupDrag({ pointerId: activePointerId });
         }
       };
 
@@ -566,7 +584,7 @@ export default {
       el.removeEventListener('click', onClickCapture, true);
 
       if (activePointerId != null) {
-        cleanupDrag({ pointerId: activePointerId }, { cancelled: true });
+        cleanupDrag({ pointerId: activePointerId });
       } else {
         releasePointer();
         detachSafetyListeners();
@@ -603,7 +621,7 @@ export default {
       const mql = window.matchMedia(breakQuery);
       const onChange = () => {
         if (activePointerId != null) {
-          cleanupDrag({ pointerId: activePointerId }, { cancelled: true });
+          cleanupDrag({ pointerId: activePointerId });
         }
         resetToCssOrigin();
         renderDebugBoxes();
@@ -645,7 +663,7 @@ export default {
       const onResize = () => {
         renderDebugBoxes();
         if (activePointerId != null) {
-          cleanupDrag({ pointerId: activePointerId }, { cancelled: true });
+          cleanupDrag({ pointerId: activePointerId });
         }
         if (!resetOnResize) return;
 

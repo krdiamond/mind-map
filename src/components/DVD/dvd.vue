@@ -12,7 +12,7 @@
       ],
       responsive: [
         {
-          query: '(max-width: 1024px)',
+          query: '(max-width: 1023px)',
           coordsBase: '.cabinet-container',
           snapInto: [
             { left: 13, top: 195, width: 73, height: 40 },

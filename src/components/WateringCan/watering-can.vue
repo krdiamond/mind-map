@@ -6,7 +6,7 @@
             ],
             responsive: [
                 {
-                    query: '(max-width: 1024px)',
+                    query: '(max-width: 1023px)',
                     coordsBase: '.cabinet-container',
                     snapInto: [
                         { left: -150, top: 185, width: 200, height: 65 }, // // Ground
