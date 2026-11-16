@@ -1,168 +1,3 @@
-<!-- <template>
-  <div class="player">
-    <h1>My Playlist</h1>
-
-    <div class="now-playing">
-      Now playing: {# currentSong.title #}
-    </div>
-
-    <audio
-      ref="audio"
-      :src="currentSong.src"
-      @ended="nextSong"
-    ></audio>
-
-    <div class="controls">
-      <button @click="prevSong">Prev</button>
-      <button @click="togglePlay">
-        {# isPlaying ? 'Pause' : 'Play' #}
-      </button>
-      <button @click="nextSong">Next</button>
-    </div>
-
-    <ul class="playlist">
-      <li
-        v-for="(song, index) in songs"
-        :key="index"
-        :class="{ active: index === currentSongIndex }"
-        @click="selectSong(index)"
-      >
-        {# song.title #}
-      </li>
-    </ul>
-  </div>
-</template>
-
-<script>
-export default {
-  name: 'SimpleAudioPlayer',
-  data() {
-    return {
-      currentSongIndex: 0,
-      isPlaying: false,
-      songs: [
-        {
-          title: 'Song One',
-          src: '/audio/song-one.mp3'
-        },
-        {
-          title: 'Song Two',
-          src: '/audio/song-two.mp3'
-        },
-        {
-          title: 'Song Three',
-          src: '/audio/song-three.mp3'
-        }
-      ]
-    }
-  },
-  computed: {
-    currentSong() {
-      return this.songs[this.currentSongIndex]
-    }
-  },
-  methods: {
-    togglePlay() {
-      const audio = this.$refs.audio
-
-      if (!audio) return
-
-      if (audio.paused) {
-        audio.play()
-        this.isPlaying = true
-      } else {
-        audio.pause()
-        this.isPlaying = false
-      }
-    },
-    selectSong(index) {
-      this.currentSongIndex = index
-      this.playCurrentSong()
-    },
-    nextSong() {
-      this.currentSongIndex = (this.currentSongIndex + 1) % this.songs.length
-      this.playCurrentSong()
-    },
-    prevSong() {
-      this.currentSongIndex =
-        (this.currentSongIndex - 1 + this.songs.length) % this.songs.length
-      this.playCurrentSong()
-    },
-    playCurrentSong() {
-      this.$nextTick(() => {
-        const audio = this.$refs.audio
-        if (!audio) return
-
-        audio.load()
-        audio.play()
-        this.isPlaying = true
-      })
-    }
-  }
-}
-</script>
-
-<style scoped>
-.player {
-  max-width: 600px;
-  margin: 40px auto;
-  padding: 20px;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  font-family: Arial, sans-serif;
-}
-
-h1 {
-  font-size: 24px;
-  margin-top: 0;
-}
-
-.now-playing {
-  margin-bottom: 16px;
-  font-weight: bold;
-}
-
-.controls {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-button {
-  padding: 10px 14px;
-  border: 1px solid #ccc;
-  background: #fff;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #f0f0f0;
-}
-
-.playlist {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.playlist li {
-  padding: 10px 12px;
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
-}
-
-.playlist li:hover {
-  background: #f5f5f5;
-}
-
-.playlist li.active {
-  background: #e8f0ff;
-  font-weight: bold;
-}
-</style> -->
-
 <template>
 	<div class="popup-box albums">
     <div class="wrapper">
@@ -189,51 +24,19 @@ button:hover {
 <script>
 import { fetchGoogleSheet } from '../../lib/fetchGoogleSheet'
 
-const SHEET = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR0ZgC1XczWdt5oqg-FIlc3Wck9jZbdIt7VmXONLfaZed0rPBJY_v4kbr5a27XA33Ht1hTP2gfq0VzE/pub';
-
-// The published text (TSV) leaves images out, so the images are read from the
-// sheet's Excel (.xlsx) download, which is a zip file. Returns { rowNumber: imageUrl }.
-async function fetchSheetImages() {
-  const buf = new Uint8Array(await fetch(`${SHEET}?output=xlsx`).then(r => r.arrayBuffer()));
-  const view = new DataView(buf.buffer);
-
-  // List the files in the zip.
-  let end = buf.length - 22;
-  while (view.getUint32(end, true) !== 0x06054b50) end--;
-  const files = {};
-  for (let i = 0, p = view.getUint32(end + 16, true); i < view.getUint16(end + 10, true); i++) {
-    const nameLength = view.getUint16(p + 28, true);
-    const name = new TextDecoder().decode(buf.subarray(p + 46, p + 46 + nameLength));
-    files[name] = { method: view.getUint16(p + 10, true), size: view.getUint32(p + 20, true), offset: view.getUint32(p + 42, true) };
-    p += 46 + nameLength + view.getUint16(p + 30, true) + view.getUint16(p + 32, true);
-  }
-  const read = async (name) => {
-    const f = files[name];
-    const start = f.offset + 30 + view.getUint16(f.offset + 26, true) + view.getUint16(f.offset + 28, true);
-    const blob = new Blob([buf.subarray(start, start + f.size)]);
-    return f.method === 0 ? blob : new Response(blob.stream().pipeThrough(new DecompressionStream('deflate-raw'))).blob();
-  };
-
-  // Each picture in the first sheet's drawing is anchored to a row.
-  const drawing = await (await read('xl/drawings/drawing1.xml')).text();
-  const rels = await (await read('xl/drawings/_rels/drawing1.xml.rels')).text();
-  const images = {};
-  for (const [, row, id] of drawing.matchAll(/<xdr:row>(\d+)<\/xdr:row>[\s\S]*?r:embed="([^"]+)"/g)) {
-    const target = rels.match(new RegExp(`Id="${id}"[^>]*Target="\\.\\./([^"]+)"`))[1];
-    images[row] = URL.createObjectURL(new Blob([await read(`xl/${target}`)], { type: 'image/png' }));
-  }
-  return images;
-}
-
 export default {
   name: 'Albums',
   data() {
     return {
+      sheet: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR0ZgC1XczWdt5oqg-FIlc3Wck9jZbdIt7VmXONLfaZed0rPBJY_v4kbr5a27XA33Ht1hTP2gfq0VzE/pub',
       albums: [],
     };
   },
   async mounted() {
-    const [data, images] = await Promise.all([fetchGoogleSheet(`${SHEET}?output=tsv&single=true&gid=0`), fetchSheetImages()]);
+    const [data, images] = await Promise.all([
+      fetchGoogleSheet(`${this.sheet}?output=tsv&single=true&gid=0`),
+      this.fetchSheetImages(),
+    ]);
     this.albums = data.map((cols, i) => ({
       id: i,
       date: (cols[0] || '').replace(/\//g, '.').replace(/\.\d{2}(\d{2})$/, '.$1'),
@@ -242,7 +45,42 @@ export default {
       image: images[i + 1] || '',
       rating: cols[4] || '',
     }));
-  }
+  },
+  methods: {
+    // The published text (TSV) leaves images out, so the images are read from the
+    // sheet's Excel (.xlsx) download, which is a zip file. Returns { rowNumber: imageUrl }.
+    async fetchSheetImages() {
+      const buf = new Uint8Array(await fetch(`${this.sheet}?output=xlsx`).then(r => r.arrayBuffer()));
+      const view = new DataView(buf.buffer);
+
+      // List the files in the zip.
+      let end = buf.length - 22;
+      while (view.getUint32(end, true) !== 0x06054b50) end--;
+      const files = {};
+      for (let i = 0, p = view.getUint32(end + 16, true); i < view.getUint16(end + 10, true); i++) {
+        const nameLength = view.getUint16(p + 28, true);
+        const name = new TextDecoder().decode(buf.subarray(p + 46, p + 46 + nameLength));
+        files[name] = { method: view.getUint16(p + 10, true), size: view.getUint32(p + 20, true), offset: view.getUint32(p + 42, true) };
+        p += 46 + nameLength + view.getUint16(p + 30, true) + view.getUint16(p + 32, true);
+      }
+      const read = async (name) => {
+        const f = files[name];
+        const start = f.offset + 30 + view.getUint16(f.offset + 26, true) + view.getUint16(f.offset + 28, true);
+        const blob = new Blob([buf.subarray(start, start + f.size)]);
+        return f.method === 0 ? blob : new Response(blob.stream().pipeThrough(new DecompressionStream('deflate-raw'))).blob();
+      };
+
+      // Each picture in the first sheet's drawing is anchored to a row.
+      const drawing = await (await read('xl/drawings/drawing1.xml')).text();
+      const rels = await (await read('xl/drawings/_rels/drawing1.xml.rels')).text();
+      const images = {};
+      for (const [, row, id] of drawing.matchAll(/<xdr:row>(\d+)<\/xdr:row>[\s\S]*?r:embed="([^"]+)"/g)) {
+        const target = rels.match(new RegExp(`Id="${id}"[^>]*Target="\\.\\./([^"]+)"`))[1];
+        images[row] = URL.createObjectURL(new Blob([await read(`xl/${target}`)], { type: 'image/png' }));
+      }
+      return images;
+    },
+  },
 };
 </script>
 

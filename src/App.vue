@@ -20,7 +20,7 @@
             <Candle ref="candle" @bringToFront="bringToFront($event)" @overlap="onCandleOverlap($event)"  /> 
             <!-- <Remote @overlap="onCandleOverlap($event)" @click="onRemoteClick($event)" @bringToFront="bringToFront($event)"/>  -->
             <Buddha ref="buddha" @bringToFront="bringToFront($event)" @click="onBuddhaClick($event)" />
-            <DVD ref="dvd" @bringToFront="bringToFront($event)" @click="onDVDClick($event)" @overlap="onCandleOverlap($event)" />
+            <!-- <DVD ref="dvd" @bringToFront="bringToFront($event)" @click="onDVDClick($event)" @overlap="onCandleOverlap($event)" /> -->
             <AirpodPro ref="airpodPro" @bringToFront="bringToFront($event)" @click="onAirPodProClick($event)" @overlap="onCandleOverlap($event)" />
             <!-- <Gold @bringToFront="bringToFront($event)"/> -->
             <WateringCan @overlap="putOutFire($event)" ref="wateringCan"/>   

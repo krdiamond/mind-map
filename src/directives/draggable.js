@@ -240,12 +240,27 @@ export default {
       return { x: tx, y: ty };
     }
 
+    const keepInViewport = () => {
+      const r = el.getBoundingClientRect();
+      const vw = document.documentElement.clientWidth;
+      const vh = document.documentElement.clientHeight;
+      let dx = 0;
+      let dy = 0;
+      if (r.right > vw) dx = vw - r.right;
+      if (r.left + dx < 0) dx = -r.left;
+      if (r.bottom > vh) dy = vh - r.bottom;
+      if (r.top + dy < 0) dy = -r.top;
+      if (dx) el.style.left = (parseFloat(el.style.left) || 0) + dx + 'px';
+      if (dy) el.style.top = (parseFloat(el.style.top) || 0) + dy + 'px';
+    };
+
     const applySnap = () => {
       const target = pickNearestSnapTarget(getRelPos());
       let snapMs = opts.snapDurationMs ?? 120;
 
       if (!target) {
-        resetToCssOrigin();
+        // No snap areas (e.g. popups): stay where dropped, but keep it inside the window.
+        keepInViewport();
         return 0;
       }
 
