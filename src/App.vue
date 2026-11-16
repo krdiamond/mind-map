@@ -79,21 +79,27 @@ export default {
     onBuddhaClick(e) {
       if (this.checkToggle(e) === false ) {
         this.$refs.buddha.toggleValidation();
+        this.$nextTick(() => this.bringToFront(this.$refs.buddha.$refs.validation?.$el));
       }
     },
     onAirPodProClick(e) {
       if(e.currentTarget.id === "Ash") { return }
       if (this.checkToggle(e) === false ) {
         this.$refs.airpodPro.toggleMusicPlayer();
+        this.$nextTick(() => this.bringToFront(this.$refs.airpodPro.$refs.albums?.$el));
       }
     },
     checkToggle(e) { //this determines if it is a drag click or a toggle click
       return !!e?.currentTarget?.dataset?.dragged
     },
     bringToFront(e){
+      if (!e) return;
       if (e.classList.contains('popup-box')) {
         document.querySelectorAll('.popup-box').forEach(b => b.classList.remove('top-popup'));
         e.classList.add('top-popup');
+        // Popups sit inside their icon. A z-index on that icon (top-icon) would trap
+        // the popup underneath popups from other icons, so take it off.
+        e.parentElement?.closest('.icon')?.classList.remove('top-icon');
       }
       else if (e.classList.contains('icon')) {
         document.querySelectorAll('.icon').forEach(i => i.classList.remove('top-icon'));

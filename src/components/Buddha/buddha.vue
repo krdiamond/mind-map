@@ -34,8 +34,9 @@
 
             <Validation 
                 v-if="showValidation"
+                ref="validation"
                 @close="toggleValidation"
-                @pointerdown="$emit('bringToFront', this.$el)"
+                @pointerdown="$emit('bringToFront', $refs.validation.$el)"
                 @click.stop 
                 v-draggable.desktop
             />

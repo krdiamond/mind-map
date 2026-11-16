@@ -55,8 +55,8 @@
 
 /* ---------------- POPUP BOX ---------------- */
 
-.popup-box[data-dragging="true"] {z-index: 4}            
-.popup-box.top-popup { z-index: 4; }     
+.popup-box[data-dragging="true"] {z-index: 5}            
+.popup-box.top-popup { z-index: 5; }     
 .popup-box:focus { outline: none }
 
 

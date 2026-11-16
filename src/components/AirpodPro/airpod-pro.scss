@@ -1,13 +1,14 @@
 @use '../../styles/mixins' as *;
 
 .airpod-pro {
-    left: 14.8281px;
-    top: 221px;
+    left: 14px;
+    top: 126px;
     width: 40px;
     @include up(lg) { 
         left: 42px;
-        top: 510px;
+        top: 410px;
         width: 100px;
+
     }
     .ash {
         position: absolute;
