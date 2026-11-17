@@ -85,7 +85,7 @@ export default {
     onAirPodProClick(e) {
       if(e.currentTarget.id === "Ash") { return }
       if (this.checkToggle(e) === false ) {
-        this.$refs.airpodPro.toggleMusicPlayer();
+        this.$refs.airpodPro.toggleAlbumsPerDay();
         this.$nextTick(() => this.bringToFront(this.$refs.airpodPro.$refs.albums?.$el));
       }
     },

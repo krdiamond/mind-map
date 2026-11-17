@@ -21,7 +21,7 @@
 import { fetchGoogleSheet } from '../../lib/fetchGoogleSheet'
 
 export default {
-  name: 'Albums',
+  name: 'AlbumsPerDay',
   data() {
     return {
       albums: [],

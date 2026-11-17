@@ -34,10 +34,10 @@
     <img :src="Fire" alt="Fire" class="fire hide"/>
     <img :src="Ash" alt="Ash" class="ash w-full hide" />
 
-      <MusicPlayer 
-        v-show="showMusicPlayer" 
+      <AlbumsPerDay 
+        v-show="showAlbumsPerDay" 
         ref="albums" 
-        @close="toggleMusicPlayer" 
+        @close="toggleAlbumsPerDay" 
         @pointerdown="$emit('bringToFront', $refs.albums.$el)"
         @click.stop v-draggable.desktop
     />
@@ -53,22 +53,22 @@
     import Fire from '../../assets/fire.gif';
     import Ash from '../../assets/ash.png'
 
-    import MusicPlayer from './MusicPlayer.vue';
+    import AlbumsPerDay from './AlbumsPerDay.vue';
 
     export default {
         name: 'AirpodPro',
-        components: { MusicPlayer },
+        components: { AlbumsPerDay },
         data() {
             return {
                 AirpodPro, 
                 Fire, Ash,
-                showMusicPlayer: false,
+                showAlbumsPerDay: false,
             }
         },
         methods: {
-            toggleMusicPlayer(e) {
+            toggleAlbumsPerDay(e) {
                 if (!!e?.currentTarget?.dataset?.dragged === false ) {
-                    this.showMusicPlayer = !this.showMusicPlayer
+                    this.showAlbumsPerDay = !this.showAlbumsPerDay
                 }
             }
         }
